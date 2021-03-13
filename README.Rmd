@@ -9,7 +9,9 @@ knitr::opts_chunk$set(fig.width = 8, fig.height = 4.5)
 
 library(tidyverse)
 library(ggcpesrthemes)
-theme_cpesr_setup(authors="Julien Gossa")
+theme_cpesr_setup(
+  authors="Julien Gossa",
+  source = "https://archeo-lex.fr/")
 ```
 
 ## Présentation
@@ -110,7 +112,7 @@ code %>%
   geom_text(aes(label=round(Modifications)), vjust=-0.3) +
   #scale_x_discrete(breaks=mandatures) +
   scale_fill_distiller(palette="Reds", direction=0) +
-  ggtitle("Nombre de modifications du code de l'éducation \ndurant une scolarité jusqu'au bac") + 
+  ggtitle("Nombre de modifications du code de l'éducation \ndurant une scolarité jusqu'au bac de chaque année") + 
   theme_cpesr_cap() + guides(fill=FALSE)
 ```
 
