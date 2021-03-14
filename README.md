@@ -26,9 +26,10 @@ Trois dépôts présentent les données législatives françaises :
 L’exploitation actuelle se limite au Code de l’éducation présenté par
 Archéo Lex, mais est facilement adaptable à d’autres.
 
-Le script [getlog-archeolex-education.sh](getlog-archeolex-education.sh)
-permet de récupérer les logs du dépôt git :
-[archeolex-education.csv](archeolex-education.csv).
+Le script [getlog-archeolex.sh](getlog-archeolex.sh) permet de récupérer
+les logs du dépôt git :
+[archeolex-education.csv](archeolex-education.csv) et
+[archeolex.csv](archeolex.csv).
 
 **Attention** : ce travail quantifie le nombre de modifications, et non
 l’importance des modifications. De petites modifications peuvent avoir
@@ -59,3 +60,11 @@ On compte ici le nombre de modifications sur les 15 années précédentes
 ![](README_files/figure-gfm/lignes.cummul-1.png)<!-- -->
 
 ![](README_files/figure-gfm/lignes.par.an-1.png)<!-- -->
+
+## Comparaison entre codes
+
+![](README_files/figure-gfm/modif.cummul.tous-1.png)<!-- -->
+
+![](README_files/figure-gfm/modif.cummul.tous.2000-1.png)<!-- -->
+
+![](README_files/figure-gfm/modif.cummul.tous.2000.tab-1.png)<!-- -->

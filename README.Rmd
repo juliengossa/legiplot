@@ -29,8 +29,8 @@ Trois dépôts présentent les données législatives françaises :
 L'exploitation actuelle se limite au Code de l'éducation présenté par Archéo Lex,
 mais est facilement adaptable à d'autres.
 
-Le script [getlog-archeolex-education.sh](getlog-archeolex-education.sh) permet de récupérer 
-les logs du dépôt git : [archeolex-education.csv](archeolex-education.csv).
+Le script [getlog-archeolex.sh](getlog-archeolex.sh) permet de récupérer 
+les logs du dépôt git : [archeolex-education.csv](archeolex-education.csv) et [archeolex.csv](archeolex.csv).
 
 
 __Attention__ : ce travail quantifie le nombre de modifications, et non
@@ -54,7 +54,7 @@ mandatures <- c(2000,2002,2007,2012,2017)
 ```{r modif.cummul}
 code %>%
   arrange(Date) %>%
-  mutate(Modifications = as.numeric(rownames(code))) %>%
+  mutate(Modifications = row_number()) %>%
   ggplot(aes(x=Date,y=Modifications)) +
   geom_point() +
   #scale_x_discrete(breaks=mandatures) +
@@ -143,3 +143,53 @@ code %>%
   theme_cpesr_cap() + guides(fill=FALSE)
 ```
 
+
+## Comparaison entre codes
+
+```{r data.tous}
+codes <- read.csv("archeolex.csv", header=TRUE,  quote='"') %>%
+  mutate(
+    Date = as.Date(Date)
+  )
+```
+
+```{r modif.cummul.tous}
+codes %>%
+  arrange(Date) %>%
+  group_by(Dossier) %>%
+  mutate(Modifications = row_number()) %>%
+  ggplot(aes(x=Date,y=Modifications, group=Dossier, color=(Dossier=="code_de_l'éducation"))) +
+  geom_line(size=0.3) +
+  #scale_x_discrete(breaks=mandatures) +
+  scale_color_manual(values=c("grey","red"), name="Education") +
+  ggtitle("Nombre cummulé de modifications des principaux codes en vigueurs") + 
+  theme_cpesr_cap() + guides(fill=FALSE)
+```
+
+```{r modif.cummul.tous.2000}
+codes %>%
+  filter(Date > as.Date("2000-01-01")) %>%
+  arrange(Date) %>%
+  group_by(Dossier) %>%
+  mutate(Modifications = row_number()) %>%
+  ggplot(aes(x=Date,y=Modifications, group=Dossier, color=(Dossier=="code_de_l'éducation"))) +
+  geom_line(size=0.5) +
+  #scale_x_discrete(breaks=mandatures) +
+  scale_color_manual(values=c("grey","red")) +
+  ggtitle("Nombre cummulé de modifications des principaux codes en vigueurs", subtitle = "Depuis 2000") + 
+  theme_cpesr_cap() + guides(fill=FALSE)
+```
+
+
+```{r modif.cummul.tous.2000.tab, fig.height=9}
+codes %>%
+  filter(Date > as.Date("2000-01-01")) %>%
+  group_by(Dossier) %>%
+  summarise(Modifications = n()) %>%
+  ggplot(aes(x=reorder(Dossier,Modifications),y=Modifications, fill=(Dossier=="code_de_l'éducation"))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values=c("grey","red")) +
+  ggtitle("Nombre modifications\n depuis 2000") + 
+  theme_cpesr_cap() + guides(fill=FALSE)
+```
