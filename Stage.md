@@ -114,7 +114,7 @@ L'application doit prendre en entrée un dépôt git Archeo-Lex et doit produire
 Par exemple, pour [ce commit](https://archeo-lex.fr/codes/code_de_l%27%C3%A9ducation/2021-04-03/commit) :
 
 ```
-Version;Date;Grande.partie;Partie;Livre;Titre;Chapitre;Article;Type
+Code;Version;Date;Grande.partie;Partie;Livre;Titre;Article;Type
 Code de l'éducation;85ba87f;2020-04-03;R;6;1;2;D612-34;Modification
 ```
 
