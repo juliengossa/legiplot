@@ -120,7 +120,14 @@ Code de l'éducation;85ba87f;2020-04-03;R;6;1;2;D612-34;Modification
 
 Il s'agit donc, pour chaque modification, d'identifier sa nature et le numéro d'article concerné (s'il ne s'agit pas d'une modification de structure).
 
+### Algorithme général pour un code et un commit
 
+- Récupérer le `diff` du commit
+- Récupérer le `code` à la version du commit
+- Pour chaque ligne du `diff`
+  - Identifier la nature de la modification
+  - Identifier l'article de la modification
+  - décider d'ajouter ou non à la sortie
 
 
 
