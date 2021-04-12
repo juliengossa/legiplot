@@ -14,7 +14,7 @@ Divers projets visent à stocker ces codes sur des dépôts git. Ces dépôts pe
 
 Une exemple préliminaire est disponible ici : https://github.com/juliengossa/legiplot
 
-### Missions et tâches confiées au stagiaire *
+### Missions et tâches confiées au stagiaire
 
 Le stagiaire aura pour mission de concevoir une application prenant en entrée un dépôt GIT [Archeo-Lex](https://archeo-lex.fr/)
 et retournant en sortie un jeu de données quantitiatives décrivant les évolutions du code juridique déposé. 
