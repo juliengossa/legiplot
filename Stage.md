@@ -36,8 +36,8 @@ GIT, diff, markdown, R, analyse de texte, versionning.
 ## Détails concrets 
 
 Ces modifications sont localisées dans les codes, selon :
-- La grande partie législative/règlementaire ;
-- La partie ;
+- La partie législative/règlementaire ;
+- La sous-partie (optionnelle) ;
 - Le livre ;
 - Le titre ;
 - Le chapitre ;
@@ -109,25 +109,27 @@ Pour ce travail, la granularité choisie est l'article.
 
 L'application doit prendre en entrée un dépôt git Archeo-Lex et doit produire en sortie un fichier au format suivant :
 
-`Code;Version;Date;Partie;Sous-partie;Livre;Titre;Article;Type`
+`Code;Version;Date;Partie;Nature;Sous-partie;Livre;Titre;Article;Type`
 
 Par exemple, pour [ce commit](https://archeo-lex.fr/codes/code_de_l%27%C3%A9ducation/2021-04-03/commit) :
 
 ```
-Code;Version;Date;Partie;Sous-partie;Livre;Titre;Article;Type
-Code de l'éducation;85ba87f;2020-04-03;R;NA;6;1;2;D612-34;Modification
+Code;Version;Date;Partie;Nature;Sous-partie;Livre;Titre;Article;Type
+Code de l'éducation;85ba87f;2020-04-03;Règlementaire;R;NA;6;1;2;D612-34;Modification
 ```
 
-Il s'agit donc, pour chaque modification, d'identifier sa nature et le numéro d'article concerné (s'il ne s'agit pas d'une modification de structure).
+NB : la Sous-partie peut être à `NA` lorsqu'elle n'existe pas (fréquent dans la partie réglementaire).
+
+Il s'agit donc, pour chaque modification, d'identifier sa nature, le numéro d'article concerné (s'il ne s'agit pas d'une modification de structure), et l'éventuelle sous-partie.
 
 ### Algorithme général pour un code et un commit
 
 - Récupérer le `diff` du commit
-- Récupérer le `code` à la version du commit
+- Récupérer le `texte` du code à la version du commit
 - Pour chaque ligne du `diff`
   - Identifier la nature de la modification
-  - Identifier l'article de la modification
-  - décider d'ajouter ou non à la sortie
+  - Identifier l'article de la modification et l'éventuelle sous-partie
+  - Décider d'ajouter ou non à la sortie
 
 
 
