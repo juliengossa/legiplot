@@ -3,7 +3,7 @@ import re
 import git 
 from git.compat import defenc
 
-def createDepo(*codes_list):
+def createRepo(*codes_list):
     for code in codes_list:
         path = 'archeo_lex/'+code
         if(os.path.exists(path)):
