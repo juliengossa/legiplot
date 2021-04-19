@@ -1,6 +1,7 @@
 import os
 import re
 import git
+import sys
 import difflib 
 from git.compat import defenc
 
@@ -21,6 +22,7 @@ def createRepo(*codes_list):
 
 
 def getDiff(type_code,number_commit):
+    #sys.stdout = open("a.txt","w")
     path='archeo_lex/'+type_code
     repo = git.Repo(path)
     os.chdir(path)
@@ -28,32 +30,28 @@ def getDiff(type_code,number_commit):
     #Obtenit le diff selon le commit(le diff de le commit que l'on a entré et le commit précédent)
     diff = commit.diff(commit.parents[0], create_patch=True).pop()
     print(commit.parents[0])
+    #a=diff.a_blob
     a=diff.a_blob.data_stream.read().decode('utf-8')
-    b=diff.b_blob.data_stream.read().decode('utf-8').splitlines()
+    #b=diff.b_blob.data_stream.read().decode('utf-8').splitlines()
     #differ = difflib.Differ()
     #lines = list(differ.compare(b,a))
     print(a)
-    """
-    for line in lines:
-        print(line)
-    """
-    '''
-    for num,txt in enumerate(lines):
-        if txt.startswith('  #######'):
-            print(num,':',txt)
-    '''
+    
+    
+
+   
     
     
 '''
-quelques versions de commit pour code_civil
-2b5d875bf431d8cf21df3c376551d7b7802e7a75
-f1975506ff1acf167891aa2287e88f5330f2bab3
-7947e5660e5ff34cbc639b84b72b8245446dbcdc
-075e5160b5e137c2e71fbfe95ff88be52fa9e50d
+quelque versions de commit pour code de l'éducation
+69b00191794e276da0d8cdd12aa9d48cbd569c1b
+1289adb8cf1af5b3a0bd9a1ed722dd49b411bc72
+git diff 1289adb8cf1af5b3a0bd9a1ed722dd49b411bc72 69b00191794e276da0d8cdd12aa9d48cbd569c1b
 '''
 
 #main
-getDiff("code_civil","f1975506ff1acf167891aa2287e88f5330f2bab3")
-#createRepo('code_civil','code_de_la_propriété_intellectuelle')
+createRepo('code_civil','code_de_la_propriété_intellectuelle','code_de_l\'éducation')
+getDiff("code_de_l\'éducation","69b00191794e276da0d8cdd12aa9d48cbd569c1b")
+
 
 
