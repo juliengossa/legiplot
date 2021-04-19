@@ -1,7 +1,23 @@
 import os
 import re
-from git import Repo
+import git 
 from git.compat import defenc
+
+def createDepo(*codes_list):
+    for code in codes_list:
+        path = 'archeo_lex/'+code
+        if(os.path.exists(path)):
+            repo = git.Repo(path)
+            repo.git.pull()
+            print("archeo_lex/"+code+" a déjà exist,et on le pull")
+        else:
+            try:
+                repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+code,to_path=path)
+            except IOError:
+                print("On ne trouve pas"+ code)
+            else:
+                print("On crée archeo_lex/"+code)
+
 
 def getDiff(type_code,number_commit):
     path='archeo_lex/'+type_code
@@ -39,7 +55,8 @@ f1975506ff1acf167891aa2287e88f5330f2bab3
 '''
 
 #main
-getDiff("code_civil","2b5d875bf431d8cf21df3c376551d7b7802e7a75")
+#getDiff("code_civil","2b5d875bf431d8cf21df3c376551d7b7802e7a75")
+createRepo('code_civil','code_de_la_propriété_intellectuelle')
 
 
 '''
