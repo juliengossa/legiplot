@@ -47,18 +47,24 @@ class ArcheoLexLog:
                 print("On ne trouve pas"+self.code)
             #else:
                 #print("On crée archeo_lex/"+code)
-
-    def write_csv(self,row,file):
-        #si le file exist,on le supprime
-        if file == None:
-            file = os.path.dirname(os.path.abspath(__file__))+'/'+self.code+'.csv'
-        else:
-            file = os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
-        with open(file, 'a+', newline='',encoding='utf-8') as wf:
-            csv_write = csv.writer(wf)
-            csv_write.writerow(row)
     
     @staticmethod
+    def write_csv(row,fileCsv):
+        with open(fileCsv, 'a+', newline='',encoding='utf-8') as wf:
+            csv_write = csv.writer(wf)
+            csv_write.writerow(row)
+
+    @staticmethod
+    def create_csv(fileCsv):
+        if fileCsv!=None:
+            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+fileCsv+'.csv'
+        else:
+            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
+        if os.path.exists(fileCsv):
+            os.remove(fileCsv)
+        csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','nature']
+        ArcheoLexLog.write_csv(csv_head,fileCsv) 
+
     def romanToInt(s):
         """Convertir des chiffres romains ou spéciaux en chiffres arabes
 
@@ -240,8 +246,12 @@ class ArcheoLexLog:
         """print les infomations et les écrire dans csv
 
         """
+        if file!=None:
+            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
+        else:
+            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
         message =[self.code,version,date,partie_courent,sous_partie_courent,livre_courent,titre_courent,chapitre_courent,article_courent,type]
-        self.write_csv(message,file)
+        self.write_csv(message,fileCsv)
         print(message)
 
     def isStructureChange(self,modification):
@@ -376,14 +386,6 @@ class ArcheoLexLog:
     def processCode(self,datelimit,file):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
         """
-        #si on ne entre pas un nom de file.
-        if file==None:
-            fileCSV = os.path.dirname(os.path.abspath(__file__))+'/'+self.code+'.csv'
-            if os.path.exists(fileCSV):
-                os.remove(fileCSV)
-            #écrire la première ligne de csv
-            csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','nature']
-            self.write_csv(csv_head,file) 
         path = self.enterPath()
         repo = git.Repo(path)
         #obtenir tous les version
