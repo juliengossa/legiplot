@@ -128,7 +128,7 @@ def getDifflines(commit):
     return lines
 
 def getType(line):
-    type = "Na"
+    type = "NA"
     if line.find("Article")!= -1 and line.find('#')!=-1:
             #get type
             if line.startswith('-'):             # -######Article est Supression
@@ -148,47 +148,47 @@ def getNumberChanged(type):
         number_changed=0
     return number_changed
 
-def getPartieCourent(Article_courent):
-    if Article_courent[0] == 'L':
-        partie_courent="Législative" 
-    elif Article_courent[0]=='R' or Article_courent[0] == 'D':
-        partie_courent = "Réglementaire"
+def getPartieCurrent(Article_current):
+    if Article_current[0] == 'L':
+        partie_current="Législative" 
+    elif Article_current[0]=='R' or Article_current[0] == 'D':
+        partie_current = "Réglementaire"
     else:
-        partie_courent="Na"
-    return partie_courent
+        partie_current="NA"
+    return partie_current
 
-def getSousPartieCourent(previous_partie,line):
-    """Obtient le numéro de série sous_partie courente
+def getSousPartieCurrent(previous_partie,line):
+    """Obtient le numéro de série sous_partie courante
 
         Sous partie s'écrit généralement comme   ## Première partie : XXXXX. 
         Nous extrayons Première et la convertissons en chiffres romains. 
-        Si nous passons à la Partie suivante (ex: # Partie réglementaire), la sous_partie courante est Na
+        Si nous passons à la Partie suivante (ex: # Partie réglementaire), la sous_partie courante est NA
        
        Arg:
            previous_partie:String de sous partie précedente
            line:String on doit le traiter
         
        return:
-           sous_partie_courent:String de partie courente
+           sous_partie_current:String de partie courante
 
         Raise:
             KeyError:Il peut y avoir plus de 10 Sous Partie, ou écriture irrégulière
                        Et les errors vont être écrit dans errorMessage.csv
     """
-    sous_partie_courent= previous_partie
+    sous_partie_current= previous_partie
 
     if line.find("partie : ") != -1 and line.startswith("  ##") and not line.startswith("  ###"):   
         try:
-            sous_partie_courent =frToInt("".join(re.findall(r"## (.+?) partie",line)))
+            sous_partie_current =frToInt("".join(re.findall(r"## (.+?) partie",line)))
         except KeyError:
             faultMessage = "There is a spelling error in this line: "+line
             print(faultMessage)
             write_csv("errorMessage",faultMessage)      
     if line.startswith("  # Partie"):           
-        sous_partie_courent = "Na"
-    return sous_partie_courent
+        sous_partie_current = "NA"
+    return sous_partie_current
 
-def getCourent(structure_name,previous,line):
+def getCurrent(structure_name,previous,line):
     """Obtient le numéro de série(Livre/Titre/Chapitre)
 
         La sturcture normale s'écrit généralement comme   ##### Chapitre Ier :  
@@ -200,13 +200,13 @@ def getCourent(structure_name,previous,line):
            line:String on doit le traiter
         
        return:
-           courent:Structure courente
+           current:Structure courante
 
         Raise:
             KeyError:Il peut y avoir écriture irrégulière
             Et les errors vont être écrit dans errorMessage.csv
     """
-    courent = previous
+    current = previous
     #Exemple:Chapitre  Ier quinquies : Autorisations,Supprimer les espaces supplémentaires
     line =' '.join(re.split(' +|\n+', line)).strip()
     #on trouve il y a des fautes pour des codes 
@@ -215,18 +215,18 @@ def getCourent(structure_name,previous,line):
        structure_name=structure_name+" :"
     if line.find("# "+structure_name)!= -1 :
         try:
-            courent = romanToInt("".join(re.findall(rf'{structure_name} (.+?)\b',line)))
+            current = romanToInt("".join(re.findall(rf'{structure_name} (.+?)\b',line)))
         except IndexError:
             faultMessage = "There is a spelling error in this line: "+line
             print(faultMessage)
             write_csv("errorMessage",faultMessage)
-    return courent
+    return current
 
-def outputInfo(type_code,version,date,partie_courent,sous_partie_courent,livre_courent,titre_courent,chapitre_courent,article_courent,type):
+def outputInfo(type_code,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type):
     """print les infomations et les écrire dans csv
 
     """
-    message =[type_code,version,date,partie_courent,sous_partie_courent,livre_courent,titre_courent,chapitre_courent,article_courent,type]
+    message =[type_code,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type]
     write_csv(type_code,message)
     print(message)
 
@@ -260,24 +260,24 @@ def getDiff(type_code,number_commit):
     #get lines in diff
     lines=getDifflines(commit)
     #get la structue des articles modifiées
-    livre_courent = "Na"
-    titre_courent = "Na"
-    chapitre_courent = "Na"
-    article_courent = "Na"
-    partie_courent = "Na"
-    sous_partie_courent = "Na"
-    type="Na"
+    livre_current = "NA"
+    titre_current = "NA"
+    chapitre_current = "NA"
+    article_current = "NA"
+    partie_current = "NA"
+    sous_partie_current = "NA"
+    type="NA"
     for num,line in enumerate(lines):
-        livre_courent = getCourent("Livre",livre_courent,line)
-        titre_courent=getCourent("Titre",titre_courent,line)
-        chapitre_courent=getCourent("Chapitre",chapitre_courent,line)
-        sous_partie_courent=getSousPartieCourent(sous_partie_courent,line)
+        livre_current = getCurrent("Livre",livre_current,line)
+        titre_current=getCurrent("Titre",titre_current,line)
+        chapitre_current=getCurrent("Chapitre",chapitre_current,line)
+        sous_partie_current=getSousPartieCurrent(sous_partie_current,line)
         if line.find("Article")!= -1 and line.find('#')!= -1:
-            article_courent=line.replace("#","").replace(" ","").replace("Article","").strip("+").strip("-")
+            article_current=line.replace("#","").replace(" ","").replace("Article","").strip("+").strip("-")
             type=getType(line)
             #nombre_modifier=0
             nombre_modifier=getNumberChanged(type)
-            #Parcourir tous les lignes d'article courent
+            #Parcourir tous les lignes d'article courant
             currentArticleLines = lines[num+1:]
             for modification in currentArticleLines:
                 #S'il y a pas de modifcation on n'imprime pas les résultats
@@ -285,13 +285,13 @@ def getDiff(type_code,number_commit):
                     break
                 #S'il y a des modification on imprime les résultats et l'écrit dans csv
                 if modification.find("Article")!=-1 and modification.find("#")!=-1 and nombre_modifier !=0:  
-                    partie_courent=getPartieCourent(article_courent)
-                    outputInfo(type_code, version, date, partie_courent, sous_partie_courent, livre_courent, titre_courent, chapitre_courent, article_courent, type)
+                    partie_current=getPartieCurrent(article_current)
+                    outputInfo(type_code, version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_current, type)
                     break
                 #S'il y a des changement sur la dernière version
                 if  nombre_modifier !=0 and not modification:
-                    partie_courent=getPartieCourent(article_courent)
-                    outputInfo(type_code, version, date, partie_courent, sous_partie_courent, livre_courent, titre_courent, chapitre_courent, article_courent, type)
+                    partie_current=getPartieCurrent(article_current)
+                    outputInfo(type_code, version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_current, type)
                     break
                 #Compter le nombre de lignes modifiées et Ignorer les changements structurels
                 if modification.startswith('+') and len(modification) != 2 and isStructureChange(modification) == False:   # len(modification)==2 quand il y a que un "+" dans cette ligne  
@@ -313,11 +313,13 @@ def processCode(type_code):
     for log in log_list:
         commit_number ="".join(re.findall(r"{\"(.+?)\"}",log))
         getDiff(type_code,commit_number)
+        
 
 #main
 createRepo('code_civil','code_de_la_propriété_intellectuelle','code_de_l\'éducation')
-processCode("code_de_l\'éducation")
-processCode('code_de_la_propriété_intellectuelle')
+getDiff('code_de_l\'éducation',"fb8ac0e")
+#processCode("code_de_l\'éducation")
+#processCode('code_de_la_propriété_intellectuelle')
 #processCode('code_civil')
 
 

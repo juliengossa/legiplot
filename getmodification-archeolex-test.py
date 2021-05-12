@@ -6,6 +6,7 @@ import difflib
 import time
 import dateparser
 import csv
+import shutil
 from git.compat import defenc
 from pathlib import Path
 
@@ -29,9 +30,18 @@ def createRepo(*codes_list):
     for code in codes_list:
         path = 'archeo_lex/'+code
         if(os.path.exists(path)):
-            repo = git.Repo(path)
-            repo.git.pull()
-            #print("archeo_lex/"+code+" a déjà exist,et on le pull")
+            try:
+                repo = git.Repo(path)
+                repo.git.pull()
+                #print("archeo_lex/"+code+" a déjà exist,et on le pull")
+            except git.InvalidGitRepositoryError:
+                pass
+            except git.GitCommandError:
+                os.removedirs(path)
+                try:
+                    repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+code,to_path=path)
+                except IOError:
+                    print("On ne trouve pas"+ code)
         else:
             try:
                 repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+code,to_path=path)
@@ -244,17 +254,15 @@ def isStructureChange(modification):
 def getDiff(type_code,number_commit):
     """Obtenez toutes les modifications d'une version d'un code
 
-        Parcourez les informations de différence, déterminer le livre et titre et chapitre et article de chaque ligne,
-        et lorsqu'il atteint le début de l'article suivant ou la dernière ligne du texte, juger s'il faut sortir les
-        informations des ；modification de l'article actuel en calculant si le nombre de lignes modifiées est égal
-        à zéro.
-
+        Parcourez les informations de différence, nous extrayons les informations 
+        correspondantes du nom de l'article
+        
         Arg:
            type_code:String de non du code
            number_commit: Commit(type) de version
     """
     #créer repo et get commit
-    repo = git.Repo('.')
+    repo = git.Repo(enterPath(type_code))
     commit = repo.commit(number_commit)
     #get la version et la date
     date = getDate(repo,commit)
@@ -270,9 +278,7 @@ def getDiff(type_code,number_commit):
     sous_partie_courent = "Na"
     type = None
     for num,line in enumerate(lines):
-
         #print(line)
-
         # Détection du type de la ligne
         if line.startswith('-'):             # -######Article est Supression
             type_line = "Suppression"
@@ -280,7 +286,6 @@ def getDiff(type_code,number_commit):
             type_line = "Ajout"
         else:
             type_line = None
-
         # Si changement de section
         if len(line) > 2 and line[2] == '#':
             # Si un type de modification a été détecté avant ce changement de section, l'afficher et le réinitialiser
@@ -289,8 +294,7 @@ def getDiff(type_code,number_commit):
                 i = 1 if article_courent[1].isnumeric() else 2
                 livre_courent = article_courent[i]
                 titre_courent = article_courent[i+1]
-                chapitre_courent = article_courent[i+1]
-
+                chapitre_courent = article_courent[i+2]
                 outputInfo(type_code, version, date, partie_courent, sous_partie_courent, livre_courent, titre_courent, chapitre_courent, article_courent, type)
             type = None
 
@@ -313,6 +317,8 @@ def processCode(type_code, limit=-1):
     """
     csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','nature']
     path = enterPath(type_code)
+    if os.path.exists(type_code+".csv"):
+        os.remove(type_code+".csv")
     write_csv(type_code,csv_head)
     repo = git.Repo(path)
     #obtenir tous les version
@@ -328,6 +334,7 @@ def processCode(type_code, limit=-1):
 
 #main
 createRepo('code_civil','code_de_la_propriété_intellectuelle','code_de_l\'éducation')
+#getDiff('code_de_l\'éducation',"fb8ac0e")
 #createRepo('code_de_l\'éducation')
 processCode("code_de_l\'éducation")
 #processCode('code_de_la_propriété_intellectuelle')
