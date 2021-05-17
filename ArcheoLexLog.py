@@ -122,18 +122,18 @@ class ArcheoLexLog:
         lines = list(differ.compare(a,b))
         return lines
 
-    def getPartieCurrent(slef,Article_curent):
+    def getPartieCurrent(slef,article_current):
         #code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
         #Exemple: Article L111 est remplcé par Article 111
-        if Article_curent[0] == 'L'or Article_curent[0].isnumeric():
-            partie_curent="Législative"
-        elif Article_curent[0] == 'A':
-            partie_curent = "Arrêtés"
-        elif Article_curent[0]=='R' or Article_curent[0] == 'D':
-            partie_curent = "Réglementaire"
+        if article_current[0] == 'L'or article_current[0].isnumeric():
+            partie_current="Législative"
+        elif article_current[0] == 'A':
+            partie_current = "Arrêtés"
+        elif article_current[0]=='R' or article_current[0] == 'D':
+            partie_current = "Réglementaire"
         else:
-            partie_curent="NA"
-        return partie_curent
+            partie_current="NA"
+        return partie_current
 
     def getSousPartieCurrent(self,previous_partie,line):
         """Obtient le numéro de série sous_partie courente
@@ -147,25 +147,25 @@ class ArcheoLexLog:
                 line:String on doit le traiter
 
             return:
-                sous_partie_curent:String de partie courente
+                sous_partie_current:String de partie courente
 
             Raise:
                 KeyError:Il peut y avoir plus de 10 Sous Partie, ou écriture irrégulière
                        
         """
-        sous_partie_curent= previous_partie
+        sous_partie_current= previous_partie
         if line.find("partie : ") != -1 and line.startswith("  ##") and not line.startswith("  ###"):
             try:
-                sous_partie_curent =self._frToInt("".join(re.findall(r"## (.+?) partie",line)))
+                sous_partie_current =self._frToInt("".join(re.findall(r"## (.+?) partie",line)))
             except KeyError:
                 faultMessage = "There is a spelling error in this line: "+line
                 sys.stderr.write(faultMessage)
                 #self._write_csv("errorMessage",faultMessage)
         if line.startswith("  # Partie"):
-            sous_partie_curent = "NA"
-        return sous_partie_curent
+            sous_partie_current = "NA"
+        return sous_partie_current
 
-    def outputInfo(self,version,date,partie_curent,sous_partie_curent,livre_curent,titre_curent,chapitre_curent,article_curent,type,file):
+    def outputInfo(self,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type,file):
         """print les infomations et les écrire dans csv,par défault,le file est codes.csv
            
         """
@@ -173,7 +173,7 @@ class ArcheoLexLog:
             fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
         else:
             fileCsv= os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
-        message =[self.code,version,date,partie_curent,sous_partie_curent,livre_curent,titre_curent,chapitre_curent,article_curent,type]
+        message =[self.code,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type]
         self._write_csv(message,fileCsv)
         print(message)
 
@@ -187,7 +187,7 @@ class ArcheoLexLog:
             type_line = None
         return type_line
 
-    def isAnnex(self,article_curent):
+    def isAnnex(self,article_current):
         """vérifier si un article est dans l'annex ou non
 
             Quand un article dans l'annex,il y a deux cas:
@@ -206,15 +206,15 @@ class ArcheoLexLog:
             True:C'est un article dans l'annex
             False:ce n'est pas un article dans l'annex
         """
-        if article_curent.upper().find("ANNEX")!=-1:
+        if article_current.upper().find("ANNEX")!=-1:
             return True
-        elif article_curent[0].isnumeric() and self.code != "code_pénal":
+        elif article_current[0].isnumeric() and self.code != "code_pénal":
             return True
         else:
             return False   
 
     @staticmethod
-    def _getLivreLocation(article_curent):
+    def _getLivreLocation(article_current):
         """vérifier le type du nom d'article et return la location du livre
 
            cas normal:
@@ -227,24 +227,24 @@ class ArcheoLexLog:
            3.Ex:111, la location du livre est 0 
            4.Ex:R*1211-1(code_de_la_défense), location du livre est 3
            Arg:
-           article_curent:le nom d'article
+           article_current:le nom d'article
             
         return:
             True:C'est un article dans l'annex
             False:ce n'est pas un article dans l'annex
         """
         location=1                                                                             #le cas normal:Article R14-10-2
-        if  article_curent[0].isnumeric():                                                     #Article 111
+        if  article_current[0].isnumeric():                                                     #Article 111
              location=0  
-        elif (len(article_curent)<=3) or (len(article_curent)<=5 and article_curent[3]=="-" and (not article_curent[0].isnumeric())):    #Article L10/L10-1
+        elif (len(article_current)<=3) or (len(article_current)<=5 and article_current[3]=="-" and (not article_current[0].isnumeric())):    #Article L10/L10-1
             location=-1                                                                         
-        elif article_curent[1]=="*":                                                          
+        elif article_current[1]=="*":                                                          
             location = 2                                                                      #Article R*213 
-            if len(article_curent)>=6:
-                if article_curent[5].isnumeric():                                             
+            if len(article_current)>=6:
+                if article_current[5].isnumeric():                                             
                     location=3                                                                #Article R*1211-1         
-        elif len(article_curent)>=5:                                                            
-            if article_curent[4].isnumeric() and article_curent[3]!="-":
+        elif len(article_current)>=5:                                                            
+            if article_current[4].isnumeric() and article_current[3]!="-":
                 location = 2                                                                  #Article L3121-3  Ps(éviter L77-10-25)
         return location
           
@@ -266,12 +266,12 @@ class ArcheoLexLog:
         #get lines in diff
         lines=self.getDifflines(commit)
         #get la structue des articles modifiées
-        livre_curent = "NA"
-        titre_curent = "NA"
-        chapitre_curent = "NA"
-        article_curent = "NA"
-        partie_curent = "NA"
-        sous_partie_curent = "NA"
+        livre_current = "NA"
+        titre_current = "NA"
+        chapitre_current = "NA"
+        article_current = "NA"
+        partie_current = "NA"
+        sous_partie_current = "NA"
         type = None
         for num,line in enumerate(lines):
             # Détection du type de la ligne
@@ -281,36 +281,36 @@ class ArcheoLexLog:
                 # Si un type de modification a été détecté avant ce changement de section, l'afficher et le réinitialiser
                 if type is not None:
                     #On calcule et d'imprimer les résultats si ce n'est pas un changement d'article Annexe
-                    if not self.isAnnex(article_curent):
-                        partie_curent = self.getPartieCurrent(article_curent)
+                    if not self.isAnnex(article_current):
+                        partie_current = self.getPartieCurrent(article_current)
                         # On obtenir la location du livre
-                        i=self._getLivreLocation(article_curent)
+                        i=self._getLivreLocation(article_current)
                         if i==-1:
-                            livre_curent="NA"
-                            titre_curent ="NA"
-                            chapitre_curent = "NA"
+                            livre_current="NA"
+                            titre_current ="NA"
+                            chapitre_current = "NA"
                         else:
-                            livre_curent = article_curent[i]
-                            titre_curent =article_curent[i+1]
-                            chapitre_curent = article_curent[i+2]
-                            if chapitre_curent == "-":             #Ex:L12-10-14(code_de_conmerce 2021-01-01)la chapitre est 10
-                                chapitre_curent = article_curent[i+3]+article_curent[i+4]
+                            livre_current = article_current[i]
+                            titre_current =article_current[i+1]
+                            chapitre_current = article_current[i+2]
+                            if chapitre_current == "-":             #Ex:L12-10-14(code_de_conmerce 2021-01-01)la chapitre est 10
+                                chapitre_current = article_current[i+3]+article_current[i+4]
 
                         #Le numéro avat le titre est sous_partie()
                         #L3121-3, sous_partie 3 livre 1 titre 2 chapitre 1
-                        if article_curent[i-1].isnumeric() and i-1>=0:
-                            sous_partie_curent=article_curent[i-1]
+                        if article_current[i-1].isnumeric() and i-1>=0:
+                            sous_partie_current=article_current[i-1]
 
-                        self.outputInfo(version, date, partie_curent, sous_partie_curent, livre_curent, titre_curent, chapitre_curent, article_curent, type,file)
+                        self.outputInfo(version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_current, type,file)
                 type = None
 
                 # Détection d'une nouvelle sous partie
                 # TODO : vérifier que la sous partie est réinitialisée en cas de changement de partie
-                sous_partie_curent = self.getSousPartieCurrent(sous_partie_curent,line)
+                sous_partie_current = self.getSousPartieCurrent(sous_partie_current,line)
 
                 # Si la section est un article
                 if line.find("Article")!= -1 :
-                    article_curent=line.replace("#","").replace(" ","").replace("Article","").strip("+").strip("-")
+                    article_current=line.replace("#","").replace(" ","").replace("Article","").strip("+").strip("-")
                     type = type_line
 
             # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications, dans une ligne non vide
