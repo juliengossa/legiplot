@@ -15,4 +15,5 @@ if __name__=="__main__":
           
     for code in args.codesList:
         archeoLexLog =ArcheoLexLog.ArcheoLexLog(code)
+        archeoLexLog.createRepo()
         archeoLexLog.processCode(args.datelimit,args.file)
