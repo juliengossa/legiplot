@@ -71,7 +71,7 @@ class ArcheoLexLog:
     def _frToInt(n):
         """Convertir des chiffres français en chiffres arabes
 
-            Utiliser pour la conversion du numéro de série de la sous_partie
+            Utiliser pour le numéro de série de la sous_partie
 
             Arg:
                 n:String de numéros français
@@ -84,9 +84,6 @@ class ArcheoLexLog:
 
     def enterPath(self):
         """Entrer dans le dossier contenant le code requis
-
-        Arg:
-            type_code:String de code que l'on veut
 
         return:
             Path:String du chemin du code requis
@@ -144,8 +141,6 @@ class ArcheoLexLog:
             Sous partie s'écrit généralement comme   ## Première partie : XXXXX.
             Nous extrayons Première et la convertissons en chiffres romains.
             Si nous passons à la Partie suivante (ex: # Partie réglementaire), la sous_partie courante est Na
-            Mais s'il y des Article comme :L3121-3(code du travail) sou_partie 3 Livre1 titre2 chapitre1
-            
 
             Arg:
                 previous_partie:String de sous partie précedente
@@ -156,7 +151,7 @@ class ArcheoLexLog:
 
             Raise:
                 KeyError:Il peut y avoir plus de 10 Sous Partie, ou écriture irrégulière
-                        Et les errors vont être écrit dans errorMessage.csv
+                       
         """
         sous_partie_curent= previous_partie
         if line.find("partie : ") != -1 and line.startswith("  ##") and not line.startswith("  ###"):
@@ -164,15 +159,15 @@ class ArcheoLexLog:
                 sous_partie_curent =self._frToInt("".join(re.findall(r"## (.+?) partie",line)))
             except KeyError:
                 faultMessage = "There is a spelling error in this line: "+line
-                print(faultMessage)
+                sys.stderr.write(faultMessage)
                 #self._write_csv("errorMessage",faultMessage)
         if line.startswith("  # Partie"):
             sous_partie_curent = "NA"
         return sous_partie_curent
 
     def outputInfo(self,version,date,partie_curent,sous_partie_curent,livre_curent,titre_curent,chapitre_curent,article_curent,type,file):
-        """print les infomations et les écrire dans csv
-
+        """print les infomations et les écrire dans csv,par défault,le file est codes.csv
+           
         """
         if file!=None:
             fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
@@ -205,7 +200,7 @@ class ArcheoLexLog:
             Exemple: Article L111 est remplcé par Article 111
 
         Arg:
-            article_curent:le nom d'article
+            article_current:le nom d'article
             
         return:
             True:C'est un article dans l'annex
@@ -225,10 +220,10 @@ class ArcheoLexLog:
            cas normal:
            Ex:L111,la location du livre est 1
            4 cas spéciaux:
-           1.Ex:L10/L10-1,pas de livre courent,on return -1 (code_de_justice_administrative 2019-3-25)
-                L1/L2/L3, pas de livre courent,on return -1 (code_du_travail )
+           1.Ex:L10/L10-1,pas de livre courant,on return -1 (code_de_justice_administrative 2019-3-25)
+                L1/L2/L3, pas de livre courant,on return -1 (code_du_travail )
            2.Ex:D*213,la location du livre est 2
-                L3121-3,la location du livre est 2 (code_du_travaul) (ps:la location 1 est sous_partie)
+                L3121-3,la location du livre est 2 (code_du_travail) (ps:la location 1 est sous_partie)
            3.Ex:111, la location du livre est 0 
            4.Ex:R*1211-1(code_de_la_défense), location du livre est 3
            Arg:
