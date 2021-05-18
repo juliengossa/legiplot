@@ -65,7 +65,7 @@ class ArcheoLexLog:
             fileCsv= os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
         if os.path.exists(fileCsv):
             os.remove(fileCsv)
-        csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','nature']
+        csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','type']
         ArcheoLexLog._write_csv(csv_head,fileCsv)
 
     @staticmethod
@@ -123,19 +123,6 @@ class ArcheoLexLog:
         cmp = differ.compare(a,b)
         return list(cmp)
 
-    def getPartieCurrent(slef,article_current):
-        #code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
-        #Exemple: Article L111 est remplcé par Article 111
-        if article_current[0] == 'L'or article_current[0].isnumeric():
-            partie_current="Législative"
-        elif article_current[0] == 'A':
-            partie_current = "Arrêtés"
-        elif article_current[0]=='R' or article_current[0] == 'D':
-            partie_current = "Réglementaire"
-        else:
-            partie_current="NA"
-        return partie_current
-
     def getSousPartieCurrent(self,previous_partie,line):
         """Obtient le numéro de série sous_partie courente
 
@@ -166,18 +153,6 @@ class ArcheoLexLog:
             sous_partie_current = "NA"
         return sous_partie_current
 
-    def outputInfo(self,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type,file):
-        """print les infomations et les écrire dans csv,par défault,le file est codes.csv
-
-        """
-        if file!=None:
-            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
-        else:
-            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
-        message =[self.code,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type]
-        self._write_csv(message,fileCsv)
-        print(message)
-
     @staticmethod
     def _getTypeLine(line):
         if line.startswith('-'):             # -######Article est Supression
@@ -188,66 +163,106 @@ class ArcheoLexLog:
             type_line = None
         return type_line
 
-    def isAnnex(self,article_current):
-        """vérifier si un article est dans l'annex ou non
 
-            Quand un article dans l'annex,il y a trois cas:
-            1.Il y a le mot Annex dans l'artice
-            Exemple: Article Anenex I
-            2.Pour les articles pas écrire sa Partie (L ou R ou A) et seulment des numéro
-            Exemple: Article 123 /Article 11
-            3.Pour les articles ont seulment des numéro Romain (code_de_l'urbanisme)
-            Exemple: Article II /Article I
+    class modification:
+        def __init__(self, code, date, version, type, section):
+            self.code = code
+            self.date = date
+            self.version = version
+            self.type = type
+            self.nb_modifications = 0
+            self.section = section
+            self.article = section[-1].replace("Article ","")
+            self.partie = self.getPartie()
+            [self.sous_partie,self.livre,self.titre,self.chapitre] = self.getPLTC()
 
-            PS:pour le 2ème cas:
-            code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
-            Exemple: Article L111 est remplcé par Article 111
+        def getPartie(self):
+            #code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
+            #Exemple: Article L111 est remplcé par Article 111
+            if self.isAnnex():
+                return "Annexe"
+            elif self.article[0] == 'L' or self.article[0].isnumeric():
+                return "Législative"
+            elif self.article[0] == 'A':
+                return "Arrêtés"
+            elif self.article[0]=='R' or self.article[0] == 'D':
+                return "Réglementaire"
+            else:
+                return "NA"
 
-        Arg:
-            article_current:le nom d'article
+        def getPLTC(self):
+            """vérifier le type du nom d'article et extraire les localisations
 
-        return:
-            True:C'est un article dans l'annex
-            False:ce n'est pas un article dans l'annex
+               cas normal: L111
+               Cas spéciaux traités :
+               111 : pas de partie
+               L10/L10-1 : pas de livre (code_de_justice_administrative 2019-3-25)
+               L1/L2/L3 : pas de livre (code_du_travail )
+               L3121-3 : sous partie 3, livre 1 (code_du_travail)
+               A931-1-1 : (code de la sécurité sociale)
+
+               Cas spéciaux non traités:
+               R14-10-2 : livre 1, titre 4, chapitre 10 (code de l'action sociale)
+               1874 : livre 3, titre 10 (code civil)
+            """
+
+            # Extraire le premier numéro d'article
+            # Exemples : Article L621, Article L*612, Article , Article 111, Article L10/L10-,
+            artnum = re.sub("[^0-9-]","",self.article).split('-')[0]
+            if len(artnum) < 3: return ["NA","NA","NA","NA"]
+            if len(artnum) == 4:
+                souspartie = artnum[0]
+                artnum = artnum[1:]
+            else:
+                souspartie="NA"
+
+            return [souspartie,artnum[0],artnum[1],artnum[2]]
+
+        def isAnnex(self):
+            """vérifier si un article est dans l'annex ou non
+
+                Quand un article dans l'annex,il y a trois cas:
+                1.Il y a le mot Annex dans l'artice
+                Exemple: Article Anenex I
+                2.Pour les articles pas écrire sa Partie (L ou R ou A) et seulment des numéro
+                Exemple: Article 123 /Article 11
+                3.Pour les articles ont seulment des numéro Romain (code_de_l'urbanisme)
+                Exemple: Article II /Article I
+
+                PS:pour le 2ème cas:
+                code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
+                Exemple: Article L111 est remplcé par Article 111
+
+            return:
+                True:C'est un article dans l'annex
+                False:ce n'est pas un article dans l'annex
+            """
+            if self.article.upper().find("ANNEX")!=-1 or len(self.article)==1:
+                return True
+            elif self.article[0].isnumeric() and self.code != "code_pénal":
+                return True
+            #c'est pas numéro romain
+            elif self.article[0]=="I" or self.article[0].upper=="V" or self.article[0].upper=="X":
+                return True
+            else:
+                return False
+
+
+    def outputInfo(self,mod,file):
+        """print les infomations et les écrire dans csv,par défault,le file est codes.csv
+
         """
-        if article_current.upper().find("ANNEX")!=-1 or len(article_current)==1:
-            return True
-        elif article_current[0].isnumeric() and self.code != "code_pénal":
-            return True
-        #c'est pas numéro romain
-        elif article_current[0]=="I" or article_current[0].upper=="V" or  article_current[0].upper=="X":
-            return True
+        if file != None:
+            fileCsv = os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
+
         else:
-            return False
+            fileCsv = os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
+        message = [self.code, mod.version, mod.date,
+            mod.partie,mod.sous_partie,mod.livre,mod.titre,mod.chapitre,
+            mod.article,mod.type]
+        self._write_csv(message,fileCsv)
+        print(message)
 
-    @staticmethod
-    def _getLivreLocation(article_current):
-        """vérifier le type du nom d'article et return la location du livre
-
-           cas normal:
-           Ex:L111,la location du livre est 1
-           3 cas spéciaux:
-           1.Ex:L10/L10-1,pas de livre courant,on return -1 (code_de_justice_administrative 2019-3-25)
-                L1/L2/L3, pas de livre courant,on return -1 (code_du_travail )
-           2.Ex:L3121-3,la location du livre est 2 (code_du_travail) (ps:la location 1 est sous_partie)
-           3.Ex:111, la location du livre est 0
-
-           Arg:
-           article_current:le nom d'article
-
-        return:
-            True:C'est un article dans l'annex
-            False:ce n'est pas un article dans l'annex
-        """
-        location=1                                                                             #le cas normal:Article R14-10-2
-        if  article_current[0].isnumeric():                                                     #Article 111
-            location=0
-        elif (len(article_current)<=3) or (len(article_current)<=5 and article_current[3]=="-" and (not article_current[0].isnumeric())):    #Article L10/L10-1
-            location=-1
-        elif len(article_current)>=5:
-            if article_current[4].isnumeric() and article_current[3]!="-":
-                location = 2                                                                  #Article L3121-3  Ps(éviter L77-10-25)
-        return location
 
     def getDiff(self,number_commit,file):
         """Obtenez toutes les modifications d'une version d'un code
@@ -270,63 +285,38 @@ class ArcheoLexLog:
             with open(self.code+'-'+date+'.txt', 'w') as verbfile:
                 verbfile.write('\n'.join(str(line) for line in lines))
 
-        #get la structue des articles modifiées
-        livre_current = "NA"
-        titre_current = "NA"
-        chapitre_current = "NA"
-        article_current = "NA"
-        partie_current = "NA"
-        sous_partie_current = "NA"
-        type = None
+        curmod = None # modification courante
+        cursec = [] # section courante
+
         for num,line in enumerate(lines):
             # Détection du type de la ligne
-            type_line =self._getTypeLine(line)
-                # Si changement de section ou la dernière ligne de codes
-            if (len(line) > 2 and line[2] == '#') or num == lines.count:
-                # Si un type de modification a été détecté avant ce changement de section, l'afficher et le réinitialiser
-                if type is not None:
-                    #On calcule et d'imprimer les résultats si ce n'est pas un changement d'article Annexe
-                    if not self.isAnnex(article_current):
-                        article_print=article_current #On enregistre le nom d'article avec * pour imprimer
-                        article_current=article_current.replace('*','') #On supprime *
-                        partie_current = self.getPartieCurrent(article_current)
-                        # On obtenir la location du livre
-                        i=self._getLivreLocation(article_current)
-                        if i==-1:
-                            livre_current="NA"
-                            titre_current ="NA"
-                            chapitre_current = "NA"
-                        else:
-                            livre_current = article_current[i]
-                            titre_current =article_current[i+1]
-                            chapitre_current = article_current[i+2]
-                            if chapitre_current == "-":             #Ex:L12-10-14(code_de_conmerce 2021-01-01)la chapitre est 10
-                                chapitre_current = article_current[i+3]+article_current[i+4]
+            type_line = self._getTypeLine(line)
 
-                        #Le numéro avat le titre est sous_partie()
-                        #L3121-3, sous_partie 3 livre 1 titre 2 chapitre 1
-                        try:
-                            if article_current[i-1].isnumeric() and i-1>=0:
-                                sous_partie_current=article_current[i-1]
-                        except IndexError as f:
-                            sys.stderr.write("IndexError: "+article_current)
+            # Si changement de section, enregistrer la nouvelle section
+            if (len(line) > 2 and line[2] == '#'):
+                level = line.count("#")
+                cursec = cursec[:level]+[re.sub(".*# ","",line)]
+                #print(cursec)
 
+                # Si changement d'article
+                if line.find("Article") != -1:
+                    # Si une modification a été détectée, l'imprimer
+                    if curmod is not None and curmod.type is not None and curmod.nb_modifications != 0:
+                        self.outputInfo(curmod, file)
+                        #print(line)
+                        #print(cursec)
+                        #print("\n")
 
-                        self.outputInfo(version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_print, type,file)
-                type = None
+                    # Réinitialiser la modification courante
+                    curmod = self.modification(self.code, date, version, type_line, cursec)
 
-                # Détection d'une nouvelle sous partie
-                # TODO : vérifier que la sous partie est réinitialisée en cas de changement de partie
-                sous_partie_current = self.getSousPartieCurrent(sous_partie_current,line)
+            # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications,
+            # dans une ligne non vide
+            elif type_line is not None and len(line[1:].strip()) > 0:
+                if curmod.type is None : curmod.type = "Modification"
+                curmod.nb_modifications += 1
+                #print(line)
 
-                # Si la section est un article
-                if line.find("Article")!= -1 :
-                    article_current=line.replace("#","").replace(" ","").replace("Article","").strip("+").strip("-")
-                    type = type_line
-
-            # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications, dans une ligne non vide
-            elif type is None and type_line is not None and len(line[1:].strip()) > 0:
-                type = "Modification"
 
     def processCode(self,datelimit,file):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()

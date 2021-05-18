@@ -7,16 +7,16 @@ import os
 if __name__=="__main__":
     parse = argparse.ArgumentParser()
     parse.add_argument("-d","--datelimit",type=datetime.date.fromisoformat,help="donne une date à ne pas dépasser")
-    parse.add_argument("-csv","--file",type=str,help="spécifier une fichier csv pour écrire la sortie s'il existe pas,on le créer")
-    parse.add_argument("-codes","--codesList",nargs='+',help="un list de codes",required=True)
+    parse.add_argument("-f","--file",type=str,help="spécifier une fichier csv pour écrire la sortie s'il existe pas,on le créer")
+    parse.add_argument("codes",nargs='+',help="une list de codes")
     parse.add_argument("-v","--verbose",dest='verbose', action='store_const',
                         const=True, default=False,
-                        help='Print intermediate diffs into sepatrate files')
+                        help='Produit des informations de debug')
     args = parse.parse_args()
 
     ArcheoLexLog.ArcheoLexLog.create_csv(args.file)
 
-    for code in args.codesList:
-        archeoLexLog =ArcheoLexLog.ArcheoLexLog(code,args.verbose)
+    for code in args.codes:
+        archeoLexLog = ArcheoLexLog.ArcheoLexLog(code,args.verbose)
         archeoLexLog.createRepo()
         archeoLexLog.processCode(args.datelimit,args.file)
