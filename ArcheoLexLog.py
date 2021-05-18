@@ -10,9 +10,10 @@ from git.compat import defenc
 from pathlib import Path
 
 class ArcheoLexLog:
-    def __init__(self,code, verbose=False):
+    def __init__(self,code, verbose=False, PLTC_method="code"):
         self.code=code
         self.verbose=verbose
+        self.PLTC_method=PLTC_method
 
     def createRepo(self):
         """Créer ou mettre à jour un dossier contenant les codes requises
@@ -165,7 +166,7 @@ class ArcheoLexLog:
 
 
     class modification:
-        def __init__(self, code, date, version, type, section):
+        def __init__(self, code, date, version, type, section, PLTC_method = "code"):
             self.code = code
             self.date = date
             self.version = version
@@ -173,13 +174,16 @@ class ArcheoLexLog:
             self.nb_modifications = 0
             self.section = section
             self.article = section[-1].replace("Article ","")
-            self.partie = self.getPartie()
-            [self.sous_partie,self.livre,self.titre,self.chapitre] = self.getPLTC()
+            if PLTC_method == "code":
+                self.partie = self.getPartie()
+                [self.sous_partie,self.livre,self.titre,self.chapitre] = self.getPLTC()
+            else:
+                [self.partie, self.sous_partie,self.livre,self.titre,self.chapitre] = self.getPLTC_txt()
 
         def getPartie(self):
             #code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
-            #Exemple: Article L111 est remplcé par Article 111
             if self.isAnnex():
+                #Exemple: Article L111 est remplcé par Article 111
                 return "Annexe"
             elif self.article[0] == 'L' or self.article[0].isnumeric():
                 return "Législative"
@@ -217,6 +221,11 @@ class ArcheoLexLog:
                 souspartie="NA"
 
             return [souspartie,artnum[0],artnum[1],artnum[2]]
+
+        def getPLTC_txt(self):
+            PLTC = self.section[0:5]
+            while len(PLTC) < 5: PLTC.append("NA")
+            return PLTC
 
         def isAnnex(self):
             """vérifier si un article est dans l'annex ou non
@@ -295,8 +304,10 @@ class ArcheoLexLog:
             # Si changement de section, enregistrer la nouvelle section
             if (len(line) > 2 and line[2] == '#'):
                 level = line.count("#")
-                cursec = cursec[:level]+[re.sub(".*# ","",line)]
+                cursec = cursec[:level-1]+[re.sub(".*# ","",line)]
+                #print(line)
                 #print(cursec)
+                #print("\n")
 
                 # Si changement d'article
                 if line.find("Article") != -1:
@@ -308,7 +319,7 @@ class ArcheoLexLog:
                         #print("\n")
 
                     # Réinitialiser la modification courante
-                    curmod = self.modification(self.code, date, version, type_line, cursec)
+                    curmod = self.modification(self.code, date, version, type_line, cursec, self.PLTC_method)
 
             # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications,
             # dans une ligne non vide
