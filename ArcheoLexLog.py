@@ -277,7 +277,7 @@ class ArcheoLexLog:
             # Détection du type de la ligne
             type_line =self._getTypeLine(line)
                 # Si changement de section ou la dernière ligne de codes
-            if (len(line) > 2 and line[2] == '#') or num == lines.count:
+            if (len(line) > 2 and line[2] == '#') or num == len(lines)-1:
                 # Si un type de modification a été détecté avant ce changement de section, l'afficher et le réinitialiser
                 if type is not None:
                     #On calcule et d'imprimer les résultats si ce n'est pas un changement d'article Annexe
