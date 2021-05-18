@@ -18,14 +18,16 @@ Dans la class [ArcheoLexLog](ArcheoLexLog.py),on a un méthode qui s'appelle **g
 Dans le cas normale, nous pouvons facilement obtenir le livre, le titre et le chapitre actuels par le nom de l'article.Cependant, les noms de certains articles ne sont pas inhabituels. Nous avons des cas particuliers. 
 | nom_d'article | se trouve | partie | livre | titre | chapitre| Traitement spécial|
 | ------ | ------ | ------ |------ | ------ | ------ |------ | 
-| Article R111-12 | tous les codes | Régelmentaire |1 | 1 | 1 | C'est cas normal pas besoin de traitement spécial|
+| Article R111-12 | tous les codes | Régelmentaire |1 | 1 | 1 | C'est cas normalpas besoin de traitement spécial|
+| Article D\*213| beaucoup de codes |beaucoup de codes| 2 |1| 3| dans getDiff() on supprimer \* |
+| Article *R213| code_de_l'urbanisme|beaucoup de codes| 2 |1| 3| dans getDiff() on supprimer \* |
 | Article ANNEX | beaucoup de codes|  | |  |  | ce type de code est dans Annexe est on imprime pas,isAnnex(self,article_current)return Ture|
-| Article 111 | beaucoup de codes(pas code_pénal) |  | |  |  | ce type d'article est dans Annexe et on imprime pas,isAnnex(self,article_current)return Ture, _getLivreLocation(article_current) return 0|
+| Article IV | code_de_l'urbanisme) |  | |  |  | ce type d'article n'est peut être pas dans Annexe mais on ignore,isAnnex(self,article_current)return Ture|
+| Article 111 | beaucoup de codes(pas code_pénal) |  | |  |  | ce type d'article est dans Annexe et on imprime pas,isAnnex(self,article_current)return Ture|
 | Article 111 | code_pénal|Législative|1 |1| 1 | ce type d'article ignore "L",isAnnex(self,article_current)return False, _getLivreLocation(article_current) return 0,getPartieCurrent(slef,article_current) return Législative|
-| Article L10 | beaucoup de codes|Législative|Na |Na| Na |_getLivreLocation(article_current) return 0|
-| Article D\*213| beaucoup de codes |beaucoup de codes| 2 |1| 3| _getLivreLocation(article_current) return 2|
+| Article L10 | beaucoup de codes|Législative|Na |Na| Na |_getLivreLocation(article_current) return -1|
 | Article L3121-3| code_du_travail code_de_la_santé_publique code_de_la_défense code_général_des_collectivités_territoriales|Législatives|1 |2| 1| _getLivreLocation(article_current) return 2|
-| Article R\*1211-1| code_du_travail code_de_la_santé_publique code_de_la_défense code_général_des_collectivités_territoriales|Législatives|2 |1| 1| _getLivreLocation(article_current) return 3|
+| Article R\*1211-1| code_du_travail code_de_la_santé_publique code_de_la_défense code_général_des_collectivités_territoriales|Législatives|2 |1| 1| dans getDiff() on supprimer \* et _getLivreLocation(article_current) return 2|
 
 PS:Les deux derniers noms d'articles, on peut obtenir sous_partie
 | nom_d'article | sous_partie |Traitement spécial|
@@ -49,4 +51,4 @@ Par Exemple:python archeolex-excavation.py -csv codesType1 -d 2020-12-31 -codes 
 
 ### Traiter les codes de type I
 
-Dans la class ArcheoLexLog2(pas encore pull)
+Dans la class ArcheoLexLog2(pas encore push)
