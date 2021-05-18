@@ -13,7 +13,7 @@ code_de_commerce code_de_justice_administrative code_de_l'action_sociale_et_des_
 
 code_civil code_de_l'artisanat code_de_la_famille_et_de_l'aide_sociale code_de_procédure_civile code_de_procédure_pénale code_des_postes_et_des_communications_électroniques code_disciplinaire_et_pénal_de_la_marine_marchande code_électoral
 
-### Traiter les codes de type I
+## La deuxième étape:Traiter les codes de type I
 Dans la class [ArcheoLexLog](ArcheoLexLog.py),on a un méthode qui s'appelle **getDiff(self,number_commit,file)**,il imprime tous les articles de la version du number_commit qui sont modiffiés(ou Ajoutés ou Supprimés) 
 Dans le cas normale, nous pouvons facilement obtenir le livre, le titre et le chapitre actuels par le nom de l'article.Cependant, les noms de certains articles ne sont pas inhabituels. Nous avons des cas particuliers. 
 | nom_d'article | se trouve | partie | livre | titre | chapitre| Traitement spécial|
@@ -49,6 +49,6 @@ Par Exemple:python archeolex-excavation.py -csv codesType1 -d 2020-12-31 -codes 
 
 3.Dans une version,le même article peut-êtres changé plusieurs fois(code_de_commerce 2021-02-13,R713-36 apparaît trois fois,Première fois est Ajout,Deuxième fois est modification,Trosième fois est Suppression).[ici ce commit](https://archeo-lex.fr/codes/code_de_commerce/2021-02-13/commit)
 
-### Traiter les codes de type I
+## La troisième étape:Traiter les codes de type II
 
 Dans la class ArcheoLexLog2(pas encore push)
