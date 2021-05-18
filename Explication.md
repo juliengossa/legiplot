@@ -18,9 +18,9 @@ Dans la class [ArcheoLexLog](ArcheoLexLog.py),on a un méthode qui s'appelle **g
 Dans le cas normale, nous pouvons facilement obtenir le livre, le titre et le chapitre actuels par le nom de l'article.Cependant, les noms de certains articles sont inhabituels. Nous avons des cas particuliers. 
 | nom_d'article | se trouve | partie | livre | titre | chapitre| Traitement spécial|
 | ------ | ------ | ------ |------ | ------ | ------ |------ | 
-| Article R111-12 | tous les codes | Régelmentaire |1 | 1 | 1 | C'est cas normalpas besoin de traitement spécial|
-| Article D\*213| beaucoup de codes |beaucoup de codes| 2 |1| 3| dans getDiff() on supprimer \* |
-| Article *R213| code_de_l'urbanisme|beaucoup de codes| 2 |1| 3| dans getDiff() on supprimer \* |
+| Article R111-12 | tous les codes | Régelmentaire |1 | 1 | 1 | C'est cas normal,pas besoin de traitement spécial|
+| Article D\*213| beaucoup de codes |beaucoup de codes| 2 |1| 3| dans getDiff() on supprime \* |
+| Article \*R213| code_de_l'urbanisme|beaucoup de codes| 2 |1| 3| dans getDiff() on supprime \* |
 | Article ANNEX | beaucoup de codes|  | |  |  | ce type de code est dans Annexe est on imprime pas,isAnnex(self,article_current)return Ture|
 | Article IV | code_de_l'urbanisme) |  | |  |  | ce type d'article n'est peut être pas dans Annexe mais on ignore,isAnnex(self,article_current)return Ture|
 | Article 111 | beaucoup de codes(pas code_pénal) |  | |  |  | ce type d'article est dans Annexe et on imprime pas,isAnnex(self,article_current)return Ture|
@@ -36,7 +36,8 @@ PS:Les deux derniers noms d'articles, on peut obtenir sous_partie
 | Article R\*1211-1 |1 | écrire dans getDiff(): "if article_current[i-1].isnumeric() and i-1>=0:sous_partie_current=article_current[i-1]"|
 
 ### le command pour imprimer le csv des codes
-Par Exemple:python archeolex-excavation.py -csv codesType1 -d 2020-12-31 -codes code_de_commerce code_de_justice_administrative code_de_l'action_sociale_et_des_familles code_de_l'aviation_civile code_de_l'éducation code_de_l'entrée_et_du_séjour_des_étrangers_et_du_droit_d'asile code_de_l'environnement code_de_l'urbanisme code_de_l'organisation_judiciaire code_de_l'énergie code_de_la_consommation code_de_la_construction_et_de_l'habitation code_de_la_défense code_de_la_propriété_intellectuelle code_de_la_recherche code_de_la_route code_de_la_santé_publique code_de_la_sécurité_intérieure code_de_la_sécurité_sociale code_des_assurances code_des_juridictions_financières code_des_transports code_du_cinéma_et_de_l'image_animée code_du_patrimoine code_du_sport code_du_tourisme code_du_travail code_forestier_(nouveau) code_général_de_la_propriété_des_personnes_publiques
+Par Exemple:   
+python archeolex-excavation.py -csv codesType1 -d 2020-12-31 -codes code_de_commerce code_de_justice_administrative code_de_l'action_sociale_et_des_familles code_de_l'aviation_civile code_de_l'éducation code_de_l'entrée_et_du_séjour_des_étrangers_et_du_droit_d'asile code_de_l'environnement code_de_l'urbanisme code_de_l'organisation_judiciaire code_de_l'énergie code_de_la_consommation code_de_la_construction_et_de_l'habitation code_de_la_défense code_de_la_propriété_intellectuelle code_de_la_recherche code_de_la_route code_de_la_santé_publique code_de_la_sécurité_intérieure code_de_la_sécurité_sociale code_des_assurances code_des_juridictions_financières code_des_transports code_du_cinéma_et_de_l'image_animée code_du_patrimoine code_du_sport code_du_tourisme code_du_travail code_forestier_(nouveau) code_général_de_la_propriété_des_personnes_publiques
 
 - **csv** le nom du file
 - **d** la date limite
