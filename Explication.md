@@ -42,12 +42,16 @@ Par Exemple:python archeolex-excavation.py -csv codesType1 -d 2020-12-31 -codes 
 - **d** la date limite
 - **codes** quelques codes de type I
 
-### les problème potentiel:
-1.pour code_du_cinéma_et_de_l'image_animée et code du sport,la plus part des codes sont Annexes,mais on tous ignore  
+### les problèmes:
+**Problème fréquent et grave**
+Pour quelques versions de quelques codes,le nombre de lignes sorties sont beaucoup plus grands que le fait, quelques articles ne changent pas du tout,mais ils apparaissent plusieur fois dans CSV.Et leur types de modification ne sont pas mêmes.
+Par exemple
+| nom_d'article et version | site | Article_Modifiés_sur_site| csv |lignes_sortie_dans_csv |
+| ------ | ------ | ------ |------ |------ |
+| code_de_commerce 2021-02-13 |[modification](https://archeo-lex.fr/codes/code_de_commerce/2021-02-13/modifications) | 39|[code_de_commerce_test.csv](code_de_commerce_test.csv)| 314 |
+| code_pénal 2010-06-21 |[modification](https://archeo-lex.fr/codes/code_p%C3%A9nal/2010-06-21/modifications) | 41 |[code_pénal.csv](code_pénal.csv)| 122 |
 
-2.S'il y a trop de modifications dans une version (plus de 400,par exemple:code_du_commerce 2021-01-01),c'est diffcile de vérifier si'il est correcte ou non,et ce n'est pas sûr si [le site](https://archeo-lex.fr/codes/code_de_commerce/2021-01-01/commit) montre tous les modiffications.
 
-3.Dans une version,le même article peut-êtres changé plusieurs fois(code_de_commerce 2021-02-13,R713-36 apparaît trois fois,Première fois est Ajout,Deuxième fois est modification,Trosième fois est Suppression).[ici ce commit](https://archeo-lex.fr/codes/code_de_commerce/2021-02-13/commit)
 
 ## La troisième étape:Traiter les codes de type II
 
