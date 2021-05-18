@@ -50,7 +50,7 @@ Par exemple
 | nom_d'article et version | site | Article_Modifiés_sur_site| csv |lignes_sortie_dans_csv |
 | ------ | ------ | ------ |------ |------ |
 | code_de_commerce 2021-02-13 |[modification](https://archeo-lex.fr/codes/code_de_commerce/2021-02-13/modifications) | 39|[code_de_commerce_test.csv](code_de_commerce_test.csv)| 314 |
-| code_pénal 2010-06-21 |[modification](https://archeo-lex.fr/codes/code_p%C3%A9nal/2010-06-21/modifications) | 41 |[code_pénal.csv](code_pénal.csv)| 122 |
+| code_pénal 2010-06-21 |[modification](https://archeo-lex.fr/codes/code_p%C3%A9nal/2010-06-21/modifications) | 41 |[code_pénal_test.csv](code_pénal_test.csv)| 122 |
 
 
 
