@@ -190,11 +190,14 @@ class ArcheoLexLog:
     def isAnnex(self,article_current):
         """vérifier si un article est dans l'annex ou non
 
-            Quand un article dans l'annex,il y a deux cas:
+            Quand un article dans l'annex,il y a trois cas:
             1.Il y a le mot Annex dans l'artice 
             Exemple: Article Anenex I
-            2.Pour les articles pas écrire sa Partie (L ou R ou A) est seulment des numéro 
+            2.Pour les articles pas écrire sa Partie (L ou R ou A) et seulment des numéro 
             Exemple: Article 123 /Article 11
+            3.Pour les articles ont seulment des numéro Romain (code_de_l'urbanisme)
+            Exemple: Article II /Article I
+
             PS:pour le 2ème cas:
             code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
             Exemple: Article L111 est remplcé par Article 111
@@ -206,9 +209,12 @@ class ArcheoLexLog:
             True:C'est un article dans l'annex
             False:ce n'est pas un article dans l'annex
         """
-        if article_current.upper().find("ANNEX")!=-1:
+        if article_current.upper().find("ANNEX")!=-1 or len(article_current)==1:
             return True
         elif article_current[0].isnumeric() and self.code != "code_pénal":
+            return True
+        #c'est pas numéro romain
+        elif article_current[0]=="I" or article_current[0].upper=="V" or  article_current[0].upper=="X": 
             return True
         else:
             return False   
@@ -219,13 +225,12 @@ class ArcheoLexLog:
 
            cas normal:
            Ex:L111,la location du livre est 1
-           4 cas spéciaux:
+           3 cas spéciaux:
            1.Ex:L10/L10-1,pas de livre courant,on return -1 (code_de_justice_administrative 2019-3-25)
                 L1/L2/L3, pas de livre courant,on return -1 (code_du_travail )
-           2.Ex:D*213,la location du livre est 2
-                L3121-3,la location du livre est 2 (code_du_travail) (ps:la location 1 est sous_partie)
+           2.Ex:L3121-3,la location du livre est 2 (code_du_travail) (ps:la location 1 est sous_partie)
            3.Ex:111, la location du livre est 0 
-           4.Ex:R*1211-1(code_de_la_défense), location du livre est 3
+           
            Arg:
            article_current:le nom d'article
             
@@ -235,14 +240,9 @@ class ArcheoLexLog:
         """
         location=1                                                                             #le cas normal:Article R14-10-2
         if  article_current[0].isnumeric():                                                     #Article 111
-             location=0  
+            location=0  
         elif (len(article_current)<=3) or (len(article_current)<=5 and article_current[3]=="-" and (not article_current[0].isnumeric())):    #Article L10/L10-1
-            location=-1                                                                         
-        elif article_current[1]=="*":                                                          
-            location = 2                                                                      #Article R*213 
-            if len(article_current)>=6:
-                if article_current[5].isnumeric():                                             
-                    location=3                                                                #Article R*1211-1         
+            location=-1                                                                                
         elif len(article_current)>=5:                                                            
             if article_current[4].isnumeric() and article_current[3]!="-":
                 location = 2                                                                  #Article L3121-3  Ps(éviter L77-10-25)
@@ -282,6 +282,8 @@ class ArcheoLexLog:
                 if type is not None:
                     #On calcule et d'imprimer les résultats si ce n'est pas un changement d'article Annexe
                     if not self.isAnnex(article_current):
+                        article_print=article_current #On enregistre le nom d'article avec * pour imprimer 
+                        article_current=article_current.replace('*','') #On supprime *
                         partie_current = self.getPartieCurrent(article_current)
                         # On obtenir la location du livre
                         i=self._getLivreLocation(article_current)
@@ -298,10 +300,14 @@ class ArcheoLexLog:
 
                         #Le numéro avat le titre est sous_partie()
                         #L3121-3, sous_partie 3 livre 1 titre 2 chapitre 1
-                        if article_current[i-1].isnumeric() and i-1>=0:
-                            sous_partie_current=article_current[i-1]
+                        try:
+                            if article_current[i-1].isnumeric() and i-1>=0:
+                                sous_partie_current=article_current[i-1]
+                        except IndexError as f:
+                            sys.stderr.write("IndexError: "+article_current)
+                            
 
-                        self.outputInfo(version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_current, type,file)
+                        self.outputInfo(version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_print, type,file)
                 type = None
 
                 # Détection d'une nouvelle sous partie
@@ -315,7 +321,7 @@ class ArcheoLexLog:
 
             # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications, dans une ligne non vide
             elif type is None and type_line is not None and len(line[1:].strip()) > 0:
-                type = "modification"
+                type = "Modification"
     
     def processCode(self,datelimit,file):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
