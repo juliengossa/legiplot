@@ -10,8 +10,9 @@ from git.compat import defenc
 from pathlib import Path
 
 class ArcheoLexLog:
-    def __init__(self,code):
-        self.code=code  
+    def __init__(self,code, verbose=False):
+        self.code=code
+        self.verbose=verbose
 
     def createRepo(self):
         """Créer ou mettre à jour un dossier contenant les codes requises
@@ -25,7 +26,7 @@ class ArcheoLexLog:
 
         Raises：
         IOError:une erreur se produit lorsque on entre les mauvais noms
-        GitCommandError:une erreur se produit lorsque il y a un merge 
+        GitCommandError:une erreur se produit lorsque il y a un merge
         """
         dir_path=sys.path[0]
         path=dir_path+'/archeo_lex/'+self.code
@@ -49,7 +50,7 @@ class ArcheoLexLog:
                 sys.stderr.write("On ne trouve pas"+self.code)
             #else:
                 #print("On crée archeo_lex/"+code)
-    
+
     @staticmethod
     def _write_csv(row,fileCsv):
         with open(fileCsv, 'a+', newline='',encoding='utf-8') as wf:
@@ -65,7 +66,7 @@ class ArcheoLexLog:
         if os.path.exists(fileCsv):
             os.remove(fileCsv)
         csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','nature']
-        ArcheoLexLog._write_csv(csv_head,fileCsv) 
+        ArcheoLexLog._write_csv(csv_head,fileCsv)
 
     @staticmethod
     def _frToInt(n):
@@ -119,8 +120,8 @@ class ArcheoLexLog:
         a=diff.a_blob.data_stream.read().decode('utf-8').splitlines()
         b=diff.b_blob.data_stream.read().decode('utf-8').splitlines()
         differ=difflib.Differ()
-        lines = list(differ.compare(a,b))
-        return lines
+        cmp = differ.compare(a,b)
+        return list(cmp)
 
     def getPartieCurrent(slef,article_current):
         #code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
@@ -151,7 +152,7 @@ class ArcheoLexLog:
 
             Raise:
                 KeyError:Il peut y avoir plus de 10 Sous Partie, ou écriture irrégulière
-                       
+
         """
         sous_partie_current= previous_partie
         if line.find("partie : ") != -1 and line.startswith("  ##") and not line.startswith("  ###"):
@@ -167,7 +168,7 @@ class ArcheoLexLog:
 
     def outputInfo(self,version,date,partie_current,sous_partie_current,livre_current,titre_current,chapitre_current,article_current,type,file):
         """print les infomations et les écrire dans csv,par défault,le file est codes.csv
-           
+
         """
         if file!=None:
             fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
@@ -191,9 +192,9 @@ class ArcheoLexLog:
         """vérifier si un article est dans l'annex ou non
 
             Quand un article dans l'annex,il y a trois cas:
-            1.Il y a le mot Annex dans l'artice 
+            1.Il y a le mot Annex dans l'artice
             Exemple: Article Anenex I
-            2.Pour les articles pas écrire sa Partie (L ou R ou A) et seulment des numéro 
+            2.Pour les articles pas écrire sa Partie (L ou R ou A) et seulment des numéro
             Exemple: Article 123 /Article 11
             3.Pour les articles ont seulment des numéro Romain (code_de_l'urbanisme)
             Exemple: Article II /Article I
@@ -204,7 +205,7 @@ class ArcheoLexLog:
 
         Arg:
             article_current:le nom d'article
-            
+
         return:
             True:C'est un article dans l'annex
             False:ce n'est pas un article dans l'annex
@@ -214,10 +215,10 @@ class ArcheoLexLog:
         elif article_current[0].isnumeric() and self.code != "code_pénal":
             return True
         #c'est pas numéro romain
-        elif article_current[0]=="I" or article_current[0].upper=="V" or  article_current[0].upper=="X": 
+        elif article_current[0]=="I" or article_current[0].upper=="V" or  article_current[0].upper=="X":
             return True
         else:
-            return False   
+            return False
 
     @staticmethod
     def _getLivreLocation(article_current):
@@ -229,31 +230,31 @@ class ArcheoLexLog:
            1.Ex:L10/L10-1,pas de livre courant,on return -1 (code_de_justice_administrative 2019-3-25)
                 L1/L2/L3, pas de livre courant,on return -1 (code_du_travail )
            2.Ex:L3121-3,la location du livre est 2 (code_du_travail) (ps:la location 1 est sous_partie)
-           3.Ex:111, la location du livre est 0 
-           
+           3.Ex:111, la location du livre est 0
+
            Arg:
            article_current:le nom d'article
-            
+
         return:
             True:C'est un article dans l'annex
             False:ce n'est pas un article dans l'annex
         """
         location=1                                                                             #le cas normal:Article R14-10-2
         if  article_current[0].isnumeric():                                                     #Article 111
-            location=0  
+            location=0
         elif (len(article_current)<=3) or (len(article_current)<=5 and article_current[3]=="-" and (not article_current[0].isnumeric())):    #Article L10/L10-1
-            location=-1                                                                                
-        elif len(article_current)>=5:                                                            
+            location=-1
+        elif len(article_current)>=5:
             if article_current[4].isnumeric() and article_current[3]!="-":
                 location = 2                                                                  #Article L3121-3  Ps(éviter L77-10-25)
         return location
-          
+
     def getDiff(self,number_commit,file):
         """Obtenez toutes les modifications d'une version d'un code
 
-            Parcourez les informations de différence, nous extrayons les informations 
+            Parcourez les informations de différence, nous extrayons les informations
             correspondantes du nom de l'article
-        
+
             Arg:
                 number_commit: Commit(type) de version
         """
@@ -265,6 +266,10 @@ class ArcheoLexLog:
         version = self.getVersion(repo,commit)
         #get lines in diff
         lines=self.getDifflines(commit)
+        if self.verbose:
+            with open(self.code+'-'+date+'.txt', 'w') as verbfile:
+                verbfile.write('\n'.join(str(line) for line in lines))
+
         #get la structue des articles modifiées
         livre_current = "NA"
         titre_current = "NA"
@@ -282,7 +287,7 @@ class ArcheoLexLog:
                 if type is not None:
                     #On calcule et d'imprimer les résultats si ce n'est pas un changement d'article Annexe
                     if not self.isAnnex(article_current):
-                        article_print=article_current #On enregistre le nom d'article avec * pour imprimer 
+                        article_print=article_current #On enregistre le nom d'article avec * pour imprimer
                         article_current=article_current.replace('*','') #On supprime *
                         partie_current = self.getPartieCurrent(article_current)
                         # On obtenir la location du livre
@@ -305,7 +310,7 @@ class ArcheoLexLog:
                                 sous_partie_current=article_current[i-1]
                         except IndexError as f:
                             sys.stderr.write("IndexError: "+article_current)
-                            
+
 
                         self.outputInfo(version, date, partie_current, sous_partie_current, livre_current, titre_current, chapitre_current, article_print, type,file)
                 type = None
@@ -322,14 +327,14 @@ class ArcheoLexLog:
             # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications, dans une ligne non vide
             elif type is None and type_line is not None and len(line[1:].strip()) > 0:
                 type = "Modification"
-    
+
     def processCode(self,datelimit,file):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
         """
         path = self.enterPath()
         repo = git.Repo(path)
         #obtenir tous les version
-        commit_log =repo.git.log('--pretty={"%h"}') 
+        commit_log =repo.git.log('--pretty={"%h"}')
         log_list = commit_log.split("\n")
         log_list.pop()  #supprimer la première version
         for log in log_list:
@@ -339,5 +344,3 @@ class ArcheoLexLog:
             if datelimit != None:
                 if datetime.strptime(date,'%Y-%m-%d').date()<datelimit: return()
             self.getDiff(commit_number,file)
-            
-            

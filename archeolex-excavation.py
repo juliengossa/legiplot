@@ -1,4 +1,4 @@
-import datetime  
+import datetime
 import argparse
 from re import A
 import ArcheoLexLog
@@ -9,11 +9,14 @@ if __name__=="__main__":
     parse.add_argument("-d","--datelimit",type=datetime.date.fromisoformat,help="donne une date à ne pas dépasser")
     parse.add_argument("-csv","--file",type=str,help="spécifier une fichier csv pour écrire la sortie s'il existe pas,on le créer")
     parse.add_argument("-codes","--codesList",nargs='+',help="un list de codes",required=True)
-    args =parse.parse_args()
-    
+    parse.add_argument("-v","--verbose",dest='verbose', action='store_const',
+                        const=True, default=False,
+                        help='Print intermediate diffs into sepatrate files')
+    args = parse.parse_args()
+
     ArcheoLexLog.ArcheoLexLog.create_csv(args.file)
-          
+
     for code in args.codesList:
-        archeoLexLog =ArcheoLexLog.ArcheoLexLog(code)
+        archeoLexLog =ArcheoLexLog.ArcheoLexLog(code,args.verbose)
         archeoLexLog.createRepo()
         archeoLexLog.processCode(args.datelimit,args.file)
