@@ -15,7 +15,7 @@ code_civil code_de_l'artisanat code_de_la_famille_et_de_l'aide_sociale code_de_p
 
 ## La deuxième étape:Traiter les codes de type I
 Dans la class [ArcheoLexLog](ArcheoLexLog.py),on a un méthode qui s'appelle **getDiff(self,number_commit,file)**,il imprime tous les articles de la version du number_commit qui sont modiffiés(ou Ajoutés ou Supprimés) 
-Dans le cas normale, nous pouvons facilement obtenir le livre, le titre et le chapitre actuels par le nom de l'article.Cependant, les noms de certains articles ne sont pas inhabituels. Nous avons des cas particuliers. 
+Dans le cas normale, nous pouvons facilement obtenir le livre, le titre et le chapitre actuels par le nom de l'article.Cependant, les noms de certains articles sont inhabituels. Nous avons des cas particuliers. 
 | nom_d'article | se trouve | partie | livre | titre | chapitre| Traitement spécial|
 | ------ | ------ | ------ |------ | ------ | ------ |------ | 
 | Article R111-12 | tous les codes | Régelmentaire |1 | 1 | 1 | C'est cas normalpas besoin de traitement spécial|
