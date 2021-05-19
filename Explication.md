@@ -47,10 +47,10 @@ python archeolex-excavation.py -csv codesType1 -d 2020-12-31 -codes code_de_comm
 **Problème fréquent et grave**
 Pour quelques versions de quelques codes,le nombre de lignes sorties sont beaucoup plus grands que le fait, quelques articles ne changent pas du tout,mais ils apparaissent plusieur fois dans CSV.Et leur types de modification ne sont pas mêmes.
 Par exemple
-| nom_d'article et version | site | Article_Modifiés_sur_site| csv |lignes_sortie_dans_csv |
-| ------ | ------ | ------ |------ |------ |
-| code_de_commerce 2021-02-13 |[modification](https://archeo-lex.fr/codes/code_de_commerce/2021-02-13/modifications) | 39|[code_de_commerce_test.csv](code_de_commerce_test.csv)| 314 |
-| code_pénal 2010-06-21 |[modification](https://archeo-lex.fr/codes/code_p%C3%A9nal/2010-06-21/modifications) | 41 |[code_pénal_test.csv](code_pénal_test.csv)| 122 |
+| nom_d'article et version | site | Article_Modifiés_sur_site| csv |lignes_sortie_dans_csv | lignes_sortie_dans_all_codes_fulltext.csv|
+| ------ | ------ | ------ |------ |------ |------ |
+| code_de_commerce 2021-02-13 |[modification](https://archeo-lex.fr/codes/code_de_commerce/2021-02-13/modifications) | 39|[code_de_commerce_test.csv](code_de_commerce_test.csv)| 314 |252|
+| code_pénal 2010-06-21 |[modification](https://archeo-lex.fr/codes/code_p%C3%A9nal/2010-06-21/modifications) | 41 |[code_pénal_test.csv](code_pénal_test.csv)| 122 |108|
 
 
 
