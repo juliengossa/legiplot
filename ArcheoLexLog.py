@@ -252,7 +252,7 @@ class ArcheoLexLog:
             """
             if self.article.upper().find("ANNEX")!=-1 or len(self.article)==1:
                 return True
-            elif self.article[0].isnumeric() and self.code != "code_pénal":
+            elif self.article[0].isnumeric() and self.code not in ["code_pénal","code_civil"]:
                 return True
             #c'est pas numéro romain
             elif self.article[0]=="I" or self.article[0].upper=="V" or self.article[0].upper=="X":
@@ -336,7 +336,7 @@ class ArcheoLexLog:
 
             # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications,
             # dans une ligne non vide
-            elif type_line is not None and len(line[1:].strip()) > 0:
+            elif type_line is not None and len(line[1:].strip()) > 0 and curmod is not None:
                 if curmod.type is None : curmod.type = "Modification"
                 curmod.nb_modifications += 1
                 #print(line)

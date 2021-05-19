@@ -41,7 +41,7 @@ chapitres
 code\_civil
 </td>
 <td style="text-align:right;">
-38217
+6240
 </td>
 <td style="text-align:left;">
 1803-03-15
@@ -50,19 +50,19 @@ code\_civil
 2021-01-01
 </td>
 <td style="text-align:right;">
-7
+2
 </td>
 <td style="text-align:right;">
-88
+72
 </td>
 <td style="text-align:right;">
-407
+213
 </td>
 <td style="text-align:right;">
-1388
+418
 </td>
 <td style="text-align:right;">
-1970
+1849
 </td>
 </tr>
 <tr>
@@ -70,7 +70,7 @@ code\_civil
 code\_de\_commerce
 </td>
 <td style="text-align:right;">
-17210
+16445
 </td>
 <td style="text-align:left;">
 2000-12-14
@@ -79,19 +79,19 @@ code\_de\_commerce
 2021-05-17
 </td>
 <td style="text-align:right;">
-4
+1
 </td>
 <td style="text-align:right;">
-46
+13
 </td>
 <td style="text-align:right;">
-122
+117
 </td>
 <td style="text-align:right;">
-609
+324
 </td>
 <td style="text-align:right;">
-2034
+1970
 </td>
 </tr>
 <tr>
@@ -99,7 +99,7 @@ code\_de\_commerce
 code\_de\_justice\_administrative
 </td>
 <td style="text-align:right;">
-2985
+2690
 </td>
 <td style="text-align:left;">
 2001-01-01
@@ -108,19 +108,19 @@ code\_de\_justice\_administrative
 2021-05-01
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-12
+13
 </td>
 <td style="text-align:right;">
-51
+40
 </td>
 <td style="text-align:right;">
-263
+137
 </td>
 <td style="text-align:right;">
-695
+698
 </td>
 </tr>
 <tr>
@@ -128,7 +128,7 @@ code\_de\_justice\_administrative
 code\_de\_l’action\_sociale\_et\_des\_familles
 </td>
 <td style="text-align:right;">
-9144
+8489
 </td>
 <td style="text-align:left;">
 2001-07-18
@@ -137,19 +137,19 @@ code\_de\_l’action\_sociale\_et\_des\_familles
 2021-05-14
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-45
+9
 </td>
 <td style="text-align:right;">
-47
+50
 </td>
 <td style="text-align:right;">
-237
+238
 </td>
 <td style="text-align:right;">
-1314
+1328
 </td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@ code\_de\_l’action\_sociale\_et\_des\_familles
 code\_de\_l’artisanat
 </td>
 <td style="text-align:right;">
-386
+374
 </td>
 <td style="text-align:left;">
 1955-05-22
@@ -166,13 +166,13 @@ code\_de\_l’artisanat
 2021-04-01
 </td>
 <td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
 12
 </td>
 <td style="text-align:right;">
-52
-</td>
-<td style="text-align:right;">
-85
+1
 </td>
 <td style="text-align:right;">
 1
@@ -186,7 +186,7 @@ code\_de\_l’artisanat
 code\_de\_l’aviation\_civile
 </td>
 <td style="text-align:right;">
-2903
+2218
 </td>
 <td style="text-align:left;">
 1967-06-25
@@ -195,19 +195,19 @@ code\_de\_l’aviation\_civile
 2021-01-28
 </td>
 <td style="text-align:right;">
-4
+1
 </td>
 <td style="text-align:right;">
-19
+21
 </td>
 <td style="text-align:right;">
-71
+60
 </td>
 <td style="text-align:right;">
-312
+97
 </td>
 <td style="text-align:right;">
-689
+640
 </td>
 </tr>
 <tr>
@@ -215,7 +215,7 @@ code\_de\_l’aviation\_civile
 code\_de\_l’éducation
 </td>
 <td style="text-align:right;">
-11986
+10739
 </td>
 <td style="text-align:left;">
 2000-12-14
@@ -224,7 +224,7 @@ code\_de\_l’éducation
 2021-05-06
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
 14
@@ -233,10 +233,10 @@ code\_de\_l’éducation
 69
 </td>
 <td style="text-align:right;">
-234
+232
 </td>
 <td style="text-align:right;">
-1024
+1030
 </td>
 </tr>
 <tr>
@@ -244,7 +244,7 @@ code\_de\_l’éducation
 code\_de\_l’énergie
 </td>
 <td style="text-align:right;">
-4982
+3609
 </td>
 <td style="text-align:left;">
 2011-07-31
@@ -253,19 +253,19 @@ code\_de\_l’énergie
 2021-05-12
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
 15
 </td>
 <td style="text-align:right;">
-72
+65
 </td>
 <td style="text-align:right;">
-133
+107
 </td>
 <td style="text-align:right;">
-865
+736
 </td>
 </tr>
 <tr>
@@ -273,7 +273,7 @@ code\_de\_l’énergie
 code\_de\_l’entrée\_et\_du\_séjour\_des\_étrangers\_et\_du\_droit\_d’asile
 </td>
 <td style="text-align:right;">
-8015
+6514
 </td>
 <td style="text-align:left;">
 2005-01-28
@@ -282,19 +282,19 @@ code\_de\_l’entrée\_et\_du\_séjour\_des\_étrangers\_et\_du\_droit\_d’asil
 2021-05-01
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-29
+30
 </td>
 <td style="text-align:right;">
-121
+107
 </td>
 <td style="text-align:right;">
-353
+266
 </td>
 <td style="text-align:right;">
-1382
+1394
 </td>
 </tr>
 <tr>
@@ -302,7 +302,7 @@ code\_de\_l’entrée\_et\_du\_séjour\_des\_étrangers\_et\_du\_droit\_d’asil
 code\_de\_l’environnement
 </td>
 <td style="text-align:right;">
-18384
+19966
 </td>
 <td style="text-align:left;">
 2001-01-01
@@ -311,19 +311,19 @@ code\_de\_l’environnement
 2021-05-16
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-48
+13
 </td>
 <td style="text-align:right;">
-65
+63
 </td>
 <td style="text-align:right;">
-278
+233
 </td>
 <td style="text-align:right;">
-1445
+1509
 </td>
 </tr>
 <tr>
@@ -331,7 +331,7 @@ code\_de\_l’environnement
 code\_de\_l’organisation\_judiciaire
 </td>
 <td style="text-align:right;">
-6547
+5214
 </td>
 <td style="text-align:left;">
 1978-07-13
@@ -340,19 +340,19 @@ code\_de\_l’organisation\_judiciaire
 2021-05-01
 </td>
 <td style="text-align:right;">
-5
+2
 </td>
 <td style="text-align:right;">
-62
+39
 </td>
 <td style="text-align:right;">
-196
+140
 </td>
 <td style="text-align:right;">
-274
+229
 </td>
 <td style="text-align:right;">
-885
+971
 </td>
 </tr>
 <tr>
@@ -360,7 +360,7 @@ code\_de\_l’organisation\_judiciaire
 code\_de\_l’urbanisme
 </td>
 <td style="text-align:right;">
-20883
+12577
 </td>
 <td style="text-align:left;">
 1973-03-27
@@ -372,16 +372,16 @@ code\_de\_l’urbanisme
 4
 </td>
 <td style="text-align:right;">
-52
+55
 </td>
 <td style="text-align:right;">
-232
+206
 </td>
 <td style="text-align:right;">
-794
+584
 </td>
 <td style="text-align:right;">
-1848
+1956
 </td>
 </tr>
 <tr>
@@ -389,7 +389,7 @@ code\_de\_l’urbanisme
 code\_de\_la\_consommation
 </td>
 <td style="text-align:right;">
-6614
+6234
 </td>
 <td style="text-align:left;">
 1994-01-04
@@ -404,13 +404,13 @@ code\_de\_la\_consommation
 18
 </td>
 <td style="text-align:right;">
-77
+63
 </td>
 <td style="text-align:right;">
-252
+233
 </td>
 <td style="text-align:right;">
-1257
+1292
 </td>
 </tr>
 <tr>
@@ -418,7 +418,7 @@ code\_de\_la\_consommation
 code\_de\_la\_construction\_et\_de\_l’habitation
 </td>
 <td style="text-align:right;">
-12538
+14600
 </td>
 <td style="text-align:left;">
 1978-06-08
@@ -427,19 +427,19 @@ code\_de\_la\_construction\_et\_de\_l’habitation
 2021-05-01
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-78
+82
 </td>
 <td style="text-align:right;">
-193
+121
 </td>
 <td style="text-align:right;">
-338
+294
 </td>
 <td style="text-align:right;">
-1684
+1898
 </td>
 </tr>
 <tr>
@@ -447,7 +447,7 @@ code\_de\_la\_construction\_et\_de\_l’habitation
 code\_de\_la\_défense
 </td>
 <td style="text-align:right;">
-8125
+9202
 </td>
 <td style="text-align:left;">
 2005-03-23
@@ -456,19 +456,19 @@ code\_de\_la\_défense
 2021-04-18
 </td>
 <td style="text-align:right;">
-2
+3
 </td>
 <td style="text-align:right;">
-11
+12
 </td>
 <td style="text-align:right;">
-38
+39
 </td>
 <td style="text-align:right;">
-142
+140
 </td>
 <td style="text-align:right;">
-181
+205
 </td>
 </tr>
 <tr>
@@ -476,7 +476,7 @@ code\_de\_la\_défense
 code\_de\_la\_famille\_et\_de\_l’aide\_sociale
 </td>
 <td style="text-align:right;">
-1059
+890
 </td>
 <td style="text-align:left;">
 1956-01-28
@@ -485,19 +485,19 @@ code\_de\_la\_famille\_et\_de\_l’aide\_sociale
 2019-12-30
 </td>
 <td style="text-align:right;">
-11
+2
 </td>
 <td style="text-align:right;">
-78
+42
 </td>
 <td style="text-align:right;">
-142
+48
 </td>
 <td style="text-align:right;">
-185
+16
 </td>
 <td style="text-align:right;">
-38
+36
 </td>
 </tr>
 <tr>
@@ -505,7 +505,7 @@ code\_de\_la\_famille\_et\_de\_l’aide\_sociale
 code\_de\_la\_propriété\_intellectuelle
 </td>
 <td style="text-align:right;">
-3405
+3222
 </td>
 <td style="text-align:left;">
 1993-01-01
@@ -514,19 +514,19 @@ code\_de\_la\_propriété\_intellectuelle
 2021-05-14
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-15
+14
 </td>
 <td style="text-align:right;">
-37
+36
 </td>
 <td style="text-align:right;">
-99
+95
 </td>
 <td style="text-align:right;">
-480
+481
 </td>
 </tr>
 <tr>
@@ -534,7 +534,7 @@ code\_de\_la\_propriété\_intellectuelle
 code\_de\_la\_recherche
 </td>
 <td style="text-align:right;">
-691
+435
 </td>
 <td style="text-align:left;">
 2004-08-11
@@ -552,10 +552,10 @@ code\_de\_la\_recherche
 21
 </td>
 <td style="text-align:right;">
-83
+74
 </td>
 <td style="text-align:right;">
-216
+199
 </td>
 </tr>
 <tr>
@@ -563,7 +563,7 @@ code\_de\_la\_recherche
 code\_de\_la\_route
 </td>
 <td style="text-align:right;">
-3678
+2763
 </td>
 <td style="text-align:left;">
 2001-06-01
@@ -572,16 +572,16 @@ code\_de\_la\_route
 2021-05-01
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-8
+9
 </td>
 <td style="text-align:right;">
-28
+29
 </td>
 <td style="text-align:right;">
-177
+123
 </td>
 <td style="text-align:right;">
 610
@@ -592,7 +592,7 @@ code\_de\_la\_route
 code\_de\_la\_santé\_publique
 </td>
 <td style="text-align:right;">
-57016
+51264
 </td>
 <td style="text-align:left;">
 1953-10-27
@@ -601,19 +601,19 @@ code\_de\_la\_santé\_publique
 2021-05-14
 </td>
 <td style="text-align:right;">
-6
+3
 </td>
 <td style="text-align:right;">
-51
+52
 </td>
 <td style="text-align:right;">
-246
+204
 </td>
 <td style="text-align:right;">
-914
+666
 </td>
 <td style="text-align:right;">
-2587
+2797
 </td>
 </tr>
 <tr>
@@ -621,7 +621,7 @@ code\_de\_la\_santé\_publique
 code\_de\_la\_sécurité\_intérieure
 </td>
 <td style="text-align:right;">
-6770
+4606
 </td>
 <td style="text-align:left;">
 2012-12-23
@@ -630,19 +630,19 @@ code\_de\_la\_sécurité\_intérieure
 2021-05-08
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-9
+10
 </td>
 <td style="text-align:right;">
-61
+59
 </td>
 <td style="text-align:right;">
-188
+162
 </td>
 <td style="text-align:right;">
-1006
+967
 </td>
 </tr>
 <tr>
@@ -650,7 +650,7 @@ code\_de\_la\_sécurité\_intérieure
 code\_de\_la\_sécurité\_sociale
 </td>
 <td style="text-align:right;">
-64191
+40626
 </td>
 <td style="text-align:left;">
 1976-01-15
@@ -659,19 +659,19 @@ code\_de\_la\_sécurité\_sociale
 2021-05-16
 </td>
 <td style="text-align:right;">
-5
+3
 </td>
 <td style="text-align:right;">
-90
+50
 </td>
 <td style="text-align:right;">
-390
+166
 </td>
 <td style="text-align:right;">
-874
+726
 </td>
 <td style="text-align:right;">
-3349
+3473
 </td>
 </tr>
 <tr>
@@ -679,7 +679,7 @@ code\_de\_la\_sécurité\_sociale
 code\_de\_procédure\_civile
 </td>
 <td style="text-align:right;">
-3807
+3324
 </td>
 <td style="text-align:left;">
 1976-07-30
@@ -688,19 +688,19 @@ code\_de\_procédure\_civile
 2021-01-01
 </td>
 <td style="text-align:right;">
-8
+2
 </td>
 <td style="text-align:right;">
-64
+59
 </td>
 <td style="text-align:right;">
-280
+175
 </td>
 <td style="text-align:right;">
-654
+223
 </td>
 <td style="text-align:right;">
-863
+834
 </td>
 </tr>
 <tr>
@@ -708,7 +708,7 @@ code\_de\_procédure\_civile
 code\_de\_procédure\_pénale
 </td>
 <td style="text-align:right;">
-17974
+13103
 </td>
 <td style="text-align:left;">
 1958-12-24
@@ -717,19 +717,19 @@ code\_de\_procédure\_pénale
 2021-05-01
 </td>
 <td style="text-align:right;">
-4
+3
 </td>
 <td style="text-align:right;">
 29
 </td>
 <td style="text-align:right;">
-204
+151
 </td>
 <td style="text-align:right;">
-987
+368
 </td>
 <td style="text-align:right;">
-1827
+1817
 </td>
 </tr>
 <tr>
@@ -737,7 +737,7 @@ code\_de\_procédure\_pénale
 code\_des\_assurances
 </td>
 <td style="text-align:right;">
-10479
+10492
 </td>
 <td style="text-align:left;">
 1976-07-16
@@ -746,19 +746,19 @@ code\_des\_assurances
 2021-04-01
 </td>
 <td style="text-align:right;">
-3
+2
 </td>
 <td style="text-align:right;">
-10
+14
 </td>
 <td style="text-align:right;">
-97
+98
 </td>
 <td style="text-align:right;">
-317
+231
 </td>
 <td style="text-align:right;">
-1209
+1244
 </td>
 </tr>
 <tr>
@@ -766,7 +766,7 @@ code\_des\_assurances
 code\_des\_juridictions\_financières
 </td>
 <td style="text-align:right;">
-5670
+4280
 </td>
 <td style="text-align:left;">
 1994-12-28
@@ -775,19 +775,19 @@ code\_des\_juridictions\_financières
 2021-03-29
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-5
+6
 </td>
 <td style="text-align:right;">
-21
+22
 </td>
 <td style="text-align:right;">
-116
+78
 </td>
 <td style="text-align:right;">
-471
+490
 </td>
 </tr>
 <tr>
@@ -795,7 +795,7 @@ code\_des\_juridictions\_financières
 code\_des\_postes\_et\_des\_communications\_électroniques
 </td>
 <td style="text-align:right;">
-4392
+3901
 </td>
 <td style="text-align:left;">
 1962-03-23
@@ -804,19 +804,19 @@ code\_des\_postes\_et\_des\_communications\_électroniques
 2021-05-01
 </td>
 <td style="text-align:right;">
-4
+2
 </td>
 <td style="text-align:right;">
-11
+12
 </td>
 <td style="text-align:right;">
-56
+59
 </td>
 <td style="text-align:right;">
-305
+149
 </td>
 <td style="text-align:right;">
-661
+673
 </td>
 </tr>
 <tr>
@@ -824,7 +824,7 @@ code\_des\_postes\_et\_des\_communications\_électroniques
 code\_des\_transports
 </td>
 <td style="text-align:right;">
-8350
+9120
 </td>
 <td style="text-align:left;">
 2010-12-18
@@ -833,7 +833,7 @@ code\_des\_transports
 2021-05-17
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
 11
@@ -842,10 +842,10 @@ code\_des\_transports
 58
 </td>
 <td style="text-align:right;">
-238
+227
 </td>
 <td style="text-align:right;">
-385
+419
 </td>
 </tr>
 <tr>
@@ -865,13 +865,13 @@ code\_disciplinaire\_et\_pénal\_de\_la\_marine\_marchande
 1
 </td>
 <td style="text-align:right;">
-3
+4
 </td>
 <td style="text-align:right;">
-20
+6
 </td>
 <td style="text-align:right;">
-71
+1
 </td>
 <td style="text-align:right;">
 1
@@ -882,7 +882,7 @@ code\_disciplinaire\_et\_pénal\_de\_la\_marine\_marchande
 code\_du\_cinéma\_et\_de\_l’image\_animée
 </td>
 <td style="text-align:right;">
-4135
+3156
 </td>
 <td style="text-align:left;">
 2009-11-07
@@ -891,19 +891,19 @@ code\_du\_cinéma\_et\_de\_l’image\_animée
 2021-01-25
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-14
+15
 </td>
 <td style="text-align:right;">
 47
 </td>
 <td style="text-align:right;">
-245
+109
 </td>
 <td style="text-align:right;">
-272
+266
 </td>
 </tr>
 <tr>
@@ -911,7 +911,7 @@ code\_du\_cinéma\_et\_de\_l’image\_animée
 code\_du\_patrimoine
 </td>
 <td style="text-align:right;">
-3390
+2545
 </td>
 <td style="text-align:left;">
 2004-08-07
@@ -926,13 +926,13 @@ code\_du\_patrimoine
 13
 </td>
 <td style="text-align:right;">
-61
+51
 </td>
 <td style="text-align:right;">
-324
+113
 </td>
 <td style="text-align:right;">
-426
+400
 </td>
 </tr>
 <tr>
@@ -940,7 +940,7 @@ code\_du\_patrimoine
 code\_du\_sport
 </td>
 <td style="text-align:right;">
-4792
+4667
 </td>
 <td style="text-align:left;">
 2006-05-25
@@ -949,19 +949,19 @@ code\_du\_sport
 2021-05-09
 </td>
 <td style="text-align:right;">
-4
+1
 </td>
 <td style="text-align:right;">
-7
+8
 </td>
 <td style="text-align:right;">
-21
+22
 </td>
 <td style="text-align:right;">
-174
+54
 </td>
 <td style="text-align:right;">
-384
+391
 </td>
 </tr>
 <tr>
@@ -969,7 +969,7 @@ code\_du\_sport
 code\_du\_tourisme
 </td>
 <td style="text-align:right;">
-1943
+1878
 </td>
 <td style="text-align:left;">
 2005-02-24
@@ -978,10 +978,10 @@ code\_du\_tourisme
 2021-02-26
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-6
+7
 </td>
 <td style="text-align:right;">
 30
@@ -990,7 +990,7 @@ code\_du\_tourisme
 86
 </td>
 <td style="text-align:right;">
-272
+273
 </td>
 </tr>
 <tr>
@@ -998,7 +998,7 @@ code\_du\_tourisme
 code\_du\_travail
 </td>
 <td style="text-align:right;">
-62456
+48375
 </td>
 <td style="text-align:left;">
 1973-07-11
@@ -1007,19 +1007,19 @@ code\_du\_travail
 2021-05-14
 </td>
 <td style="text-align:right;">
-6
+2
 </td>
 <td style="text-align:right;">
-56
+58
 </td>
 <td style="text-align:right;">
-341
+331
 </td>
 <td style="text-align:right;">
-1358
+1071
 </td>
 <td style="text-align:right;">
-3841
+4087
 </td>
 </tr>
 <tr>
@@ -1027,7 +1027,7 @@ code\_du\_travail
 code\_électoral
 </td>
 <td style="text-align:right;">
-3745
+3644
 </td>
 <td style="text-align:left;">
 1966-12-30
@@ -1036,19 +1036,19 @@ code\_électoral
 2021-04-06
 </td>
 <td style="text-align:right;">
-3
+4
 </td>
 <td style="text-align:right;">
-40
+43
 </td>
 <td style="text-align:right;">
-132
+96
 </td>
 <td style="text-align:right;">
-385
+148
 </td>
 <td style="text-align:right;">
-1032
+1022
 </td>
 </tr>
 <tr>
@@ -1056,7 +1056,7 @@ code\_électoral
 code\_forestier\_(nouveau)
 </td>
 <td style="text-align:right;">
-691
+427
 </td>
 <td style="text-align:left;">
 2012-09-14
@@ -1065,19 +1065,19 @@ code\_forestier\_(nouveau)
 2021-03-12
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-4
+5
 </td>
 <td style="text-align:right;">
-21
+22
 </td>
 <td style="text-align:right;">
-61
+59
 </td>
 <td style="text-align:right;">
-218
+168
 </td>
 </tr>
 <tr>
@@ -1085,7 +1085,7 @@ code\_forestier\_(nouveau)
 code\_général\_de\_la\_propriété\_des\_personnes\_publiques
 </td>
 <td style="text-align:right;">
-1647
+1364
 </td>
 <td style="text-align:left;">
 2006-07-16
@@ -1094,7 +1094,7 @@ code\_général\_de\_la\_propriété\_des\_personnes\_publiques
 2021-04-16
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
 6
@@ -1103,10 +1103,10 @@ code\_général\_de\_la\_propriété\_des\_personnes\_publiques
 20
 </td>
 <td style="text-align:right;">
-45
+44
 </td>
 <td style="text-align:right;">
-92
+96
 </td>
 </tr>
 <tr>
@@ -1114,28 +1114,28 @@ code\_général\_de\_la\_propriété\_des\_personnes\_publiques
 code\_général\_des\_collectivités\_territoriales
 </td>
 <td style="text-align:right;">
-18033
+19111
 </td>
 <td style="text-align:left;">
 1996-02-25
 </td>
 <td style="text-align:left;">
-2021-05-14
+2021-05-17
 </td>
 <td style="text-align:right;">
-3
+1
 </td>
 <td style="text-align:right;">
-37
+36
 </td>
 <td style="text-align:right;">
-121
+92
 </td>
 <td style="text-align:right;">
-279
+265
 </td>
 <td style="text-align:right;">
-572
+602
 </td>
 </tr>
 <tr>
@@ -1143,7 +1143,7 @@ code\_général\_des\_collectivités\_territoriales
 code\_pénal
 </td>
 <td style="text-align:right;">
-8523
+3223
 </td>
 <td style="text-align:left;">
 1992-07-23
@@ -1152,19 +1152,19 @@ code\_pénal
 2021-05-01
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;">
-12
+13
 </td>
 <td style="text-align:right;">
 34
 </td>
 <td style="text-align:right;">
-116
+86
 </td>
 <td style="text-align:right;">
-452
+451
 </td>
 </tr>
 </tbody>
