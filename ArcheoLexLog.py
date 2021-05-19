@@ -117,11 +117,14 @@ class ArcheoLexLog:
             return:
                 lines:list des informations différentes
         """
-        diff = commit.parents[0].diff(commit, create_patch=True).pop()
-        a=diff.a_blob.data_stream.read().decode('utf-8').splitlines()
-        b=diff.b_blob.data_stream.read().decode('utf-8').splitlines()
-        differ=difflib.Differ()
-        cmp = differ.compare(a,b)
+        # diff = commit.parents[0].diff(commit).pop()
+        # a=diff.a_blob.data_stream.read().decode('utf-8').splitlines()
+        # b=diff.b_blob.data_stream.read().decode('utf-8').splitlines()
+        # differ=difflib.Differ()
+        # cmp = differ.compare(a,b)
+
+        diff = commit.parents[0].diff(commit, create_patch=True, unified=100000000).pop()
+        cmp = diff.diff.decode('utf-8').splitlines()
         return list(cmp)
 
     def getSousPartieCurrent(self,previous_partie,line):
