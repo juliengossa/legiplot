@@ -224,6 +224,7 @@ class ArcheoLexLog:
 
         def getPLTC_txt(self):
             PLTC = self.section[0:5]
+            if len(PLTC) < 5: PLTC.pop()
             while len(PLTC) < 5: PLTC.append("NA")
             return PLTC
 
