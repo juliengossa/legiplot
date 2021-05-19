@@ -297,6 +297,7 @@ class ArcheoLexLog:
 
         curmod = None # modification courante
         cursec = [] # section courante
+        mods = {}
 
         for num,line in enumerate(lines):
             # Détection du type de la ligne
@@ -312,9 +313,17 @@ class ArcheoLexLog:
 
                 # Si changement d'article
                 if line.find("Article") != -1:
-                    # Si une modification a été détectée, l'imprimer
-                    if curmod is not None and curmod.type is not None and curmod.nb_modifications != 0:
-                        self.outputInfo(curmod, file)
+                    # Si une modification a été détectée, l'enregistrer
+                    if curmod is not None and curmod.type is not None:
+                        if curmod.article in mods:
+                            nbm = mods[curmod.article].nb_modifications + curmod.nb_modifications
+                            if nbm == 0:
+                                del mods[curmod.article]
+                            else:
+                                mods[curmod.article].type = "Modification"
+                                mods[curmod.article].nb_modifications = nbm
+                        else:
+                            mods[curmod.article] = curmod
                         #print(line)
                         #print(cursec)
                         #print("\n")
@@ -329,6 +338,7 @@ class ArcheoLexLog:
                 curmod.nb_modifications += 1
                 #print(line)
 
+        return mods
 
     def processCode(self,datelimit,file):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
@@ -345,4 +355,5 @@ class ArcheoLexLog:
             date=self.getDate(commit)
             if datelimit != None:
                 if datetime.strptime(date,'%Y-%m-%d').date()<datelimit: return()
-            self.getDiff(commit_number,file)
+            mods = self.getDiff(commit_number,file)
+            for m in mods: self.outputInfo(mods[m], file)
