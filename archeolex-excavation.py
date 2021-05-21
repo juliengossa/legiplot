@@ -11,7 +11,8 @@ if __name__=="__main__":
     parse.add_argument("-t","--fulltext",dest='PLTC_method', action='store_const',
                         const="fulltext", default="code",
                         help='Produit des informations de debug')
-    parse.add_argument("codes",nargs='+',help="une list de codes")
+    parse.add_argument("traitement", metavar="diff|check", nargs=1, help='Traitement à effectuer')
+    parse.add_argument("codes", metavar="code", nargs='+',help="une list de codes")
     parse.add_argument("-v","--verbose",dest='verbose', action='store_const',
                         const=True, default=False,
                         help='Produit des informations de debug')
@@ -22,4 +23,4 @@ if __name__=="__main__":
     for code in args.codes:
         archeoLexLog = ArcheoLexLog.ArcheoLexLog(code,args.verbose,args.PLTC_method)
         archeoLexLog.createRepo()
-        archeoLexLog.processCode(args.datelimit,args.file)
+        archeoLexLog.processCode(args.datelimit,args.file,args.traitement[0])

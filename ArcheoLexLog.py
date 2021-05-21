@@ -97,9 +97,9 @@ class ArcheoLexLog:
         os.chdir(path)
         return path
 
-    def getVersion(self,repo,commit):
+    def getVersion(self,commit):
         sha=commit.hexsha
-        short_sha=repo.git.rev_parse(sha, short=7)
+        short_sha=self.repo.git.rev_parse(sha, short=7)
         version = short_sha
         return version
 
@@ -126,6 +126,19 @@ class ArcheoLexLog:
         diff = commit.parents[0].diff(commit, create_patch=True, unified=100000000).pop()
         cmp = diff.diff.decode('utf-8').splitlines()
         return list(cmp)
+
+    def getLines(self,commit):
+        """Obtenir les lignes de cette version
+
+            Arg:
+                commit:Commit(type) numéro de version
+
+            return:
+                lines:liste des lignes
+        """
+        lignes = commit.tree[0].data_stream.read().decode('utf-8').splitlines()
+        return list(lignes)
+
 
     def getSousPartieCurrent(self,previous_partie,line):
         """Obtient le numéro de série sous_partie courente
@@ -260,6 +273,44 @@ class ArcheoLexLog:
             else:
                 return False
 
+        def normalizeArtnum(self):
+            #an = re.sub(self.article.replace("* ","").replace("*","").replace(" ","-")
+            an = re.sub("^[^0-9]*","",self.article).replace(" ","-")
+            return [ s.zfill(6) for s in an.split('-') ]
+
+        def compareNum(self,other):
+            """ Compare les numéros d'article
+
+            return:
+                "lt" si self avant other
+                "eq" si égal
+                "gt" si self après other
+                "ew" si les articles sont dans des parties différentes
+            """
+            if other is None or self.partie == "Annexe" or other.partie == "Annexe": return "ew"
+            if self.partie != other.partie: return "ew"
+            if self.article == other.article: return "eq"
+
+            s_artnum = self.normalizeArtnum()
+            o_artnum = other.normalizeArtnum()
+
+            try:
+                # Gestion L239-1 vs L23-10-1
+                if s_artnum[1] == "000010" and o_artnum[0][-1]=="9":
+                    return "gt"
+            except:pass
+            try:
+                # Gestion L239-1 vs L239-1 A
+                if s_artnum == o_artnum[0:-1] and not o_artnum[-1].strip("0").isnumeric():
+                    return "gt"
+            except:pass
+
+            if s_artnum < o_artnum:
+                #print(self.article+' vs '+other.article+' : '+'-'.join(s_artnum)+' vs '+'-'.join(o_artnum))
+                #print(str(s_artnum == o_artnum[-1])+' '+o_artnum[-1].strip("0")+' '+str(o_artnum[-1].strip("0").isnumeric()))
+                return "lt"
+            else: return "gt"
+
 
     def outputInfo(self,mod,file):
         """print les infomations et les écrire dans csv,par défault,le file est codes.csv
@@ -277,7 +328,7 @@ class ArcheoLexLog:
         print(message)
 
 
-    def getDiff(self,number_commit,file):
+    def getDiff(self,commit):
         """Obtenez toutes les modifications d'une version d'un code
 
             Parcourez les informations de différence, nous extrayons les informations
@@ -286,12 +337,9 @@ class ArcheoLexLog:
             Arg:
                 number_commit: Commit(type) de version
         """
-        #créer repo et get commit
-        repo = git.Repo(self.enterPath())
-        commit = repo.commit(number_commit)
         #get la version et la date
         date = self.getDate(commit)
-        version = self.getVersion(repo,commit)
+        version = self.getVersion(commit)
         #get lines in diff
         lines=self.getDifflines(commit)
         if self.verbose:
@@ -343,20 +391,87 @@ class ArcheoLexLog:
 
         return mods
 
-    def processCode(self,datelimit,file):
+
+
+
+
+    def getErrors(self,commit):
+        """Obtenez toutes les erreurs d'une version d'un code
+            Arg:
+                number_commit: Commit(type) de version
+        """
+        #get la version et la date
+        date = self.getDate(commit)
+        version = self.getVersion(commit)
+        cursec = [] # section courante
+        errors = {}
+        article_precedent = None
+
+        #get lines du code
+        lines=self.getLines(commit)
+        if self.verbose:
+            with open(self.code+'-'+date+'.txt', 'w') as verbfile:
+                verbfile.write('\n'.join(str(line) for line in lines))
+
+        for num,line in enumerate(lines):
+            # Si changement de section, enregistrer la nouvelle section
+            if (len(line) > 2 and line[2] == '#'):
+                level = line.count("#")
+                cursec = cursec[:level-1]+[re.sub(".*# ","",line)]
+
+                # Si changement d'article
+                if line.find("Article") != -1:
+                    article = self.modification(self.code, date, version, None, cursec, self.PLTC_method)
+
+                    cmp = article.compareNum(article_precedent)
+
+                    # Test doublon
+                    if cmp == "eq":
+                        article.type = "doublon"
+                        errors[article.article] = article
+
+                    # Test inversion
+                    if cmp == "lt":
+                        article.type = "inversion "+article_precedent.article
+                        errors[article.article] = article
+
+                    article_precedent = article
+
+        return errors
+
+
+    def processCode(self,datelimit,file,traitement="check"):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
         """
         path = self.enterPath()
-        repo = git.Repo(path)
+        self.repo = git.Repo(path)
+
         #obtenir tous les version
-        commit_log =repo.git.log('--pretty={"%h"}')
+        commit_log = self.repo.git.log('--pretty={"%h"}')
         log_list = commit_log.split("\n")
-        log_list.pop()  #supprimer la première version
+
+        if traitement == "diff":
+            log_list.pop()  #supprimer la version la plus ancienne
+
+        if traitement == "check":
+            log_list.reverse()  #ordre chronologique
+
+        articles = []
+
         for log in log_list:
             commit_number ="".join(re.findall(r"{\"(.+?)\"}",log))
-            commit=repo.commit(commit_number)
+            commit=self.repo.commit(commit_number)
             date=self.getDate(commit)
             if datelimit != None:
                 if datetime.strptime(date,'%Y-%m-%d').date()<datelimit: return()
-            mods = self.getDiff(commit_number,file)
-            for m in mods: self.outputInfo(mods[m], file)
+
+            if traitement == "check":
+                errors = self.getErrors(commit)
+                for e in errors:
+                    if errors[e].article not in articles:
+                        self.outputInfo(errors[e], file)
+                        articles.append(errors[e].article)
+            else:
+                mods = self.getDiff(commit)
+                for m in mods:
+                    self.outputInfo(mods[m], file)
