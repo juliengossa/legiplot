@@ -33,7 +33,6 @@ class ArcheoLexLog:
             try:
                 repo = git.Repo(path)
                 repo.git.pull()
-                #print("archeo_lex/"+code+" a déjà exist,et on le pull")
             except git.InvalidGitRepositoryError:
                 pass
             except git.GitCommandError:
@@ -47,8 +46,6 @@ class ArcheoLexLog:
                 repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+self.code,to_path=path)
             except IOError:
                 sys.stderr.write("On ne trouve pas"+self.code)
-            #else:
-                #print("On crée archeo_lex/"+code)
 
     @staticmethod
     def _write_csv(row,fileCsv):
@@ -74,7 +71,6 @@ class ArcheoLexLog:
             Path:String du chemin du code requis
 
         """
-        #dir_path=os.path.abspath(os.path.dirname(sys.argv[0]))
         dir_path=sys.path[0]
         path=dir_path+'/archeo_lex/'+self.code
         os.chdir(path)
