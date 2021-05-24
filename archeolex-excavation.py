@@ -2,7 +2,6 @@ import datetime
 import argparse
 from re import A
 import ArcheoLexLog
-import os
 
 if __name__=="__main__":
     parse = argparse.ArgumentParser()

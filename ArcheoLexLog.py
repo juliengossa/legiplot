@@ -1,13 +1,11 @@
+from Article import Article
 from datetime import datetime
 import os
 import re
 import git
-import difflib
 import dateparser
 import csv
 import sys
-from git.compat import defenc
-from pathlib import Path
 
 class ArcheoLexLog:
     def __init__(self,code, verbose=False, PLTC_method="code"):
@@ -69,21 +67,6 @@ class ArcheoLexLog:
         csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','type']
         ArcheoLexLog._write_csv(csv_head,fileCsv)
 
-    @staticmethod
-    def _frToInt(n):
-        """Convertir des chiffres français en chiffres arabes
-
-            Utiliser pour le numéro de série de la sous_partie
-
-            Arg:
-                n:String de numéros français
-
-            return:
-                str(dict[n]):String de chiffre arabe
-        """
-        dict={"Première":"1","Deuxième":"2","Troisième":"3","Quatrième":"4","Cinquième":"5","Sixième":"6","Septième":"7","Huitième":"8","Neuvième":"9","Dixième":"10"}
-        return(str(dict[n]))
-
     def enterPath(self):
         """Entrer dans le dossier contenant le code requis
 
@@ -117,12 +100,6 @@ class ArcheoLexLog:
             return:
                 lines:list des informations différentes
         """
-        # diff = commit.parents[0].diff(commit).pop()
-        # a=diff.a_blob.data_stream.read().decode('utf-8').splitlines()
-        # b=diff.b_blob.data_stream.read().decode('utf-8').splitlines()
-        # differ=difflib.Differ()
-        # cmp = differ.compare(a,b)
-
         diff = commit.parents[0].diff(commit, create_patch=True, unified=100000000).pop()
         cmp = diff.diff.decode('utf-8').splitlines()
         return list(cmp)
@@ -139,37 +116,6 @@ class ArcheoLexLog:
         lignes = commit.tree[0].data_stream.read().decode('utf-8').splitlines()
         return list(lignes)
 
-
-    def getSousPartieCurrent(self,previous_partie,line):
-        """Obtient le numéro de série sous_partie courente
-
-            Sous partie s'écrit généralement comme   ## Première partie : XXXXX.
-            Nous extrayons Première et la convertissons en chiffres romains.
-            Si nous passons à la Partie suivante (ex: # Partie réglementaire), la sous_partie courante est Na
-
-            Arg:
-                previous_partie:String de sous partie précedente
-                line:String on doit le traiter
-
-            return:
-                sous_partie_current:String de partie courente
-
-            Raise:
-                KeyError:Il peut y avoir plus de 10 Sous Partie, ou écriture irrégulière
-
-        """
-        sous_partie_current= previous_partie
-        if line.find("partie : ") != -1 and line.startswith("  ##") and not line.startswith("  ###"):
-            try:
-                sous_partie_current =self._frToInt("".join(re.findall(r"## (.+?) partie",line)))
-            except KeyError:
-                faultMessage = "There is a spelling error in this line: "+line
-                sys.stderr.write(faultMessage)
-                #self._write_csv("errorMessage",faultMessage)
-        if line.startswith("  # Partie"):
-            sous_partie_current = "NA"
-        return sous_partie_current
-
     @staticmethod
     def _getTypeLine(line):
         if line.startswith('-'):             # -######Article est Supression
@@ -179,138 +125,6 @@ class ArcheoLexLog:
         else:
             type_line = None
         return type_line
-
-
-    class modification:
-        def __init__(self, code, date, version, type, section, PLTC_method = "code"):
-            self.code = code
-            self.date = date
-            self.version = version
-            self.type = type
-            self.nb_modifications = 0
-            self.section = section
-            self.article = section[-1].replace("Article ","")
-            if PLTC_method == "code":
-                self.partie = self.getPartie()
-                [self.sous_partie,self.livre,self.titre,self.chapitre] = self.getPLTC()
-            else:
-                [self.partie, self.sous_partie,self.livre,self.titre,self.chapitre] = self.getPLTC_txt()
-
-        def getPartie(self):
-            #code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
-            if self.isAnnex():
-                #Exemple: Article L111 est remplcé par Article 111
-                return "Annexe"
-            elif self.article[0] == 'L' or self.article[0].isnumeric():
-                return "Législative"
-            elif self.article[0] == 'A':
-                return "Arrêtés"
-            elif self.article[0]=='R' or self.article[0] == 'D':
-                return "Réglementaire"
-            else:
-                return "NA"
-
-        def getPLTC(self):
-            """vérifier le type du nom d'article et extraire les localisations
-
-               cas normal: L111
-               Cas spéciaux traités :
-               111 : pas de partie
-               L10/L10-1 : pas de livre (code_de_justice_administrative 2019-3-25)
-               L1/L2/L3 : pas de livre (code_du_travail )
-               L3121-3 : sous partie 3, livre 1 (code_du_travail)
-               A931-1-1 : (code de la sécurité sociale)
-
-               Cas spéciaux non traités:
-               R14-10-2 : livre 1, titre 4, chapitre 10 (code de l'action sociale)
-               1874 : livre 3, titre 10 (code civil)
-            """
-
-            # Extraire le premier numéro d'article
-            # Exemples : Article L621, Article L*612, Article , Article 111, Article L10/L10-,
-            artnum = re.sub("[^0-9-]","",self.article).split('-')[0]
-            if len(artnum) < 3: return ["NA","NA","NA","NA"]
-            if len(artnum) == 4:
-                souspartie = artnum[0]
-                artnum = artnum[1:]
-            else:
-                souspartie="NA"
-
-            return [souspartie,artnum[0],artnum[1],artnum[2]]
-
-        def getPLTC_txt(self):
-            PLTC = self.section[0:5]
-            if len(PLTC) < 5: PLTC.pop()
-            while len(PLTC) < 5: PLTC.append("NA")
-            return PLTC
-
-        def isAnnex(self):
-            """vérifier si un article est dans l'annex ou non
-
-                Quand un article dans l'annex,il y a trois cas:
-                1.Il y a le mot Annex dans l'artice
-                Exemple: Article Anenex I
-                2.Pour les articles pas écrire sa Partie (L ou R ou A) et seulment des numéro
-                Exemple: Article 123 /Article 11
-                3.Pour les articles ont seulment des numéro Romain (code_de_l'urbanisme)
-                Exemple: Article II /Article I
-
-                PS:pour le 2ème cas:
-                code_pénal est spéciale,dans sa partie législative,pas de "L" dans le nom des articles
-                Exemple: Article L111 est remplcé par Article 111
-
-            return:
-                True:C'est un article dans l'annex
-                False:ce n'est pas un article dans l'annex
-            """
-            if self.article.upper().find("ANNEX")!=-1 or len(self.article)==1:
-                return True
-            elif self.article[0].isnumeric() and self.code not in ["code_pénal","code_civil"]:
-                return True
-            #c'est pas numéro romain
-            elif self.article[0]=="I" or self.article[0].upper=="V" or self.article[0].upper=="X":
-                return True
-            else:
-                return False
-
-        def normalizeArtnum(self):
-            #an = re.sub(self.article.replace("* ","").replace("*","").replace(" ","-")
-            an = re.sub("^[^0-9]*","",self.article).replace(" ","-")
-            return [ s.zfill(6) for s in an.split('-') ]
-
-        def compareNum(self,other):
-            """ Compare les numéros d'article
-
-            return:
-                "lt" si self avant other
-                "eq" si égal
-                "gt" si self après other
-                "ew" si les articles sont dans des parties différentes
-            """
-            if other is None or self.partie == "Annexe" or other.partie == "Annexe": return "ew"
-            if self.partie != other.partie: return "ew"
-            if self.article == other.article: return "eq"
-
-            s_artnum = self.normalizeArtnum()
-            o_artnum = other.normalizeArtnum()
-
-            try:
-                # Gestion L239-1 vs L23-10-1
-                if s_artnum[1] == "000010" and o_artnum[0][-1]=="9":
-                    return "gt"
-            except:pass
-            try:
-                # Gestion L239-1 vs L239-1 A
-                if s_artnum == o_artnum[0:-1] and not o_artnum[-1].strip("0").isnumeric():
-                    return "gt"
-            except:pass
-
-            if s_artnum < o_artnum:
-                #print(self.article+' vs '+other.article+' : '+'-'.join(s_artnum)+' vs '+'-'.join(o_artnum))
-                #print(str(s_artnum == o_artnum[-1])+' '+o_artnum[-1].strip("0")+' '+str(o_artnum[-1].strip("0").isnumeric()))
-                return "lt"
-            else: return "gt"
-
 
     def outputInfo(self,mod,file):
         """print les infomations et les écrire dans csv,par défault,le file est codes.csv
@@ -327,7 +141,6 @@ class ArcheoLexLog:
         self._write_csv(message,fileCsv)
         print(message)
 
-
     def getDiff(self,commit):
         """Obtenez toutes les modifications d'une version d'un code
 
@@ -336,6 +149,9 @@ class ArcheoLexLog:
 
             Arg:
                 number_commit: Commit(type) de version
+            
+            return:
+                mods:dict qui répresente une modification(un dict)
         """
         #get la version et la date
         date = self.getDate(commit)
@@ -343,7 +159,7 @@ class ArcheoLexLog:
         #get lines in diff
         lines=self.getDifflines(commit)
         if self.verbose:
-            with open(self.code+'-'+date+'.txt', 'w') as verbfile:
+            with open(self.code+'-'+date+'.txt', 'w',encoding="utf-8") as verbfile:
                 verbfile.write('\n'.join(str(line) for line in lines))
 
         curmod = None # modification courante
@@ -358,10 +174,7 @@ class ArcheoLexLog:
             if (len(line) > 2 and line[2] == '#'):
                 level = line.count("#")
                 cursec = cursec[:level-1]+[re.sub(".*# ","",line)]
-                #print(line)
-                #print(cursec)
-                #print("\n")
-
+                
                 # Si changement d'article
                 if line.find("Article") != -1:
                     # Si une modification a été détectée, l'enregistrer
@@ -375,25 +188,16 @@ class ArcheoLexLog:
                                 mods[curmod.article].nb_modifications = nbm
                         else:
                             mods[curmod.article] = curmod
-                        #print(line)
-                        #print(cursec)
-                        #print("\n")
-
+                        
                     # Réinitialiser la modification courante
-                    curmod = self.modification(self.code, date, version, type_line, cursec, self.PLTC_method)
+                    curmod = Article(self.code, date, version, type_line, cursec, self.PLTC_method)
 
             # Si pas de changement de section, on vérifie juste s'il n'y a pas de modifications,
             # dans une ligne non vide
             elif type_line is not None and len(line[1:].strip()) > 0 and curmod is not None:
                 if curmod.type is None : curmod.type = "Modification"
-                curmod.nb_modifications += 1
-                #print(line)
-
+                curmod.nb_modifications += 1                 
         return mods
-
-
-
-
 
     def getErrors(self,commit):
         """Obtenez toutes les erreurs d'une version d'un code
@@ -410,7 +214,7 @@ class ArcheoLexLog:
         #get lines du code
         lines=self.getLines(commit)
         if self.verbose:
-            with open(self.code+'-'+date+'.txt', 'w') as verbfile:
+            with open(self.code+'-'+date+'.txt', 'w',encoding="utf-8") as verbfile:
                 verbfile.write('\n'.join(str(line) for line in lines))
 
         for num,line in enumerate(lines):
@@ -421,8 +225,7 @@ class ArcheoLexLog:
 
                 # Si changement d'article
                 if line.find("Article") != -1:
-                    article = self.modification(self.code, date, version, None, cursec, self.PLTC_method)
-
+                    article = Article(self.code, date, version, None, cursec, self.PLTC_method)
                     cmp = article.compareNum(article_precedent)
 
                     # Test doublon
@@ -436,15 +239,13 @@ class ArcheoLexLog:
                         errors[article.article] = article
 
                     article_precedent = article
-
         return errors
-
-
+   
     def processCode(self,datelimit,file,traitement="check"):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
         """
         path = self.enterPath()
-        self.repo = git.Repo(path)
+        self.repo = git.Repo(path,search_parent_directories=True)
 
         #obtenir tous les version
         commit_log = self.repo.git.log('--pretty={"%h"}')
@@ -475,3 +276,4 @@ class ArcheoLexLog:
                 mods = self.getDiff(commit)
                 for m in mods:
                     self.outputInfo(mods[m], file)
+    
