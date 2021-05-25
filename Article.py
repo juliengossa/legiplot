@@ -70,8 +70,16 @@ class Article:
         """
         # Extraire le premier numéro d'article
         # Exemples : Article L621, Article L*612, Article , Article 111, Article L10/L10-,
-        artnum = re.sub("[^0-9-]","",self.article).split('-')[0]
-        if len(artnum) < 3: return ["NA","NA","NA","NA"]
+        artnumlist = re.sub("[^0-9-]","",self.article).split('-')
+        artnum=artnumlist[0]
+        if len(artnum) < 3:
+            if len(artnumlist)>2:
+                if len(artnumlist[1])==2 and len(artnum)==2:
+                    return ["NA",artnum[0],artnum[1],artnumlist[1]]
+                else:
+                    return ["NA","NA","NA","NA"]
+            else:
+                return ["NA","NA","NA","NA"]
         if len(artnum) == 4:
             souspartie = artnum[0]
             artnum = artnum[1:]

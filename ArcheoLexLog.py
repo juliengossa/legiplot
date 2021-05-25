@@ -56,13 +56,11 @@ class ArcheoLexLog:
     @staticmethod
     def create_csv(fileCsv):
         if fileCsv!=None:
+            if os.path.exists(fileCsv):
+                os.remove(fileCsv)
             fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+fileCsv+'.csv'
-        else:
-            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
-        if os.path.exists(fileCsv):
-            os.remove(fileCsv)
-        csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','type']
-        ArcheoLexLog._write_csv(csv_head,fileCsv)
+            csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','type']
+            ArcheoLexLog._write_csv(csv_head,fileCsv)
 
     def enterPath(self):
         """Entrer dans le dossier contenant le code requis
@@ -126,16 +124,14 @@ class ArcheoLexLog:
         """print les infomations et les écrire dans csv,par défault,le file est codes.csv
 
         """
+        message = [self.code, mod.version, mod.date,
+        mod.partie,mod.sous_partie,mod.livre,mod.titre,mod.chapitre,
+        mod.article,mod.type]
         if file != None:
             fileCsv = os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
-
-        else:
-            fileCsv = os.path.dirname(os.path.abspath(__file__))+'/codes.csv'
-        message = [self.code, mod.version, mod.date,
-            mod.partie,mod.sous_partie,mod.livre,mod.titre,mod.chapitre,
-            mod.article,mod.type]
-        self._write_csv(message,fileCsv)
-        print(message)
+            self._write_csv(message,fileCsv)
+        else:    
+            print(message)
 
     def getDiff(self,commit):
         """Obtenez toutes les modifications d'une version d'un code
