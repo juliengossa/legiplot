@@ -5,20 +5,23 @@ import ArcheoLexLog
 import sys
 import csv
 
-if __name__=="__main__":
+def main(argv):
     parse = argparse.ArgumentParser()
-    parse.add_argument("-d","--datelimit",help="donne une date à ne pas dépasser")
-    parse.add_argument("-f","--file", type=str,
-                        help="spécifier une fichier csv pour écrire la sortie s'il existe pas,on le créer")
+    parse.add_argument("-d","--datelimit", metavar="YYYY-MM-DD",
+                        help="Définit une date maximum pour la fouille")
+    parse.add_argument("-f","--file", metavar="fichier.csv", type=str,
+                        help="Ecrit les données dans un fichier csv (sortie standard par défaut)")
     parse.add_argument("-t","--fulltext",dest='PLTC_method', action='store_const',
                         const="fulltext", default="code",
-                        help='Produit des informations de debug')
-    parse.add_argument("traitement", metavar="diff|check", nargs=1, help='Traitement à effectuer')
-    parse.add_argument("codes", metavar="code", nargs='+',help="une list de codes")
+                        help='Détecte les noms entiers des sections')
+    parse.add_argument("traitement", metavar="diff|check", nargs=1,
+                        help='Le traitement à effectuer')
+    parse.add_argument("codes", metavar="code", nargs='+',
+                        help="La liste des codes à fouiller")
     parse.add_argument("-v","--verbose",dest='verbose', action='store_const',
                         const=True, default=False,
-                        help='Produit des informations de debug')
-    args = parse.parse_args()
+                        help='Enregistre tous les fichiers intermédiaires')
+    args = parse.parse_args(argv)
 
     if args.file is None:
         fh = sys.stdout
@@ -32,3 +35,6 @@ if __name__=="__main__":
         archeoLexLog.processCode(args.datelimit, csvwriter, args.traitement[0], args.file is not None)
 
     fh.close()
+
+if __name__=="__main__":
+    main(sys.argv[1:])
