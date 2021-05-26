@@ -8,7 +8,7 @@ import csv
 import sys
 
 class ArcheoLexLog:
-    def __init__(self,code, verbose=False, PLTC_method="code"):
+    def __init__(self, code, verbose=False, PLTC_method="code"):
         self.code=code
         self.verbose=verbose
         self.PLTC_method=PLTC_method
@@ -21,7 +21,7 @@ class ArcheoLexLog:
 
         Arg:
 
-        returns:
+        returns: le dépôt GIT du code
 
         Raises：
         IOError:une erreur se produit lorsque on entre les mauvais noms
@@ -29,50 +29,23 @@ class ArcheoLexLog:
         """
         dir_path=sys.path[0]
         path=dir_path+'/archeo_lex/'+self.code
-        if(os.path.exists(path)):
-            try:
-                repo = git.Repo(path)
-                repo.git.pull()
-            except git.InvalidGitRepositoryError:
-                pass
-            except git.GitCommandError:
-                os.removedirs(path)
+
+        try:
+            repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+self.code,to_path=path)
+        except git.GitCommandError as gce:
+            if "already exists and is not an empty directory" in gce.stderr:
                 try:
-                    repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+self.code,to_path=path)
-                except IOError:
-                    sys.stderr.write("On ne trouve pas"+self.code)
-        else:
-            try:
-                repo = git.Repo.clone_from(url ='https://archeo-lex.fr/codes/'+self.code,to_path=path)
-            except IOError:
-                sys.stderr.write("On ne trouve pas"+self.code)
+                    repo = git.Repo(path)
+                    repo.git.pull()
+                except git.InvalidGitRepositoryError as gre:
+                    sys.stderr.write("Problème avec le dossier "+path+"\n")
+                    sys.exit(1)
+            else:
+                sys.stderr.write("Erreur avec "+self.code+" : "+gce.stderr+"\n")
+                sys.exit(1)
 
-    @staticmethod
-    def _write_csv(row,fileCsv):
-        with open(fileCsv, 'a+', newline='',encoding='utf-8') as wf:
-            csv_write = csv.writer(wf)
-            csv_write.writerow(row)
+        return repo
 
-    @staticmethod
-    def create_csv(fileCsv):
-        if fileCsv!=None:
-            if os.path.exists(fileCsv):
-                os.remove(fileCsv)
-            fileCsv= os.path.dirname(os.path.abspath(__file__))+'/'+fileCsv+'.csv'
-            csv_head = ['code','version','date','partie','sous_partie','livre','titre','chapitre','article','type']
-            ArcheoLexLog._write_csv(csv_head,fileCsv)
-
-    def enterPath(self):
-        """Entrer dans le dossier contenant le code requis
-
-        return:
-            Path:String du chemin du code requis
-
-        """
-        dir_path=sys.path[0]
-        path=dir_path+'/archeo_lex/'+self.code
-        os.chdir(path)
-        return path
 
     def getVersion(self,commit):
         sha=commit.hexsha
@@ -120,18 +93,18 @@ class ArcheoLexLog:
             type_line = None
         return type_line
 
-    def outputInfo(self,mod,file):
-        """print les infomations et les écrire dans csv,par défault,le file est codes.csv
-
+    @staticmethod
+    def outputHeader(csvwriter):
+        """ Affiche l'entête
         """
-        message = [self.code, mod.version, mod.date,
-        mod.partie,mod.sous_partie,mod.livre,mod.titre,mod.chapitre,
-        mod.article,mod.type]
-        if file != None:
-            fileCsv = os.path.dirname(os.path.abspath(__file__))+'/'+file+'.csv'
-            self._write_csv(message,fileCsv)
-        else:    
-            print(message)
+        csvwriter.writerow(['code','version','date','partie','sous_partie','livre','titre','chapitre','article','type'])
+
+    def outputInfo(self,mod,csvwriter):
+        """ Affiche une ligne
+        """
+        csvwriter.writerow([self.code, mod.version, mod.date,
+            mod.partie,mod.sous_partie,mod.livre,mod.titre,mod.chapitre,
+            mod.article,mod.type])
 
     def getDiff(self,commit):
         """Obtenez toutes les modifications d'une version d'un code
@@ -141,7 +114,7 @@ class ArcheoLexLog:
 
             Arg:
                 number_commit: Commit(type) de version
-            
+
             return:
                 mods:dict qui répresente une modification(un dict)
         """
@@ -166,7 +139,7 @@ class ArcheoLexLog:
             if (len(line) > 2 and line[2] == '#'):
                 level = line.count("#")
                 cursec = cursec[:level-1]+[re.sub(".*# ","",line)]
-                
+
                 # Si changement d'article
                 if line.find("Article") != -1:
                     # Si une modification a été détectée, l'enregistrer
@@ -180,7 +153,7 @@ class ArcheoLexLog:
                                 mods[curmod.article].nb_modifications = nbm
                         else:
                             mods[curmod.article] = curmod
-                        
+
                     # Réinitialiser la modification courante
                     curmod = Article(self.code, date, version, type_line, cursec, self.PLTC_method)
 
@@ -188,7 +161,7 @@ class ArcheoLexLog:
             # dans une ligne non vide
             elif type_line is not None and len(line[1:].strip()) > 0 and curmod is not None:
                 if curmod.type is None : curmod.type = "Modification"
-                curmod.nb_modifications += 1                 
+                curmod.nb_modifications += 1
         return mods
 
     def getErrors(self,commit):
@@ -232,12 +205,11 @@ class ArcheoLexLog:
 
                     article_precedent = article
         return errors
-   
-    def processCode(self,datelimit,file,traitement="check"):
+
+    def processCode(self,datelimit,csvwriter,traitement="check",print_progression=False):
         """Obtenir tous les versions d'un et pour chaque version on fonction getDiff()
         """
-        path = self.enterPath()
-        self.repo = git.Repo(path,search_parent_directories=True)
+        self.repo = self.createRepo()
 
         #obtenir tous les version
         commit_log = self.repo.git.log('--pretty={"%h"}')
@@ -255,17 +227,21 @@ class ArcheoLexLog:
             commit_number ="".join(re.findall(r"{\"(.+?)\"}",log))
             commit=self.repo.commit(commit_number)
             date=self.getDate(commit)
+
             if datelimit != None:
-                if datetime.strptime(date,'%Y-%m-%d').date()<datelimit: return()
+                if traitement == "diff" and date < datelimit: return()
+                if traitement == "check" and date > datelimit: return()
+
+            if print_progression:
+                sys.stderr.write("\r"+self.code+" "+date+" " * 50)
 
             if traitement == "check":
                 errors = self.getErrors(commit)
                 for e in errors:
                     if errors[e].article not in articles:
-                        self.outputInfo(errors[e], file)
+                        self.outputInfo(errors[e], csvwriter)
                         articles.append(errors[e].article)
             else:
                 mods = self.getDiff(commit)
                 for m in mods:
-                    self.outputInfo(mods[m], file)
-    
+                    self.outputInfo(mods[m], csvwriter)

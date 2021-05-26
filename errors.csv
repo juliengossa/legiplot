@@ -136,17 +136,16 @@ code_de_commerce,371db35,2014-12-18,Législative,NA,7,5,1,L751-1,doublon
 code_de_commerce,371db35,2014-12-18,Législative,NA,7,5,1,L751-6,doublon
 code_de_commerce,371db35,2014-12-18,Législative,NA,7,5,2,L752-14,doublon
 code_de_commerce,371db35,2014-12-18,Législative,NA,7,5,2,L752-22,doublon
-code_de_commerce,381b7fa,2016-01-01,Législative,NA,NA,NA,NA,L23-10-11,doublon
-code_de_commerce,381b7fa,2016-01-01,Réglementaire,NA,NA,NA,NA,D23-10-1,doublon
+code_de_commerce,381b7fa,2016-01-01,Législative,NA,2,3,10,L23-10-11,doublon
+code_de_commerce,381b7fa,2016-01-01,Réglementaire,NA,2,3,10,D23-10-1,doublon
 code_de_commerce,2cffb00,2016-05-31,Arrêtés,NA,6,6,3,A663-21,doublon
 code_de_commerce,3161a14,2016-06-17,Législative,NA,9,5,0,L950-1,doublon
 code_de_commerce,6d3f46f,2016-07-29,Réglementaire,NA,8,2,2,R822-17,inversion R822-34
 code_de_commerce,6d3f46f,2016-07-29,Réglementaire,NA,8,2,2,R822-19,inversion R822-35
 code_de_commerce,41f775d,2018-04-01,Réglementaire,NA,2,2,3,R223-20-1,inversion R223-20-3
 code_de_commerce,0488286,2018-12-07,Réglementaire,NA,7,2,2,D722-28,inversion R722-34
-code_de_commerce,e9f3a8e,2019-05-24,Législative,NA,7,1,2,L712-6,doublon
-code_de_commerce,ac364b2,2019-11-04,Réglementaire,NA,2,2,7,D227-1,inversion R227-1-1
-code_de_commerce,99c643e,2021-02-13,Réglementaire,NA,7,1,3,R713-1-1,inversion R713-62
+code_de_commerce,fce2a11,2019-11-04,Réglementaire,NA,2,2,7,D227-1,inversion R227-1-1
+code_de_commerce,8530b35,2021-02-13,Réglementaire,NA,7,1,3,R713-1-1,inversion R713-62
 code_de_justice_administrative,9135081,2001-01-01,Législative,NA,2,3,4,L234-1,inversion L234-5
 code_de_justice_administrative,ddf03bc,2002-04-21,Réglementaire,NA,2,2,1,R221-3,doublon
 code_de_justice_administrative,ddf03bc,2002-04-21,Réglementaire,NA,2,2,2,R222-11,doublon
@@ -246,7 +245,7 @@ code_de_l'éducation,8c5bd9c,2006-05-24,Réglementaire,NA,3,3,7,D337-134,inversi
 code_de_l'éducation,8c5bd9c,2006-05-24,Réglementaire,NA,3,3,7,D337-129,inversion D337-134
 code_de_l'éducation,8c5bd9c,2006-05-24,Réglementaire,NA,3,3,7,D337-131,inversion D337-136
 code_de_l'éducation,c591bbb,2010-06-15,Réglementaire,NA,3,3,2,D332-26,doublon
-code_de_l'éducation,41e4dfa,2013-05-25,Législative,NA,NA,NA,NA,L23-10-1,inversion L238-3
+code_de_l'éducation,41e4dfa,2013-05-25,Législative,NA,2,3,10,L23-10-1,inversion L238-3
 code_de_l'éducation,c5b1937,2014-03-16,Réglementaire,NA,7,1,9,D719-41,doublon
 code_de_l'éducation,7f6cc02,2014-12-29,Réglementaire,NA,3,1,4,D314-91,inversion D314-106
 code_de_l'éducation,36c1787,2015-06-14,Réglementaire,NA,8,2,2,R822-2,inversion R822-6
@@ -576,8 +575,8 @@ code_de_l'énergie,683515e,2016-02-20,Réglementaire,NA,1,2,1,R121-59,inversion 
 code_de_l'énergie,3daf77c,2016-04-14,Réglementaire,NA,3,6,1,R361-3,inversion D361-7-1
 code_de_l'énergie,3daf77c,2016-04-14,Réglementaire,NA,3,6,1,R361-5,inversion D361-7-2
 code_de_l'énergie,f406e5b,2016-05-01,Réglementaire,NA,5,2,1,R521-31,inversion R521-38
-code_de_l'énergie,853958e,2018-04-08,Réglementaire,NA,3,1,4,R314-66,inversion R314-70
-code_de_l'énergie,a7e3d1b,2019-11-10,Législative,NA,4,4,6,L446-1 A,inversion L446-2
+code_de_l'énergie,0c024ef,2018-04-08,Réglementaire,NA,3,1,4,R314-66,inversion R314-70
+code_de_l'énergie,2265f11,2019-11-10,Législative,NA,4,4,6,L446-1 A,inversion L446-2
 code_de_la_consommation,fae3cf7,1993-07-27,Législative,NA,3,1,1,L311-9,inversion L311-12
 code_de_la_consommation,fae3cf7,1993-07-27,Législative,NA,3,1,1,L311-28,inversion L311-37
 code_de_la_consommation,fae3cf7,1993-07-27,Législative,NA,3,3,3,L333-1,inversion L333-7
@@ -730,7 +729,7 @@ code_de_la_construction_et_de_l'habitation,a6f2a04,2007-02-02,Législative,NA,4,
 code_de_la_construction_et_de_l'habitation,410aa61,2007-08-10,Législative,NA,3,5,3,L353-21,doublon
 code_de_la_construction_et_de_l'habitation,55e5e8e,2008-01-02,Réglementaire,NA,1,3,4,R134-4-1,doublon
 code_de_la_construction_et_de_l'habitation,d057903,2009-03-28,Législative,NA,4,4,3,L443-12,inversion L443-12-1
-code_de_la_construction_et_de_l'habitation,75bcd5e,2011-01-01,Législative,NA,NA,NA,NA,L31-10-1,inversion L316-4
+code_de_la_construction_et_de_l'habitation,75bcd5e,2011-01-01,Législative,NA,3,1,10,L31-10-1,inversion L316-4
 code_de_la_construction_et_de_l'habitation,4c35357,2011-01-31,Réglementaire,NA,5,1,1,R511-12,inversion D511-13
 code_de_la_construction_et_de_l'habitation,5bd0b61,2011-06-17,Réglementaire,NA,1,4,2,R142-9,inversion R142-10
 code_de_la_construction_et_de_l'habitation,5bd0b61,2011-06-17,Réglementaire,NA,1,4,2,R142-11,inversion R142-12
@@ -1807,14 +1806,14 @@ code_de_procédure_pénale,60a816c,2007-05-15,Réglementaire,NA,3,2,4,D324,doubl
 code_de_procédure_pénale,60a816c,2007-05-15,Arrêtés,NA,NA,NA,NA,A43-2,inversion A43-3
 code_de_procédure_pénale,f4d044a,2007-06-25,Arrêtés,NA,NA,NA,NA,A36-13,doublon
 code_de_procédure_pénale,5b1e57c,2007-11-18,Réglementaire,NA,1,4,7,D147-9-1,inversion D147-16
-code_de_procédure_pénale,daea2ae,2009-05-14,Réglementaire,NA,NA,NA,NA,R15-33-66-1,inversion R15-33-66-3
+code_de_procédure_pénale,daea2ae,2009-05-14,Réglementaire,NA,1,5,33,R15-33-66-1,inversion R15-33-66-3
 code_de_procédure_pénale,f0c9853,2009-06-12,Arrêtés,NA,NA,NA,NA,A37-10,inversion A37-15
 code_de_procédure_pénale,0c8cbf2,2010-12-29,Réglementaire,NA,4,3,6,D436,inversion D451
 code_de_procédure_pénale,deeebee,2012-05-09,Réglementaire,NA,NA,NA,NA,D46-7,doublon
 code_de_procédure_pénale,14aacee,2016-02-29,Réglementaire,NA,5,9,4,D594-11,inversion D594-16
 code_de_procédure_pénale,b2f4b5e,2016-10-01,Arrêtés,NA,NA,NA,NA,A22,doublon
 code_de_procédure_pénale,b2f4b5e,2016-10-01,Arrêtés,NA,NA,NA,NA,A23,doublon
-code_de_procédure_pénale,bd25671,2019-06-03,Réglementaire,NA,NA,NA,NA,R50-54-1,inversion R50-68
+code_de_procédure_pénale,bd25671,2019-06-03,Réglementaire,NA,5,0,54,R50-54-1,inversion R50-68
 code_de_procédure_pénale,39bf450,2020-03-24,Réglementaire,NA,1,1,5,D115-3,doublon
 code_de_procédure_pénale,83099dd,2020-07-01,Arrêtés,NA,NA,NA,NA,A-1-2,inversion A 1er
 code_des_assurances,e7ff8f7,1976-07-21,Législative,NA,1,3,2,L132-2,inversion L132-27
@@ -2021,11 +2020,11 @@ code_des_postes_et_des_communications_électroniques,6b7467f,2005-04-30,Régleme
 code_des_postes_et_des_communications_électroniques,46b2239,2005-05-21,Législative,NA,NA,NA,NA,L1,inversion L4
 code_des_postes_et_des_communications_électroniques,46b2239,2005-05-21,Législative,NA,NA,NA,NA,L6,doublon
 code_des_postes_et_des_communications_électroniques,46b2239,2005-05-21,Législative,NA,NA,NA,NA,L36-5,inversion L36-14
-code_des_postes_et_des_communications_électroniques,8d9d532,2005-05-29,Réglementaire,NA,NA,NA,NA,R20-44-27,inversion R20-44-30
-code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,NA,NA,NA,R20-44-35,inversion R20-44-38
-code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,NA,NA,NA,R20-44-36,inversion R20-44-39
-code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,NA,NA,NA,R20-44-37,inversion R20-44-40
-code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,NA,NA,NA,R20-44-42,inversion R20-44-47
+code_des_postes_et_des_communications_électroniques,8d9d532,2005-05-29,Réglementaire,NA,2,0,44,R20-44-27,inversion R20-44-30
+code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,2,0,44,R20-44-35,inversion R20-44-38
+code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,2,0,44,R20-44-36,inversion R20-44-39
+code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,2,0,44,R20-44-37,inversion R20-44-40
+code_des_postes_et_des_communications_électroniques,593748c,2007-02-08,Réglementaire,NA,2,0,44,R20-44-42,inversion R20-44-47
 code_des_transports,d269398,2010-12-01,Législative,1,8,0,3,L1803-2,inversion L1803-8
 code_des_transports,d269398,2010-12-01,Législative,1,8,0,3,L1803-1,inversion L1803-2
 code_des_transports,d269398,2010-12-01,Législative,5,3,3,2,L5332-2,inversion L5332-5
@@ -2040,9 +2039,9 @@ code_des_transports,bc8aaf9,2014-11-07,Réglementaire,1,1,1,2,R1112-11,inversion
 code_des_transports,dfbb7de,2016-12-30,Réglementaire,5,7,8,1,R5781-3,inversion D5791-2
 code_des_transports,dfbb7de,2016-12-30,Réglementaire,5,7,8,1,D5781-2,inversion R5791-1
 code_des_transports,638b397,2016-12-31,Législative,3,1,2,4,L3124-6,inversion L3124-7
-code_des_transports,f0858fc,2017-07-01,Législative,5,7,8,5,L5785-5-2,inversion L5785-5-19
-code_des_transports,6d753c7,2019-03-10,Réglementaire,5,3,1,2,R5312-73,doublon
-code_des_transports,80d2d60,2019-07-12,Réglementaire,2,2,5,1,R2251-25,inversion R2251-61
+code_des_transports,412d5b1,2017-07-01,Législative,5,7,8,5,L5785-5-2,inversion L5785-5-19
+code_des_transports,e94fb85,2019-03-10,Réglementaire,5,3,1,2,R5312-73,doublon
+code_des_transports,ce4f951,2019-07-12,Réglementaire,2,2,5,1,R2251-25,inversion R2251-61
 code_du_cinéma_et_de_l'image_animée,af3ae53,2009-07-26,Législative,NA,2,1,2,L212-7,inversion L212-13
 code_du_patrimoine,e077839,2004-02-24,Législative,NA,6,2,1,L621-12,inversion L621-22
 code_du_patrimoine,e077839,2004-02-24,Législative,NA,6,2,1,L621-11,inversion L621-12
@@ -2151,7 +2150,7 @@ code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,2,3,2,R232-6,inversion R234
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,3,1,1,R311-1,inversion R312-13
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,3,2,3,R323-4,inversion R323-23
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,3,2,1,R321-1,inversion R323-4
-code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,NA,NA,NA,R51-11-2,inversion R365-1
+code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,5,1,11,R51-11-2,inversion R365-1
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,4,1,1,R411-1,inversion R532-2
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,4,4,1,R441-9,inversion R443-10
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,6,2,0,R620-4,inversion R631-1
@@ -2169,7 +2168,7 @@ code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,2,2,3,D223-3,inversion D241
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,3,2,3,D323-17,inversion D353-12
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,3,2,3,D323-1,inversion D323-24
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,3,2,3,D323-7,inversion D323-10
-code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,NA,NA,NA,D51-10-1,inversion D440-2
+code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,5,1,10,D51-10-1,inversion D440-2
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,7,4,3,D743-1,inversion D743-8
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,9,1,0,D910-1,inversion D910-24
 code_du_travail,611e5aa,1973-11-23,Réglementaire,NA,9,1,0,D910-2,inversion D910-22
@@ -2209,17 +2208,17 @@ code_du_travail,b60060d,1978-07-18,Législative,NA,9,3,0,L930-1-11,inversion L93
 code_du_travail,fb2d3ce,1978-12-27,Réglementaire,NA,8,1,1,D811-52,inversion D871-1
 code_du_travail,1c35e3d,1979-01-17,Législative,NA,3,5,2,L352-4,inversion L352-5
 code_du_travail,1c35e3d,1979-01-17,Législative,NA,3,5,1,L351-4,inversion L351-11-2
-code_du_travail,fd165b9,1979-01-19,Législative,NA,NA,NA,NA,L51-10-2,inversion L515-3
+code_du_travail,fd165b9,1979-01-19,Législative,NA,5,1,10,L51-10-2,inversion L515-3
 code_du_travail,fd165b9,1979-01-19,Législative,NA,5,1,1,L511-2,inversion L532-1
-code_du_travail,fd165b9,1979-01-19,Législative,NA,NA,NA,NA,L51-10-1,inversion L518-1
+code_du_travail,fd165b9,1979-01-19,Législative,NA,5,1,10,L51-10-1,inversion L518-1
 code_du_travail,fd165b9,1979-01-19,Législative,NA,5,1,3,L513-1,inversion L526-4
 code_du_travail,fd165b9,1979-01-19,Réglementaire,NA,1,1,1,R111-1,inversion R526-1
 code_du_travail,ae9197f,1979-04-01,Réglementaire,NA,9,3,0,R930-10,inversion R930-19
 code_du_travail,ae9197f,1979-04-01,Réglementaire,NA,9,8,0,R980-5,inversion R980-8
 code_du_travail,08681d2,1979-10-01,Réglementaire,NA,2,3,1,R231-53,inversion R231-65
-code_du_travail,ce1599e,1979-12-02,Réglementaire,NA,NA,NA,NA,R51-11-1,inversion R362-1
+code_du_travail,ce1599e,1979-12-02,Réglementaire,NA,5,1,11,R51-11-1,inversion R362-1
 code_du_travail,ce1599e,1979-12-02,Réglementaire,NA,5,1,1,R511-1,inversion R512-8
-code_du_travail,01374df,1980-01-06,Législative,NA,NA,NA,NA,L51-11-1,inversion L516-2
+code_du_travail,01374df,1980-01-06,Législative,NA,5,1,11,L51-11-1,inversion L516-2
 code_du_travail,42f8b60,1980-01-17,Réglementaire,NA,1,1,6,R116-11,inversion R265-1
 code_du_travail,7e3a501,1980-04-01,Réglementaire,NA,2,3,3,R233-62,inversion R233-66
 code_du_travail,7e3a501,1980-04-01,Réglementaire,NA,2,3,3,R233-67,inversion R233-82
@@ -2245,7 +2244,7 @@ code_du_travail,f9d27cd,1982-11-14,Législative,NA,4,1,2,L412-1,inversion L473-2
 code_du_travail,f9d27cd,1982-11-14,Législative,NA,6,1,1,L611-1,inversion L620-7
 code_du_travail,f9d27cd,1982-11-14,Législative,NA,7,4,2,L742-5,inversion L796-2
 code_du_travail,f9d27cd,1982-11-14,Réglementaire,NA,5,2,3,R523-11,inversion R523-16
-code_du_travail,91eb9ba,1983-01-01,Réglementaire,NA,NA,NA,NA,D51-10-6,inversion D517-1
+code_du_travail,91eb9ba,1983-01-01,Réglementaire,NA,5,1,10,D51-10-6,inversion D517-1
 code_du_travail,9172c3e,1983-03-26,Réglementaire,NA,9,5,0,R950-10,inversion R960-51
 code_du_travail,8c97249,1983-05-31,Réglementaire,NA,9,3,0,R930-1,inversion R970-37
 code_du_travail,8c97249,1983-05-31,Réglementaire,NA,9,6,0,R960-2,inversion R960-51
@@ -2297,7 +2296,7 @@ code_du_travail,14be9b0,1986-06-25,Réglementaire,NA,3,4,1,R341-1,inversion R341
 code_du_travail,b02fef7,1986-07-09,Réglementaire,NA,3,4,1,D341-3,inversion D342-13
 code_du_travail,c5a82f6,1987-02-28,Réglementaire,NA,3,2,2,R322-1,inversion R471-3
 code_du_travail,c5a82f6,1987-02-28,Réglementaire,NA,3,2,2,D322-2,inversion D322-16
-code_du_travail,39ca0a2,1987-07-01,Réglementaire,NA,NA,NA,NA,D51-10-2,inversion D514-6
+code_du_travail,39ca0a2,1987-07-01,Réglementaire,NA,5,1,10,D51-10-2,inversion D514-6
 code_du_travail,038e7ea,1987-07-24,Législative,NA,1,1,9,L119-1,inversion L119-5
 code_du_travail,038e7ea,1987-07-24,Législative,NA,1,1,6,L116-1,inversion L119-1
 code_du_travail,b16d000,1987-07-31,Législative,NA,3,2,3,L323-1,inversion L365-2
