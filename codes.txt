@@ -1,6 +1,6 @@
-code_civil 
+code_civil
 code_de_commerce
-code_de_justice_administrative 
+code_de_justice_administrative
 code_de_l'action_sociale_et_des_familles
 code_de_l'artisanat
 code_de_l'aviation_civile
@@ -37,4 +37,3 @@ code_général_de_la_propriété_des_personnes_publiques
 code_général_des_collectivités_territoriales
 code_pénal
 code_électoral
-

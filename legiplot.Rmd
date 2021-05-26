@@ -1,0 +1,81 @@
+---
+title: "Legiplot"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(kableExtra)
+library(ggthemes)
+```
+
+```{r load}
+legiplot <- read.csv("all_codes_fulltext.csv") %>%
+  mutate(année = as.numeric(str_sub(date,1,4)))
+```
+
+## Données 
+
+```{r data}
+legiplot %>%
+  group_by(code) %>%
+  summarise(
+    nb_modifs = n(),
+    début = min(date),
+    fin = max(date),
+    parties = n_distinct(partie),
+    sous_parties = n_distinct(sous_partie),
+    livres = n_distinct(livre),
+    titres = n_distinct(titre),
+    chapitres = n_distinct(chapitre)
+  ) %>% kable()
+```
+
+
+## Nombre de modifications globales
+
+```{r global}
+legiplot %>%
+  group_by(année,type) %>%
+  summarise(nombre = n()) %>%
+  ggplot(aes(x=année,y=nombre,fill=type)) +
+  geom_col() +
+  theme_hc()
+```
+
+
+```{r global.zoom}
+legiplot %>%
+  filter(année > 1950) %>%
+  group_by(année,type) %>%
+  summarise(nombre = n()) %>%
+  ggplot(aes(x=année,y=nombre,fill=type)) +
+  geom_col() +
+  theme_hc()
+```
+
+```{r global.code, fig.width=10, fig.height=8}
+legiplot %>%
+  filter(année > 1950) %>%
+  group_by(année,code) %>%
+  summarise(nombre = n()) %>%
+  ggplot(aes(x=année,y=nombre,color=code)) +
+  geom_line() +
+  facet_wrap(~code) +
+  guides(color=FALSE) +
+  theme_hc()
+```
+
+
+```{r global.code.zoom, fig.width=10, fig.height=8}
+legiplot %>%
+  filter(année > 1999, code != "code_du_travail") %>%
+  group_by(année,code) %>%
+  summarise(nombre = n()) %>%
+  ggplot(aes(x=année,y=nombre,color=code)) +
+  geom_line() +
+  facet_wrap(~code) +
+  guides(color=FALSE) +
+  theme_hc()
+```
