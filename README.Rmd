@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 knitr::opts_chunk$set(fig.width = 8, fig.height = 4.5)
 
 library(tidyverse)
+library(kableExtra)
 library(ggcpesrthemes)
 theme_cpesr_setup(
   authors="Julien Gossa",
@@ -26,170 +27,62 @@ Trois dépôts présentent les données législatives françaises :
 - [Archéo Lex](https://archeo-lex.fr/) : peu précis (un fichier par code), mais régulièrement mis à jour et avec des commits chronologiques. 
 
 
-L'exploitation actuelle se limite au Code de l'éducation présenté par Archéo Lex,
-mais est facilement adaptable à d'autres.
+## Application archeolex_excavation
 
-Le script [getlog-archeolex.sh](getlog-archeolex.sh) permet de récupérer 
-les logs du dépôt git : [archeolex-education.csv](archeolex-education.csv) et [archeolex.csv](archeolex.csv).
+L'application python 3 `archeolex_excavation` facilite la fouille des dépôts git Archéo Lex.
 
+```
+usage: archeolex_excavation.py [-h] [-d YYYY-MM-DD] [-f fichier.csv] [-t] [-v] diff|check code [code ...]
 
-__Attention__ : ce travail quantifie le nombre de modifications, et non
-l'importance des modifications. De petites modifications peuvent avoir de grandes
-conséquences, alors que de grandes modifications peuvent être purement cosmétiques.
+positional arguments:
+  diff|check            Le traitement à effectuer
+  code                  La liste des codes à fouiller
 
-## Visualisations
-
-```{r data}
-code <- read.csv("archeolex-education.csv", header=TRUE,  quote='"') %>%
-  mutate(
-    Date = as.Date(Date)
-  )
-
-mandatures <- c(2000,2002,2007,2012,2017)
+optional arguments:
+  -h, --help            show this help message and exit
+  -d YYYY-MM-DD, --datelimit YYYY-MM-DD
+                        Définit une date maximum pour la fouille
+  -f fichier.csv, --file fichier.csv
+                        Ecrit les données dans un fichier csv (sortie standard par défaut)
+  -t, --fulltext        Détecte les noms entiers des sections
+  -v, --verbose         Enregistre tous les fichiers intermédiaires
 ```
 
+## Détection d'erreurs
 
-### Nombre de modifications du code de l'éducation
+L'application permet de détecter des erreurs de deux types :
+- `doublon` : articles apparaissant deux fois dans un code ;
+- `inversion` : deux articles consécutifs dont la numérotation n'est pas croissante.
 
-```{r modif.cummul}
-code %>%
-  arrange(Date) %>%
-  mutate(Modifications = row_number()) %>%
-  ggplot(aes(x=Date,y=Modifications)) +
-  geom_point() +
-  #scale_x_discrete(breaks=mandatures) +
-  ggtitle("Nombre cummulé de modifications du code de l'éducation") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
+Cette détection d'erreur est imparfaite, et n'exclu ni faux-positifs ni faux-négatifs. 
+La date correspond à la version la plus ancienne à laquelle l'erreur a été détectée.
+
+Les erreurs détectées sur un échantillon de codes se trouvent dans le fichier [errors.csv](errors.csv), au format suivant :
+
+```{r errors}
+lperrors <- read.csv("errors.csv") %>%
+  mutate(code = str_replace_all(code,'_',' '))
+head(lperrors) %>% kable()
 ```
 
-```{r modif.par.an}
-code %>%
-  mutate(Année = format(Date,"%Y")) %>%
-  filter(Année < 2021) %>%
-  group_by(Année) %>%
-  summarise(Modifications = n()) %>%
-  ggplot(aes(x=Année,y=Modifications, fill=Modifications)) +
-  geom_col() +
-  geom_text(aes(label=round(Modifications)), vjust=-0.3) +
-  scale_x_discrete(breaks=mandatures) +
-  scale_fill_distiller(palette="Reds", direction=0) +
-  ggtitle("Nombre de modifications du code de l'éducation") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
+Le nombre d'erreurs détectées est :
+
+```{r errors.stat}
+lperrors %>%
+  mutate(type = case_when(
+    type=="doublon" ~ "doublon",
+    TRUE ~ "inversion")) %>%
+  group_by(type) %>%
+  summarise(détections = n()) %>%
+  pivot_wider(names_from = type, values_from = détections)  %>% kable()
 ```
 
-### Rythme des modifications
-
-```{r rythme.par.an}
-code %>%
-  mutate(Année = format(Date,"%Y")) %>%
-  filter(Année < 2021) %>%
-  group_by(Année) %>%
-  summarise(Modifications = 365 / n() ) %>%
-  ggplot(aes(x=Année,y=Modifications, fill=Modifications)) +
-  geom_col() +
-  geom_text(aes(label=round(Modifications)), vjust=-0.3) +
-  scale_x_discrete(breaks=mandatures) +
-  scale_fill_distiller(palette="Reds") +
-  ylab("Nombre de jours") +
-  ggtitle("Nombre de jours moyens entre deux modifications du code de l'éducation") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
-```
-
-### Nombre de modifications durant une scolarité jusqu'au bac
-
-On compte ici le nombre de modifications sur les 15 années précédentes (de la maternelle au bac).
-
-```{r modif.par.scolarité}
-code %>%
-  mutate(Année = format(Date,"%Y")) %>%
-  filter(Année < 2021) %>%
-  group_by(Année) %>%
-  summarise(Modifications = n()) %>%
-  mutate(Modifications = zoo::rollsumr(Modifications,k=15, fill=NA)) %>%
-  filter(!is.na(Modifications)) %>%
-  ggplot(aes(x=Année,y=Modifications, fill=Modifications)) +
-  geom_col() +
-  geom_text(aes(label=round(Modifications)), vjust=-0.3) +
-  #scale_x_discrete(breaks=mandatures) +
-  scale_fill_distiller(palette="Reds", direction=0) +
-  ggtitle("Nombre de modifications du code de l'éducation \ndurant une scolarité jusqu'au bac de chaque année") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
-```
-
-
-### Nombre de lignes modifées dans le code de l'éducation
-
-```{r lignes.cummul}
-code %>%
-  arrange(Date) %>%
-  mutate(Modifications = cumsum(LignesModifiées)) %>% 
-  ggplot(aes(x=Date,y=Modifications)) +
-  geom_point() +
-  ggtitle("Nombre cummulé de lignes modifiées dans le code de l'éducation") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
-```
-
-```{r lignes.par.an}
-code %>%
-  mutate(Année = format(Date,"%Y")) %>%
-  filter(Année < 2021) %>%
-  group_by(Année) %>%
-  summarise(Modifications = sum(LignesModifiées)) %>%
-  ggplot(aes(x=Année,y=Modifications, fill=Modifications)) +
-  geom_col() +
-  scale_x_discrete(breaks=mandatures) +
-  scale_fill_distiller(palette="Reds", direction=0) +
-  ggtitle("Nombre de lignes modifiées par an dans le code de l'éducation") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
-```
-
-
-## Comparaison entre codes
-
-```{r data.tous}
-codes <- read.csv("archeolex.csv", header=TRUE,  quote='"') %>%
-  mutate(
-    Date = as.Date(Date)
-  )
-```
-
-```{r modif.cummul.tous}
-codes %>%
-  arrange(Date) %>%
-  group_by(Dossier) %>%
-  mutate(Modifications = row_number()) %>%
-  ggplot(aes(x=Date,y=Modifications, group=Dossier, color=(Dossier=="code_de_l'éducation"))) +
-  geom_line(size=0.3) +
-  #scale_x_discrete(breaks=mandatures) +
-  scale_color_manual(values=c("grey","red"), name="Education") +
-  ggtitle("Nombre cummulé de modifications des principaux codes en vigueurs") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
-```
-
-```{r modif.cummul.tous.2000}
-codes %>%
-  filter(Date > as.Date("2000-01-01")) %>%
-  arrange(Date) %>%
-  group_by(Dossier) %>%
-  mutate(Modifications = row_number()) %>%
-  ggplot(aes(x=Date,y=Modifications, group=Dossier, color=(Dossier=="code_de_l'éducation"))) +
-  geom_line(size=0.5) +
-  #scale_x_discrete(breaks=mandatures) +
-  scale_color_manual(values=c("grey","red")) +
-  ggtitle("Nombre cummulé de modifications des principaux codes en vigueurs", subtitle = "Depuis 2000") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
-```
-
-
-```{r modif.cummul.tous.2000.tab, fig.height=9}
-codes %>%
-  filter(Date > as.Date("2000-01-01")) %>%
-  group_by(Dossier) %>%
-  summarise(Modifications = n()) %>%
-  ggplot(aes(x=reorder(Dossier,Modifications),y=Modifications, fill=(Dossier=="code_de_l'éducation"))) +
-  geom_col() +
-  coord_flip() +
-  scale_fill_manual(values=c("grey","red")) +
-  ggtitle("Nombre modifications\n depuis 2000") + 
-  theme_cpesr_cap() + guides(fill=FALSE)
+```{r errors.stat.code}
+lperrors %>%
+  mutate(type = case_when(
+    type=="doublon" ~ "doublon",
+    TRUE ~ "inversion")) %>%
+  group_by(code,type) %>%
+  summarise(détections = n()) %>%
+  pivot_wider(names_from = type, values_from = détections, values_fill = 0)  %>% kable()
 ```
