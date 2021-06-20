@@ -1,0 +1,218 @@
+---
+title: "Legiplot : une étude quantitative des codes législatifs"
+subtitle: "https://github.com/juliengossa/legiplot"
+author: 
+  - Yang Yang, yangjoanne216@gmail.com \newline
+  - Julien Gossa, gossa@unistra.fr \newline
+  - Université de Strasbourg
+date: Juin 2021
+lang: "fr"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    toc: false
+fontsize: 8pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+options(dplyr.summarise.inform = FALSE)
+
+library(tidyverse)
+library(ggthemes)
+library(cowplot)
+
+source("R/legiplot_fun_load.R")
+source("R/legiplot_fun_tree.R")
+source("R/legiplot_fun_evol.R")
+source("R/legiplot_fun_diff.R")
+
+code.exemple <- "code de l'éducation"
+```
+
+```{r setup.load, include=FALSE, cache=TRUE}
+legiplot_load_tree()
+legiplot_load_evol()
+legiplot_load_diff()
+
+```
+
+## Introduction
+
+### Présentation du projet
+
+Legiplot vise à évaluer le rythme des réformes par la quantification des 
+modification des codes législatifs. 
+
+Les données de ces codes sont extraites des projets suivants :
+
+-   [Légifrance](https://www.legifrance.gouv.fr/) : le portail officiel bien connu ;
+-   [Archéo Lex](https://archeo-lex.fr/) : un projet indépendant qui consolide les 
+    textes de Légifrance dans des dépôts GIT.
+    
+De ces données, nous extrayons différents indicateurs et visualisations, 
+qui sont présentés en détail dans la suite.
+
+```{r exemples, fig.width=50, fig.height=8, out.width="100%" }
+plot_grid(ncol=6,
+  legiplot_plot_tree(code.exemple),
+  legiplot_indcode_plot(code.exemple),
+  legiplot_vol_code(code.exemple),
+  legiplot_modifs_annees_plot(uncode=code.exemple,start="0001-01-01"),
+  legiplot_modifs_codes_plot(uncode=code.exemple,start="0001-01-01",legend.pos="none"),
+  legiplot_modifs_codes_plot(pos="fill",uncode=code.exemple,start="0001-01-01",legend.pos="none")
+)
+```
+
+
+### Structure
+
+::: columns
+
+:::: column
+Cette représentation permet d'apprécier, dans l'espace, le volume relatif des 
+différentes parties des codes.
+
+- La représentation se limite à la partie législative.
+- Chaque nœud représente une section du code.
+- La couleur est celle de la sous-partie ou du Livre.
+- La taille représente le nombre d'articles.
+::::
+
+:::: column
+```{r exemple.tree, fig.width=10, fig.height=10, out.width="100%" }
+legiplot_plot_tree(code.exemple)
+```
+::::
+
+:::
+
+
+### Indicateurs
+
+::: columns
+
+:::: column
+
+Cette représentation permet d'apprécier différentes manières de mesurer l'évolution
+volumétrique des codes.
+
+- Trois indicateurs primaires sont présentés :
+
+  - nombre d'articles ;
+  - nombre d'alinéas (les énumerations sont comptées comme alinéas) ;
+  - nombre de mots.
+
+- Trois indicateurs secondaires sont présentés :
+
+  - nombre d'alinéas par articles ;
+  - nombre de mots par articles ;
+  - nombre de mots par alinéas.
+
+- Pour être comparables, tous les indicateurs sont normalisés en valeur 100 au début de la période.
+::::
+
+:::: column
+```{r exemple.ind, fig.width=6, fig.height=4, out.width="100%" }
+legiplot_indcode_plot(code.exemple)
+```
+::::
+
+:::
+
+
+
+
+### Evolution des volumes des Livres
+
+::: columns
+
+:::: column
+
+Cette représentation permet d'apprécier l'évolution dans le temps des volumes 
+des Livres, en fonction des parties, en terme de nombre d'articles. 
+
+Elle est particulièrement utile pour détecter les codifications progressives.
+
+- Les couleurs représentent les Livres.
+::::
+
+:::: column
+```{r exemple.vol, fig.width=6, fig.height=4, out.width="100%" }
+legiplot_vol_code(code.exemple)
+```
+::::
+
+:::
+
+
+
+### Proportion des modifications
+
+::: columns
+
+:::: column
+
+Cette représentation permet d'apprécier l'évolution des articles qui composent un code.
+
+Elle est particulièrement utile pour vérifier ce qu'il reste du code original au 
+fil des transformations.
+
+- Les couleurs représentent le nombre d'articles ajoutés, modifiés ou supprimés.
+- La première rEprésentation est en nombre d'articles.
+- La seconde représentation est en proportion des articles.
+- En raison d'erreurs en cours de correction dans Légifrance, certaines visualisations
+peuvent présenter des aberrations. 
+
+::::
+
+:::: column
+```{r exemple.modfis, fig.width=6, fig.height=8, out.width="100%" }
+plot_grid(ncol=1,
+ legiplot_modifs_codes_plot(uncode=code.exemple,start="0001-01-01",legend.pos="none"),
+ legiplot_modifs_codes_plot(pos="fill",uncode=code.exemple,start="0001-01-01",legend.pos="none")
+)
+```
+::::
+
+:::
+
+## Codes
+
+
+```{r tdb}
+
+tdb <- function(code) {
+  plot_grid(ncol=2,
+     plot_grid(ncol=1, rel_heights = c(2.5,1),
+       legiplot_plot_tree(code),
+       plot_grid(ncol=2,
+         legiplot_modifs_codes_plot(uncode=code,start="0001-01-01",legend.pos="none"),
+         legiplot_modifs_codes_plot(pos="fill",uncode=code,start="0001-01-01",legend.pos="none")
+        )
+     ),
+     plot_grid(ncol=1, align = "v", axis="lr",
+       legiplot_indcode_plot(uncode=code),
+       legiplot_vol_code(uncode=code),
+       legiplot_modifs_annees_plot(uncode=code,start="0001-01-01")
+    )
+  )
+}
+
+#tdb("code de l'éducation")
+
+```
+
+
+```{r all, results='asis', fig.width=18,fig.height=12, warning=FALSE, cache=TRUE}
+for(code in levels(lp_stats$code)) {
+#  code <- "code de l'éducation"
+
+  cat("### ",code,"\n\n")
+  
+  #if(code != "code de l'artisanat")
+  print(tdb(code))
+  
+  cat("\n\n")
+}
+```
