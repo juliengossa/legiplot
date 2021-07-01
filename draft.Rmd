@@ -1,0 +1,125 @@
+---
+title: "Draft"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(ggcpesrthemes)
+library(cowplot)
+
+source("R/legiplot_fun_load.R")
+lp_modifs <- legiplot_load_csv("data/lp_diff_t.csv")
+lp_stats <- legiplot_load_csv("data/lp_stats_ts3.csv")
+
+
+lecode = "code de l'éducation"
+startdate = as.Date("2017-06-01")
+
+theme_cpesr_setup(authors = "Julien Gossa", source="https://github.com/juliengossa/legiplot")
+```
+
+
+```{r check}
+lp_modifs %>%
+  filter(code == lecode) %>%
+  filter(date >= startdate) %>%
+  group_by(partie,sous_partie,article,type) %>%
+  summarise(nb = n()) %>%
+  arrange(desc(nb)) %>%
+  head() %>%
+  kableExtra::kable()
+```
+
+
+```{r check.2}
+lp_modifs %>%
+  filter(code == lecode) %>%
+  filter(date >= startdate) %>%
+  arrange(date) %>%
+  group_by(article) %>%
+  slice_head() %>% 
+  group_by(partie,type) %>%
+  summarise(nb = n()) %>%
+  kableExtra::kable()
+```
+
+
+```{r check.3}
+lp_modifs %>%
+  filter(code == lecode) %>%
+  filter(date >= startdate) %>%
+  arrange(date) %>%
+  group_by(article) %>%
+  slice_head() %>% 
+  group_by(type) %>%
+  #group_by(partie,type) %>%
+  summarise(nb = n()) %>%
+  head() %>%
+  kableExtra::kable()
+```
+
+
+```{r check.4}
+lp_modifs %>%
+  filter(code == lecode) %>%
+  filter(date >= startdate) %>%
+  arrange(date) %>%
+  group_by(article) %>%
+  slice_head() %>% 
+  group_by(date) %>%
+  summarise(nb = n()) %>%
+  arrange(desc(nb)) %>%
+  head() %>%
+  kableExtra::kable() 
+```
+
+
+
+
+```{r code, fig.asp=9/16}
+
+left_join(
+  lp_modifs %>%
+    filter(code == lecode) %>%
+    filter(date >= startdate) %>%
+    arrange(date) %>%
+    group_by(article) %>%
+    slice_head() %>% 
+    group_by(date,partie,type) %>%
+    summarise(nb = n()) %>%
+    pivot_wider(names_from = type, values_from = nb, values_fill = c(nb=0))
+  ,
+  lps <- lp_stats %>%
+    filter(code == lecode) %>%
+    filter(date >= startdate) %>%
+    group_by(date,partie) %>%
+    summarise(nb_articles = sum(nb_articles)) 
+) %>%
+  group_by(partie) %>%
+  arrange(date) %>%
+  mutate(across(c(Modification,Ajout,Suppression), cumsum)) %>%
+  mutate(Conservation = nb_articles - Ajout - Modification) %>%
+  pivot_longer(
+    c(Modification,Ajout,Suppression,Conservation),
+    names_to = "Articles",
+    values_to = "Nombre"
+  ) %>% 
+  mutate(Articles = factor(Articles,
+    levels = c("Conservation","Modification","Ajout","Suppression"),
+    labels = c("Conservés","Modifiés","Ajoutés","Supprimés")
+  )) %>% 
+  
+  ggplot(aes(x=date,y=Nombre,color=Articles,fill=Articles)) +
+    geom_area(aes(group=Articles), position="fill") +
+    scale_color_brewer(palette = "Paired") +
+    scale_fill_brewer(palette = "Paired") +
+    scale_y_continuous(labels = scales::percent) +
+    ylab("Proportion des articles") +
+    facet_grid(.~partie) +
+    ggtitle("Modifications du code de l'éducation sous la présidence d'E. Macron") +
+    theme_cpesr_cap()
+
+```
