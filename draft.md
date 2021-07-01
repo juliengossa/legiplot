@@ -316,3 +316,10 @@ nb
     ## Joining, by = c("date", "partie")
 
 ![](draft_files/figure-gfm/code-1.png)<!-- -->
+
+    ## `summarise()` has grouped output by 'code'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'code'. You can override using the `.groups` argument.
+
+    ## Joining, by = "code"
+
+![](draft_files/figure-gfm/top-1.png)<!-- -->

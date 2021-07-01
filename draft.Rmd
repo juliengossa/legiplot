@@ -123,3 +123,56 @@ left_join(
     theme_cpesr_cap()
 
 ```
+
+
+
+
+```{r top, fig.width=8, fig.height=6}
+left_join(
+  lp_modifs %>%
+    filter(date >= startdate) %>%
+    filter(partie == "Législative") %>%
+    arrange(date) %>%
+    group_by(code,article) %>%
+    slice_head() %>% 
+    group_by(code,type) %>%
+    summarise(nb_articles_modifiés = n()) %>%
+    arrange(desc(nb_articles_modifiés))
+    ,
+  lp_stats %>%
+    filter(partie == "Législative") %>%
+    group_by(code,date) %>%
+    summarise(nb_articles = sum(nb_articles)) %>%
+    group_by(code) %>%
+    arrange(desc(date)) %>%
+    slice_head() %>%
+    select(-date)
+) %>%
+  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>%
+  mutate(type = factor(type,
+    levels = c("Conservation","Modification","Ajout","Suppression"),
+    labels = c("Conservés","Modifiés","Ajoutés","Supprimés")
+  )) %>%
+  mutate(type=fct_rev(type)) %>%
+
+  ggplot(aes(x=reorder(code,ratio_modification,FUN=sum), y=ratio_modification, fill=type)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = rev(RColorBrewer::brewer.pal(4,"Paired")[-1]) ) +
+  scale_y_continuous(labels = scales::percent, name="Articles", limits=c(0,1)) +
+  ylab("Proportion des articles") + xlab("") +
+  ggtitle("Modifications de différents codes sous la présidence d'E. Macron", subtitle="Attention : données non vérifées") +
+  theme_cpesr_cap() +
+  theme(panel.grid.major.y = element_blank(), panel.grid.major.x = element_line(color="grey"),
+        plot.title = element_text(hjust = 1))
+    
+```
+
+
+
+
+
+
+
+
+
