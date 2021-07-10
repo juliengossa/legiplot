@@ -23,6 +23,8 @@ class Article:
         self.nb_lignes = 0
         self.nb_mots = 0
 
+        self.hash = None
+
 
     @staticmethod
     def getHeader(traitement="diff",shrink=0):

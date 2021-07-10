@@ -97,10 +97,8 @@ class ArcheoLexLog:
         return type_line
 
     def processDiff(self,commit):
-        """Obtenez toutes les modifications d'une version d'un code
-
-            Parcourez les informations de différence, nous extrayons les informations
-            correspondantes du nom de l'article
+        """ Traite un diff entre une version d'un code et sa précédente
+            (tel que renvoyé par git diff)
 
             Arg:
                 commit: Commit de version
@@ -165,10 +163,11 @@ class ArcheoLexLog:
         return mods
 
     def processVersion(self,commit,traitement,shrink=0):
-        """Obtenez toutes les erreurs d'une version d'un code
+        """ Traite une version de code
             Arg:
                 commit: Commit de version
                 traitement: Traitement à appliquer (check ou stats)
+                shrink: niveau de compression de la sortie
         """
         #get la version et la date
         date = self.getDate(commit)

@@ -8,7 +8,6 @@ library(ggthemes)
 legiplot_load_diff <- function() {
   
   lp_modifs <<- legiplot_load_csv("data/lp_diff_t.csv")
-  
   lp_modifs_articles <<- lp_modifs %>%
     filter(type == "Modification") %>%
     group_by(code,partie,sous_partie,livre,titre,chapitre,article) %>%

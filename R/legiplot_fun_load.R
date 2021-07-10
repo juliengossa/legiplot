@@ -25,5 +25,5 @@ legiplot_load_csv <- function(csvfile) {
 
 #raw <- legiplot_load_csv("lp_diff_t.csv")
 
-elections = as.Date(as.character(c(1959,1965,1969,1974,1981,1988,1995,2002,2007,2012,2017,2022)),"%Y")
 
+elections = as.Date(paste0(c(1959,1965,1969,1974,1981,1988,1995,2002,2007,2012,2017,2022),"-06-01"))
