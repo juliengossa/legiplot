@@ -1,7 +1,8 @@
 Draft
 ================
 
-    ## `summarise()` has grouped output by 'partie', 'sous_partie', 'article'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'partie', 'sous_partie', 'article'. You can
+    ## override using the `.groups` argument.
 
 <table>
 <thead>
@@ -29,6 +30,7 @@ nb
 Réglementaire
 </td>
 <td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 D371-3
@@ -37,7 +39,7 @@ D371-3
 Modification
 </td>
 <td style="text-align:right;">
-23
+25
 </td>
 </tr>
 <tr>
@@ -45,9 +47,27 @@ Modification
 Réglementaire
 </td>
 <td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 D373-2
+</td>
+<td style="text-align:left;">
+Modification
+</td>
+<td style="text-align:right;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Réglementaire
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+D374-3
 </td>
 <td style="text-align:left;">
 Modification
@@ -61,15 +81,16 @@ Modification
 Réglementaire
 </td>
 <td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
-D374-3
+D718-5
 </td>
 <td style="text-align:left;">
 Modification
 </td>
 <td style="text-align:right;">
-19
+15
 </td>
 </tr>
 <tr>
@@ -77,6 +98,7 @@ Modification
 Réglementaire
 </td>
 <td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 D683-2
@@ -93,6 +115,7 @@ Modification
 Réglementaire
 </td>
 <td style="text-align:left;">
+NA
 </td>
 <td style="text-align:left;">
 D684-2
@@ -104,26 +127,11 @@ Modification
 14
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Réglementaire
-</td>
-<td style="text-align:left;">
-</td>
-<td style="text-align:left;">
-D718-5
-</td>
-<td style="text-align:left;">
-Modification
-</td>
-<td style="text-align:right;">
-14
-</td>
-</tr>
 </tbody>
 </table>
 
-    ## `summarise()` has grouped output by 'partie'. You can override using the `.groups` argument.
+    ## `summarise()` has grouped output by 'partie'. You can override using the
+    ## `.groups` argument.
 
 <table>
 <thead>
@@ -148,7 +156,7 @@ Législative
 Ajout
 </td>
 <td style="text-align:right;">
-42
+47
 </td>
 </tr>
 <tr>
@@ -159,7 +167,7 @@ Législative
 Modification
 </td>
 <td style="text-align:right;">
-256
+269
 </td>
 </tr>
 <tr>
@@ -181,7 +189,7 @@ Réglementaire
 Ajout
 </td>
 <td style="text-align:right;">
-425
+441
 </td>
 </tr>
 <tr>
@@ -192,7 +200,7 @@ Réglementaire
 Modification
 </td>
 <td style="text-align:right;">
-885
+927
 </td>
 </tr>
 <tr>
@@ -203,7 +211,7 @@ Réglementaire
 Suppression
 </td>
 <td style="text-align:right;">
-227
+228
 </td>
 </tr>
 </tbody>
@@ -225,7 +233,7 @@ nb
 Ajout
 </td>
 <td style="text-align:right;">
-467
+488
 </td>
 </tr>
 <tr>
@@ -233,7 +241,7 @@ Ajout
 Modification
 </td>
 <td style="text-align:right;">
-1141
+1196
 </td>
 </tr>
 <tr>
@@ -241,7 +249,7 @@ Modification
 Suppression
 </td>
 <td style="text-align:right;">
-248
+249
 </td>
 </tr>
 </tbody>
@@ -263,7 +271,7 @@ nb
 2020-01-01
 </td>
 <td style="text-align:right;">
-397
+392
 </td>
 </tr>
 <tr>
@@ -271,15 +279,7 @@ nb
 2019-09-02
 </td>
 <td style="text-align:right;">
-160
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-2020-12-27
-</td>
-<td style="text-align:right;">
-72
+159
 </td>
 </tr>
 <tr>
@@ -300,34 +300,45 @@ nb
 </tr>
 <tr>
 <td style="text-align:left;">
+2020-12-27
+</td>
+<td style="text-align:right;">
+66
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 2018-01-01
 </td>
 <td style="text-align:right;">
-51
+50
 </td>
 </tr>
 </tbody>
 </table>
 
-    ## `summarise()` has grouped output by 'date', 'partie'. You can override using the `.groups` argument.
-
-    ## `summarise()` has grouped output by 'date'. You can override using the `.groups` argument.
-
+    ## `summarise()` has grouped output by 'date', 'partie'. You can override using
+    ## the `.groups` argument.
+    ## `summarise()` has grouped output by 'date'. You can override using the
+    ## `.groups` argument.
     ## Joining, by = c("date", "partie")
 
 ![](draft_files/figure-gfm/code-1.png)<!-- -->
 
-    ## `summarise()` has grouped output by 'code'. You can override using the `.groups` argument.
-    ## `summarise()` has grouped output by 'code'. You can override using the `.groups` argument.
-
+    ## `summarise()` has grouped output by 'code'. You can override using the
+    ## `.groups` argument.
+    ## `summarise()` has grouped output by 'code'. You can override using the
+    ## `.groups` argument.
     ## Joining, by = "code"
+
+    ## Warning: Removed 1 rows containing missing values (position_stack).
 
 ![](draft_files/figure-gfm/top-1.png)<!-- -->
 
-    ## `summarise()` has grouped output by 'code'. You can override using the `.groups` argument.
-
-    ## `summarise()` has grouped output by 'code', 'président'. You can override using the `.groups` argument.
-
+    ## `summarise()` has grouped output by 'code'. You can override using the
+    ## `.groups` argument.
+    ## `summarise()` has grouped output by 'code', 'président'. You can override using
+    ## the `.groups` argument.
     ## Joining, by = c("code", "président")
 
 ![](draft_files/figure-gfm/top.all-1.png)<!-- -->

@@ -2,8 +2,8 @@
 title: "Legiplot : une étude quantitative des codes législatifs"
 subtitle: "https://github.com/juliengossa/legiplot"
 author: 
-  - Yang Yang, yangjoanne216@gmail.com \newline
-  - Julien Gossa, gossa@unistra.fr \newline
+  - Yang Yang #, yangjoanne216@gmail.com \newline
+  - Julien Gossa \newline #, gossa@unistra.fr \newline
   - Université de Strasbourg
 date: Juin 2021
 lang: "fr"
@@ -30,7 +30,7 @@ source("R/legiplot_fun_diff.R")
 code.exemple <- "code de l'éducation"
 ```
 
-```{r setup.load, include=FALSE, cache=TRUE}
+```{r setup.load, include=FALSE, cache=F}
 legiplot_load_tree()
 legiplot_load_evol()
 legiplot_load_diff()

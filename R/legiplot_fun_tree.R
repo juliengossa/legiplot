@@ -18,9 +18,9 @@ legiplot_plot_tree <- function(lecode) {
     filter(code==lecode) %>%
     filter(partie == "Législative" | code == "code civil") %>%
     mutate(
-      livre = fct_recode(livre, "Sans Livre" = ""),
-      titre = fct_recode(titre, "Sans Titre" = ""),
-      chapitre = fct_recode(chapitre, "Sans Chapitre" = "")
+      livre = fct_explicit_na(livre, "Sans Livre"),
+      titre = fct_explicit_na(titre, "Sans Titre"),
+      chapitre = fct_explicit_na(chapitre, "Sans Chapitre")
     ) %>%
     mutate(across(where(is.factor), as.character)) %>%
     mutate(sous_partie = ifelse(sous_partie=="", partie, sous_partie))

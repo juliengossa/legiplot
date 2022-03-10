@@ -13,30 +13,19 @@ library(cowplot)
 
 source("R/legiplot_fun_load.R")
 lp_modifs <- legiplot_load_csv("data/lp_diff_t.csv")
-lp_stats <- legiplot_load_csv("data/lp_stats_ts3.csv")
+lp_stats <- legiplot_load_csv("data/lp_diffstats_ts3.csv")
 
 mandats <- read.csv("data/elections.csv") %>% mutate(date = as.Date(date))
 
 lecode = "code de l'éducation"
 startdate = as.Date("2017-06-01")
-mandats = as.Date(c(
-  "2017-06-01"
-))
 
 theme_cpesr_setup(authors = "Julien Gossa", source="https://github.com/juliengossa/legiplot")
 ```
 
 ```{r data}
-lp_psl <- lp_modifs %>%
-  mutate(type = fct_recode(type, ajout="Préexistence")) %>%
-  group_by(code,date,partie,sous_partie,livre,type) %>%
-  summarise(nb = n()) %>%
-  pivot_wider(names_from = type, values_from = nb, values_fill = c(nb=0)) %>%
-  left_join(lp_stats)  %>%
-  mutate(mandat = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>%
-  group_by(code,partie,sous_partie,livre) %>%
-  arrange(code,partie,sous_partie,livre,date) %>%
-  mutate(check = (nb_articles == lag(nb_articles) + Ajout - Suppression))
+lp_stats <- lp_stats %>%
+  mutate(mandat = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1)))
 ```
 
 
@@ -147,13 +136,13 @@ left_join(
 
 
 
-```{r top, fig.width=8, fig.height=6}
+```{r top, fig.width=8, fig.height=8}
+leprésident <- "Macron"
 
-leprésident = "Sarkozy"
 left_join(
   lp_modifs %>%
-    mutate(président = cut(date, method = "fixed", breaks = elections$date, labels=head(elections$président,-1))) %>% 
-    filter(président == leprésident) %>%
+    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
+    filter(président == leprésident) %>% 
     filter(partie == "Législative") %>%
     arrange(date) %>%
     group_by(code,article) %>%
@@ -163,7 +152,7 @@ left_join(
     arrange(desc(nb_articles_modifiés))
     ,
   lp_stats %>%
-    mutate(président = cut(date, method = "fixed", breaks = elections$date, labels=head(elections$président,-1))) %>% 
+    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
     filter(président == leprésident) %>%
     filter(partie == "Législative") %>%
     group_by(code,date) %>%
@@ -178,8 +167,8 @@ left_join(
     levels = c("Conservation","Modification","Ajout","Suppression"),
     labels = c("Conservés","Modifiés","Ajoutés","Supprimés")
   )) %>%
-  mutate(type=fct_rev(type)) %>% View()
-
+  mutate(type=fct_rev(type)) %>%
+  
   ggplot(aes(x=reorder(code,ratio_modification,FUN=sum), y=ratio_modification, fill=type)) +
   geom_col() +
   coord_flip() +
@@ -194,11 +183,58 @@ left_join(
 ```
 
 
+```{r top.2, fig.width=8, fig.height=6}
+leprésident <- "Macron"
+
+left_join(
+  lp_modifs %>%
+    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
+    filter(partie == "Législative") %>%
+    arrange(date) %>%
+    group_by(code,article,président) %>%
+    slice_head() %>% 
+    group_by(code,type) %>%
+    summarise(nb_articles_modifiés = n()) %>%
+    arrange(desc(nb_articles_modifiés))
+    ,
+  lp_stats %>%
+    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
+    filter(partie == "Législative") %>%
+    group_by(code,date,président) %>%
+    summarise(nb_articles = sum(nb_articles)) %>%
+    group_by(code) %>%
+    arrange(date) %>%
+    slice_head() %>%
+    select(-date)
+) %>%
+  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>%
+  mutate(type = factor(type,
+    levels = c("Conservation","Modification","Ajout","Suppression"),
+    labels = c("Conservés","Modifiés","Ajoutés","Supprimés")
+  )) %>%
+  mutate(type=fct_rev(type)) %>% View()
+  
+  ggplot(aes(x=reorder(code,ratio_modification,FUN=sum), y=ratio_modification, fill=type)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = rev(RColorBrewer::brewer.pal(4,"Paired")[-1]) ) +
+  scale_y_continuous(labels = scales::percent, name="Articles", limits=c(0,1)) +
+  ylab("Proportion des articles") + xlab("") +
+  ggtitle("Modifications de différents codes sous la présidence d'E. Macron", subtitle="Attention : données non vérifées") +
+  facet_wrap(président~.) +
+  theme_cpesr_cap() +
+  theme(panel.grid.major.y = element_blank(), panel.grid.major.x = element_line(color="grey"),
+        plot.title = element_text(hjust = 1))
+    
+```
+
+
+
 
 ```{r top.all, fig.width=16, fig.height=9}
 left_join(
   lp_modifs %>%
-    mutate(président = cut(date, method = "fixed", breaks = elections$date, labels=head(elections$président,-1))) %>% 
+    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
     filter(partie == "Législative") %>%
     arrange(date) %>%
     group_by(code,article,président) %>%
@@ -208,7 +244,7 @@ left_join(
     arrange(desc(nb_articles_modifiés))
     ,
   lp_stats %>%
-    mutate(président = cut(date, method = "fixed", breaks = elections$date, labels=head(elections$président,-1))) %>% 
+    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
     filter(partie == "Législative") %>%
     group_by(code,président,date) %>%
     summarise(nb_articles = sum(nb_articles)) %>%
@@ -217,11 +253,10 @@ left_join(
     slice_head() %>%
     select(-date)
 ) %>%
-  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>% View()
+  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>% 
   
   ggplot(aes(x=président, y=reorder(code,ratio_modification,FUN=sum), color=ratio_modification, size=ratio_modification)) +
   geom_point() +
-  scale_color_brewer +
   ylab("Proportion des articles") + xlab("") +
   ggtitle("Modifications de différents codes sous la présidence d'E. Macron", subtitle="Attention : données non vérifées") +
   theme_cpesr_cap() +

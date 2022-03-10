@@ -6,7 +6,7 @@ library(cowplot)
 
 legiplot_load_evol <- function() {
   
-  lp_stats <<- legiplot_load_csv("data/lp_stats_ts3.csv")
+  lp_stats <<- legiplot_load_csv("data/lp_diffstats_ts3.csv")
   
   lp_stats_ind <<- lp_stats %>%
     filter(date > as.Date("1810-01-01")) %>% # Gestion d'un problème de nombre de mots dans l'archive
