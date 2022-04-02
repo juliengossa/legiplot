@@ -16,7 +16,7 @@ legiplot_plot_tree <- function(lecode) {
 
   lp_tree <- lp_stats_lts1 %>%
     filter(code==lecode) %>%
-    filter(partie == "Législative" | code == "code civil") %>%
+    filter(partie == "Législative" | code %in% c("code civil","code de procédure civile")) %>%
     mutate(
       livre = fct_explicit_na(livre, "Sans Livre"),
       titre = fct_explicit_na(titre, "Sans Titre"),

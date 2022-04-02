@@ -15,7 +15,10 @@ source("R/legiplot_fun_load.R")
 lp_modifs <- legiplot_load_csv("data/lp_diff_t.csv")
 lp_stats <- legiplot_load_csv("data/lp_diffstats_ts3.csv")
 
-mandats <- read.csv("data/elections.csv") %>% mutate(date = as.Date(date))
+mandats <- read.csv("data/elections.csv") %>% 
+  mutate(
+    date = as.Date(date),
+    président = factor(président, levels=unique(président)) )
 
 lecode = "code de l'éducation"
 startdate = as.Date("2017-06-01")
@@ -134,135 +137,165 @@ left_join(
 
 
 
+## Jumps
+
+```{r load.jumps}
+lpm <- legiplot_load_csv("data/lp_diffstats_jts5.csv") %>%
+  group_by(code,date,partie) %>%
+  summarise(across(starts_with("nb"),sum)) %>%
+  mutate(fin = str_sub(date,1,4)) %>%
+  left_join(
+    left_join(
+      tibble(fin=as.character(seq(1800,2022))),
+      mandats %>% 
+        mutate(fin=str_sub(lead(date),1,4)) %>% 
+        select(-date) ) %>%
+      fill(président, .direction="up")
+    ) %>%
+  mutate(nb_conservations = nb_articles - nb_modifications - nb_ajouts)
 
 
-```{r top, fig.width=8, fig.height=8}
-leprésident <- "Macron"
+lpm.pivot <- lpm %>%
+  pivot_longer(c(nb_modifications:nb_suppressions, nb_conservations),
+               names_to = "modification", values_to = "articles", names_prefix = "nb_") %>%
+  mutate(modification = factor(modification, 
+                               levels = c("conservations","modifications","suppressions","ajouts"),
+                               labels = c("Conservé","Modifié","Supprimé","Ajouté"))) %>%
+  mutate(modification = fct_rev(modification)) %>%
+  group_by(code,partie,modification) %>%
+  mutate(ratio = articles / lag(nb_articles))
+```
 
-left_join(
-  lp_modifs %>%
-    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
-    filter(président == leprésident) %>% 
-    filter(partie == "Législative") %>%
-    arrange(date) %>%
-    group_by(code,article) %>%
-    slice_head() %>% 
-    group_by(code,type) %>%
-    summarise(nb_articles_modifiés = n()) %>%
-    arrange(desc(nb_articles_modifiés))
-    ,
-  lp_stats %>%
-    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
-    filter(président == leprésident) %>%
-    filter(partie == "Législative") %>%
-    group_by(code,date) %>%
-    summarise(nb_articles = sum(nb_articles)) %>%
-    group_by(code) %>%
-    arrange(date) %>%
-    slice_head() %>%
-    select(-date)
-) %>%
-  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>%
-  mutate(type = factor(type,
-    levels = c("Conservation","Modification","Ajout","Suppression"),
-    labels = c("Conservés","Modifiés","Ajoutés","Supprimés")
-  )) %>%
-  mutate(type=fct_rev(type)) %>%
-  
-  ggplot(aes(x=reorder(code,ratio_modification,FUN=sum), y=ratio_modification, fill=type)) +
-  geom_col() +
-  coord_flip() +
-  scale_fill_manual(values = rev(RColorBrewer::brewer.pal(4,"Paired")[-1]) ) +
-  scale_y_continuous(labels = scales::percent, name="Articles", limits=c(0,1)) +
-  ylab("Proportion des articles") + xlab("") +
-  ggtitle("Modifications de différents codes sous la présidence d'E. Macron", subtitle="Attention : données non vérifées") +
-  theme_cpesr_cap() +
-  theme(panel.grid.major.y = element_blank(), panel.grid.major.x = element_line(color="grey"),
-        plot.title = element_text(hjust = 1))
-    
+```{r check.jumps}
+lpm %>%
+  group_by(code,partie) %>%
+  mutate(check = (nb_articles - (lag(nb_articles) + nb_ajouts - nb_suppressions))) %>%
+  filter(check !=0 ) %>% 
+  kableExtra::kable()
 ```
 
 
-```{r top.2, fig.width=8, fig.height=6}
-leprésident <- "Macron"
+## Code de l'éducation
 
-left_join(
-  lp_modifs %>%
-    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
-    filter(partie == "Législative") %>%
-    arrange(date) %>%
-    group_by(code,article,président) %>%
-    slice_head() %>% 
-    group_by(code,type) %>%
-    summarise(nb_articles_modifiés = n()) %>%
-    arrange(desc(nb_articles_modifiés))
-    ,
-  lp_stats %>%
-    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
-    filter(partie == "Législative") %>%
-    group_by(code,date,président) %>%
-    summarise(nb_articles = sum(nb_articles)) %>%
-    group_by(code) %>%
-    arrange(date) %>%
-    slice_head() %>%
-    select(-date)
-) %>%
-  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>%
-  mutate(type = factor(type,
-    levels = c("Conservation","Modification","Ajout","Suppression"),
-    labels = c("Conservés","Modifiés","Ajoutés","Supprimés")
-  )) %>%
-  mutate(type=fct_rev(type)) %>% View()
-  
-  ggplot(aes(x=reorder(code,ratio_modification,FUN=sum), y=ratio_modification, fill=type)) +
-  geom_col() +
-  coord_flip() +
-  scale_fill_manual(values = rev(RColorBrewer::brewer.pal(4,"Paired")[-1]) ) +
-  scale_y_continuous(labels = scales::percent, name="Articles", limits=c(0,1)) +
-  ylab("Proportion des articles") + xlab("") +
-  ggtitle("Modifications de différents codes sous la présidence d'E. Macron", subtitle="Attention : données non vérifées") +
-  facet_wrap(président~.) +
-  theme_cpesr_cap() +
-  theme(panel.grid.major.y = element_blank(), panel.grid.major.x = element_line(color="grey"),
-        plot.title = element_text(hjust = 1))
-    
+```{r education, fig.asp=9/16, fig.retina=2}
+lpm.pivot %>%
+  mutate(articles = ifelse(modification=="Supprimé",-articles,articles)) %>%
+  filter(code == "code de l'éducation", partie == "Législative") %>%
+  ggplot(aes(x=président,y=articles,fill=modification)) +
+    geom_col(color="white") +
+    scale_fill_brewer(palette = "Paired", direction = -1, name="Article") +
+    xlab("Présidence") + ylab("Nombre d'articles") +
+    ggtitle("Modification des articles du Code de l'éducation (partie législative)") +
+    theme_cpesr_cap()
+
+```
+
+```{r education.facet}
+lpm.pivot %>%
+  mutate(articles = ifelse(modification=="Supprimé",-articles,articles)) %>%
+  filter(code == "code de l'éducation") %>%
+  ggplot(aes(x=président,y=articles,fill=modification)) +
+    geom_col() +
+    facet_grid(partie~., scales = "free_y") +
+    theme_cpesr_cap()
+
+```
+ 
+## Tous les codes dernier mandat
+
+```{r touscodes, fig.width=8, fig.height=8}
+lpm.pivot %>%
+  filter(partie=="Législative" | code %in% c("code civil", "code de procédure civile")) %>%
+  filter(président == "Macron") %>%
+  ggplot(aes(x=reorder(code,articles,FUN=sum),y=articles,fill=modification)) +
+    geom_col() +
+    coord_flip() +
+    theme_cpesr_cap()
+```
+
+```{r touscodes.ratio, fig.width=8, fig.height=8}
+lpm.pivot %>%
+  filter(partie=="Législative" | code %in% c("code civil", "code de procédure civile")) %>%
+  filter(président == "Macron") %>%
+  ggplot(aes(x=reorder(code,ratio,FUN=sum),y=ratio,fill=modification)) +
+    geom_col() +
+    coord_flip(ylim=c(0,1)) +
+    theme_cpesr_cap()
+```
+
+```{r touscodes.ratio.2, fig.width=8, fig.asp=1/1}
+lpm.sum <- lpm.pivot %>%
+  filter(partie=="Législative" | code %in% c("code civil", "code de procédure civile")) %>%
+  filter(président %in% c("Chirac 2","Sarkozy","Hollande")) %>%
+  group_by(code,président,partie) %>%
+  summarise(ratio = sum(ratio))
+
+lpm.pivot %>%
+  filter(partie=="Législative" | code %in% c("code civil", "code de procédure civile")) %>%
+  filter(président == "Macron") %>%
+  ggplot(aes(x=reorder(code,ratio,FUN=sum),y=ratio)) +
+    geom_col(aes(fill=modification)) +
+    geom_point(data=lpm.sum, aes(shape=président)) +
+    coord_flip(ylim=c(0,1)) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_shape(name="") +
+    scale_fill_discrete(name="") +
+    ggtitle("Proportion, par code, des articles modifiés durant le mandat de M. Macron", subtitle = "Partie législative seulement") +
+    theme_cpesr_cap() +
+    theme(legend.justification = "right",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          plot.title = element_text(hjust = 1)
+      ) 
 ```
 
 
-
-
-```{r top.all, fig.width=16, fig.height=9}
-left_join(
-  lp_modifs %>%
-    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
-    filter(partie == "Législative") %>%
-    arrange(date) %>%
-    group_by(code,article,président) %>%
-    slice_head() %>% 
-    group_by(code,président) %>%
-    summarise(nb_articles_modifiés = n()) %>%
-    arrange(desc(nb_articles_modifiés))
-    ,
-  lp_stats %>%
-    mutate(président = cut(date, method = "fixed", breaks = mandats$date, labels=head(mandats$président,-1))) %>% 
-    filter(partie == "Législative") %>%
-    group_by(code,président,date) %>%
-    summarise(nb_articles = sum(nb_articles)) %>%
-    group_by(code,président) %>%
-    arrange(desc(date)) %>%
-    slice_head() %>%
-    select(-date)
-) %>%
-  mutate(ratio_modification = nb_articles_modifiés / nb_articles) %>% 
-  
-  ggplot(aes(x=président, y=reorder(code,ratio_modification,FUN=sum), color=ratio_modification, size=ratio_modification)) +
-  geom_point() +
-  ylab("Proportion des articles") + xlab("") +
-  ggtitle("Modifications de différents codes sous la présidence d'E. Macron", subtitle="Attention : données non vérifées") +
-  theme_cpesr_cap() +
-  theme(panel.grid.major.y = element_blank(), panel.grid.major.x = element_line(color="grey"),
-        plot.title = element_text(hjust = 1))
-    
+```{r touscodes.ratio.3, fig.width=10, fig.asp=2/1}
+lpm.pivot %>%
+  filter(partie=="Législative" | code %in% c("code civil", "code de procédure civile")) %>%
+  filter(président %in% c("Chirac","Chirac 2","Sarkozy","Hollande","Macron")) %>%
+  ggplot(aes(x=président,y=ratio)) +
+    geom_col(aes(fill=modification)) +
+    facet_wrap(code~., ncol=4, labeller = labeller(code=label_wrap_gen(34))) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_shape(name="") +
+    scale_fill_discrete(name="") +
+    ggtitle("Proportion, par code, des articles modifiés durant le mandat de M. Macron", subtitle = "Partie législative seulement") +
+    theme_cpesr_cap() +
+    theme(legend.justification = "right",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          plot.title = element_text(hjust = 1),
+          axis.text.x = element_text(angle=45,hjust=1)
+      ) 
 ```
+
+
+## Tous les codes tous les mandats
+
+```{r tous.data, fig.width=8, fig.height=8}
+lpm %>%
+  filter(partie == "Législative") %>%
+  mutate(
+    Modifiés = nb_modifications,
+    Ajoutés = nb_modifications + nb_ajouts,
+    Supprimés = nb_modifications + nb_ajouts + nb_suppressions
+  ) %>%
+  pivot_longer(Modifiés:Supprimés, names_to = "Modification", values_to = "Articles") %>%
+  mutate(Modification = factor(Modification, levels=rev(c("Modifiés","Ajoutés","Supprimés")))) %>%
+  arrange(Modification) %>%
+  ggplot(aes(x=président,y=reorder(code,Articles,FUN=sum), size=Articles, color=Modification)) + 
+    geom_point() +
+    scale_x_discrete(name="") +
+    scale_y_discrete(name="") +
+    scale_color_discrete(name="") +
+    scale_size(name="") +
+    #guides(color = guide_legend(direction="vertical", title=NULL)) +
+    theme_cpesr_cap() +
+    theme(axis.text.x = element_text(angle=45, hjust=1),
+          legend.justification = "right")
+```
+
+
 
 

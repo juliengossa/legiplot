@@ -51,6 +51,10 @@ class AELog:
 
         self.repo = repo
 
+    def get_version(self,log,PLTC_method):
+        commit_number = "".join(re.findall(r"{\"(.+?)\"}",log))
+        commit = self.repo.commit(commit_number)
+        return AEVersion(self.code,self.repo,commit,self.verbose,PLTC_method)
 
     def process_code(self,traitement,datelimit,shrink,PLTC_method,jump):
         """Obtenir tous les versions d'un code et pour chaque version un getDiff()
@@ -61,31 +65,32 @@ class AELog:
         commit_log = self.repo.git.log('--pretty={"%h"}')
         log_list = commit_log.split("\n")
 
-        # gestion du last
-        if datelimit[0] == "last":
-            log_list = [log_list[0]]
-
-        log_list.reverse() #ordre chronologique
-
-        articles = {}
-
+        # filtrer les versions
         AEVersion.reset()
 
-        for ilog,log in enumerate(log_list):
-            commit_number = "".join(re.findall(r"{\"(.+?)\"}",log))
-            commit = self.repo.commit(commit_number)
-
-            ae_version = AEVersion(self.code,self.repo,commit,self.verbose,PLTC_method)
-
-            # sys.stderr.write(" - "+ae_version.get_date()+" / "+datelimit[0]+"\n")
-
-            # saut de versions
-            if datelimit == []: break
-            if ae_version.get_date() < datelimit[0] and ilog != len(log_list)-1: continue
+        if datelimit[0] == "last":
+            ae_versions = [self.get_version(log_list[0],PLTC_method)]
+        else:
+            if not jump:
+                ae_versions = []
+                for log in log_list:
+                    v = self.get_version(log,PLTC_method)
+                    if v.get_date() < datelimit[0]: break
+                    ae_versions.append(v)
             else:
-                if jump:
-                    datelimit = datelimit[1:]
+                ae_versions = []
+                for log in log_list:
+                    v = self.get_version(log,PLTC_method)
+                    if v.get_date() < datelimit[0]:
+                        ae_versions.append(v)
+                        datelimit = datelimit[1:]
+                        if len(datelimit) == 0: break
 
+        ae_versions.reverse()
+        articles = {}
+
+        for ae_version in ae_versions:
+            # sys.stderr.write(" - "+ae_version.get_date()+" / "+datelimit[0]+"\n")
 
             if self.print_progression:
                 sys.stderr.write("\r"+self.code+" "+ae_version.get_date()+" " * 50)

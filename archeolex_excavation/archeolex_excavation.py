@@ -35,6 +35,7 @@ def main(argv):
 
     args.shrink = min(args.shrink,6)
 
+    args.datelimit.reverse()
 
     if args.file is None:
         fh = sys.stdout
