@@ -8,22 +8,21 @@ dépôts git des codes.
 
 Trois dépôts présentent les données législatives françaises :
 
--   [Legifrance](https://github.com/legifrance) (Abandonné) : *“Ce dépôt
-    des Codes en vigueur de le République Française permet à tout un
-    chacun de consulter, modifier (fork) et proposer leurs changements
-    (Pull Request) qui seront examinés systématiquement par les
-    instances législatives de la République Française. Ces dernières
-    mettront en place dans les plus brefs délais un système de
-    validation par les citoyens (peers) afin de pouvoir répondre à
-    toutes les demandes.”*
--   [EtaLab](https://github.com/etalab/codes-juridiques-francais) : très
-    précis, mais avec une mise à jour lente et des commits non
-    chronologiques.
--   [Archéo Lex](https://archeo-lex.fr/) : peu précis (un fichier par
-    code), mais régulièrement mis à jour et avec des commits
-    chronologiques.
+- [Legifrance](https://github.com/legifrance) (Abandonné) : *“Ce dépôt
+  des Codes en vigueur de le République Française permet à tout un
+  chacun de consulter, modifier (fork) et proposer leurs changements
+  (Pull Request) qui seront examinés systématiquement par les instances
+  législatives de la République Française. Ces dernières mettront en
+  place dans les plus brefs délais un système de validation par les
+  citoyens (peers) afin de pouvoir répondre à toutes les demandes.”*
+- [EtaLab](https://github.com/etalab/codes-juridiques-francais) : très
+  précis, mais avec une mise à jour lente et des commits non
+  chronologiques.
+- [Archéo Lex](https://archeo-lex.fr/) : peu précis (un fichier par
+  code), mais régulièrement mis à jour et avec des commits
+  chronologiques.
 
-## Application archeolex\_excavation
+## Application archeolex_excavation
 
 L’application python 3 `archeolex_excavation` facilite la fouille des
 dépôts git Archéo Lex.
@@ -72,7 +71,7 @@ date
 partie
 </th>
 <th style="text-align:right;">
-sous\_partie
+sous_partie
 </th>
 <th style="text-align:right;">
 livre
