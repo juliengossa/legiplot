@@ -182,7 +182,7 @@ lpm.pivot %>%
   mutate(articles = ifelse(modification=="Supprimé",-articles,articles)) %>%
   filter(code == "code de l'éducation", partie == "Législative") %>%
   ggplot(aes(x=président,y=articles,fill=modification)) +
-    geom_col(color="white") +
+    geom_col(color="white", aes(group=modification)) +
     scale_fill_brewer(palette = "Paired", direction = -1, name="Article") +
     xlab("Présidence") + ylab("Nombre d'articles") +
     ggtitle("Modification des articles du Code de l'éducation (partie législative)") +
