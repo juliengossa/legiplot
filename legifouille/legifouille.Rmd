@@ -79,5 +79,34 @@ le %>%
   ggplot(aes(x=président,y=Nombre,fill=Type)) +
   geom_col(position = "dodge") +
   scale_x_discrete(limits=c("Sarkozy","Hollande","Macron","Macron 2")) +
-  ggtitle("Nombre de textes modifiant le code de l'éducation")
+  ggtitle("Nombre de textes modifiants le code de l'éducation")
+```
+
+```{r mandats, fig.asp=9/16}
+library(lubridate)
+lesum <- le %>% 
+  filter(!str_detect(président,"Chirac")) %>%
+  mutate(Type = recode(Type, "LOI_ORGANIQUE" = "LOI")) %>%
+  summarise(Nombre = n_distinct(Texte), .by = c(Type,président)) %>%
+  mutate(Donnée = "Mesurée") %>%
+  mutate(président = factor(président,levels=c("Sarkozy","Hollande","Macron","Macron 2")))
+  
+
+lelast <- le %>% filter(président == "Macron 2")
+i = interval(min(lelast$Date), max(lelast$Date))
+projprop = 1 / ((i %/% days(1)) / (365*5))
+
+proj <- lesum %>%
+  filter(président == "Macron 2") %>%
+  mutate(Nombre = Nombre * projprop) %>%
+  mutate(Donnée = "Projection")
+
+bind_rows(lesum,proj) %>%
+  mutate(Donnée = factor(Donnée,levels=c("Projection","Mesurée"))) %>%
+  ggplot(aes(x=Type,y=Nombre,fill=Type,alpha=Donnée)) +
+  geom_col() +
+  facet_grid(.~président) +
+  scale_alpha_manual(values=c(0.6,1)) +
+  ggtitle("Nombre de textes modifiants le code de l'éducation", subtitle = "Projection sur le temps restant du mandat actuel, au rythme du mandat actuel") +
+  theme(axis.text.x = element_blank(), axis.title.x = element_blank())
 ```
