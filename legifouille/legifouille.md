@@ -294,3 +294,9 @@ Voir les données
 | 2023-08-01 | LOI n°2023-703 du 1er août 2023            | <https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000047914986> |
 
 </details>
+
+## Mandats présidentiels
+
+    ## Joining with `by = join_by(Date)`
+
+<img src="legifouille_files/figure-gfm/mandats-1.png" width="672" />

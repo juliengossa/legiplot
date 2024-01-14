@@ -60,3 +60,24 @@ explo("2017-06-01")
 ```{r bac, results='asis'}
 explo("2009-09-01")
 ```
+
+## Mandats présidentiels 
+
+```{r mandats, fig.asp=9/16}
+elections <- read.csv("../data/elections.csv") %>%
+  rename(Date = date)
+
+le <- full_join(legifouille,elections) %>%
+  arrange(Date) %>%
+  fill(président, .direction = "down") %>%
+  filter(!is.na(Type))
+
+le %>% 
+  filter(!str_detect(président,"Chirac")) %>%
+  mutate(Type = recode(Type, "LOI_ORGANIQUE" = "LOI")) %>%
+  summarise(Nombre = n_distinct(Texte), .by = c(Type,président)) %>%
+  ggplot(aes(x=président,y=Nombre,fill=Type)) +
+  geom_col(position = "dodge") +
+  scale_x_discrete(limits=c("Sarkozy","Hollande","Macron","Macron 2")) +
+  ggtitle("Nombre de textes modifiant le code de l'éducation")
+```
