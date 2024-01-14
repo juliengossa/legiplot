@@ -11,7 +11,7 @@ Draft
 partie
 </th>
 <th style="text-align:left;">
-sous\_partie
+sous_partie
 </th>
 <th style="text-align:left;">
 article
@@ -39,7 +39,7 @@ D371-3
 Modification
 </td>
 <td style="text-align:right;">
-25
+26
 </td>
 </tr>
 <tr>
@@ -56,24 +56,7 @@ D373-2
 Modification
 </td>
 <td style="text-align:right;">
-21
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Réglementaire
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-D374-3
-</td>
-<td style="text-align:left;">
-Modification
-</td>
-<td style="text-align:right;">
-20
+22
 </td>
 </tr>
 <tr>
@@ -90,7 +73,7 @@ D718-5
 Modification
 </td>
 <td style="text-align:right;">
-15
+22
 </td>
 </tr>
 <tr>
@@ -101,7 +84,24 @@ Réglementaire
 NA
 </td>
 <td style="text-align:left;">
-D683-2
+D374-3
+</td>
+<td style="text-align:left;">
+Modification
+</td>
+<td style="text-align:right;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Réglementaire
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+D681-2
 </td>
 <td style="text-align:left;">
 Modification
@@ -118,7 +118,7 @@ Réglementaire
 NA
 </td>
 <td style="text-align:left;">
-D684-2
+D683-2
 </td>
 <td style="text-align:left;">
 Modification
@@ -156,7 +156,7 @@ Législative
 Ajout
 </td>
 <td style="text-align:right;">
-47
+198
 </td>
 </tr>
 <tr>
@@ -167,7 +167,7 @@ Législative
 Modification
 </td>
 <td style="text-align:right;">
-269
+326
 </td>
 </tr>
 <tr>
@@ -178,7 +178,7 @@ Législative
 Suppression
 </td>
 <td style="text-align:right;">
-21
+56
 </td>
 </tr>
 <tr>
@@ -189,7 +189,7 @@ Réglementaire
 Ajout
 </td>
 <td style="text-align:right;">
-441
+715
 </td>
 </tr>
 <tr>
@@ -200,7 +200,7 @@ Réglementaire
 Modification
 </td>
 <td style="text-align:right;">
-927
+1097
 </td>
 </tr>
 <tr>
@@ -211,7 +211,7 @@ Réglementaire
 Suppression
 </td>
 <td style="text-align:right;">
-228
+422
 </td>
 </tr>
 </tbody>
@@ -233,7 +233,7 @@ nb
 Ajout
 </td>
 <td style="text-align:right;">
-488
+913
 </td>
 </tr>
 <tr>
@@ -241,7 +241,7 @@ Ajout
 Modification
 </td>
 <td style="text-align:right;">
-1196
+1423
 </td>
 </tr>
 <tr>
@@ -249,7 +249,7 @@ Modification
 Suppression
 </td>
 <td style="text-align:right;">
-249
+478
 </td>
 </tr>
 </tbody>
@@ -266,6 +266,14 @@ nb
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+2022-01-01
+</td>
+<td style="text-align:right;">
+643
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 2020-01-01
@@ -306,14 +314,6 @@ nb
 66
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-2018-01-01
-</td>
-<td style="text-align:right;">
-50
-</td>
-</tr>
 </tbody>
 </table>
 
@@ -321,7 +321,7 @@ nb
     ## the `.groups` argument.
     ## `summarise()` has grouped output by 'date'. You can override using the
     ## `.groups` argument.
-    ## Joining, by = c("date", "partie")
+    ## Joining with `by = join_by(date, partie)`
 
 ![](draft_files/figure-gfm/code-1.png)<!-- -->
 
@@ -329,8 +329,8 @@ nb
 
     ## `summarise()` has grouped output by 'code', 'date'. You can override using the
     ## `.groups` argument.
-    ## Joining, by = "fin"
-    ## Joining, by = "fin"
+    ## Joining with `by = join_by(fin)`
+    ## Joining with `by = join_by(fin)`
 
 <table>
 <thead>
@@ -345,22 +345,22 @@ date
 partie
 </th>
 <th style="text-align:right;">
-nb\_articles
+nb_articles
 </th>
 <th style="text-align:right;">
-nb\_alineas
+nb_alineas
 </th>
 <th style="text-align:right;">
-nb\_mots
+nb_mots
 </th>
 <th style="text-align:right;">
-nb\_modifications
+nb_modifications
 </th>
 <th style="text-align:right;">
-nb\_ajouts
+nb_ajouts
 </th>
 <th style="text-align:right;">
-nb\_suppressions
+nb_suppressions
 </th>
 <th style="text-align:left;">
 fin
@@ -369,7 +369,7 @@ fin
 président
 </th>
 <th style="text-align:right;">
-nb\_conservations
+nb_conservations
 </th>
 <th style="text-align:right;">
 check
@@ -423,25 +423,25 @@ Hollande
 code de l’entrée et du séjour des étrangers et du droit d’asile
 </td>
 <td style="text-align:left;">
-2022-02-23
+2022-05-18
 </td>
 <td style="text-align:left;">
 Réglementaire
 </td>
 <td style="text-align:right;">
-1230
+1231
 </td>
 <td style="text-align:right;">
-17136
+15768
 </td>
 <td style="text-align:right;">
-419247
+388222
 </td>
 <td style="text-align:right;">
 202
 </td>
 <td style="text-align:right;">
-1027
+1028
 </td>
 <td style="text-align:right;">
 592
@@ -628,25 +628,25 @@ Hollande
 code de la consommation
 </td>
 <td style="text-align:left;">
-2022-03-25
+2022-05-28
 </td>
 <td style="text-align:left;">
 Législative
 </td>
 <td style="text-align:right;">
-1275
+1285
 </td>
 <td style="text-align:right;">
-3898
+3955
 </td>
 <td style="text-align:right;">
-135349
+138384
 </td>
 <td style="text-align:right;">
-252
+275
 </td>
 <td style="text-align:right;">
-169
+179
 </td>
 <td style="text-align:right;">
 46
@@ -658,7 +658,7 @@ Législative
 Macron
 </td>
 <td style="text-align:right;">
-854
+831
 </td>
 <td style="text-align:right;">
 1
@@ -669,28 +669,28 @@ Macron
 code de la consommation
 </td>
 <td style="text-align:left;">
-2022-03-25
+2022-05-28
 </td>
 <td style="text-align:left;">
 Réglementaire
 </td>
 <td style="text-align:right;">
-788
+787
 </td>
 <td style="text-align:right;">
-4510
+4519
 </td>
 <td style="text-align:right;">
-109685
+109963
 </td>
 <td style="text-align:right;">
-161
+167
 </td>
 <td style="text-align:right;">
 104
 </td>
 <td style="text-align:right;">
-46
+47
 </td>
 <td style="text-align:left;">
 2022
@@ -699,7 +699,7 @@ Réglementaire
 Macron
 </td>
 <td style="text-align:right;">
-523
+516
 </td>
 <td style="text-align:right;">
 1
@@ -716,19 +716,19 @@ code de la santé publique
 Réglementaire
 </td>
 <td style="text-align:right;">
-6984
+6983
 </td>
 <td style="text-align:right;">
-49461
+49458
 </td>
 <td style="text-align:right;">
-1544367
+1544200
 </td>
 <td style="text-align:right;">
 72
 </td>
 <td style="text-align:right;">
-6781
+6780
 </td>
 <td style="text-align:right;">
 2483
@@ -757,13 +757,13 @@ code de la santé publique
 Réglementaire
 </td>
 <td style="text-align:right;">
-7911
+7910
 </td>
 <td style="text-align:right;">
-44343
+44340
 </td>
 <td style="text-align:right;">
-1145078
+1144912
 </td>
 <td style="text-align:right;">
 2442
@@ -781,7 +781,7 @@ Réglementaire
 Sarkozy
 </td>
 <td style="text-align:right;">
-3362
+3361
 </td>
 <td style="text-align:right;">
 -1
@@ -804,7 +804,7 @@ Réglementaire
 2587
 </td>
 <td style="text-align:right;">
-80157
+80153
 </td>
 <td style="text-align:right;">
 86
@@ -845,7 +845,7 @@ Réglementaire
 3495
 </td>
 <td style="text-align:right;">
-120505
+120501
 </td>
 <td style="text-align:right;">
 133
@@ -880,10 +880,10 @@ code du travail
 Réglementaire
 </td>
 <td style="text-align:right;">
-6580
+6577
 </td>
 <td style="text-align:right;">
-48576
+48574
 </td>
 <td style="text-align:right;">
 1409811
@@ -895,7 +895,7 @@ Réglementaire
 6468
 </td>
 <td style="text-align:right;">
-3362
+3361
 </td>
 <td style="text-align:left;">
 2012
@@ -904,10 +904,10 @@ Réglementaire
 Sarkozy
 </td>
 <td style="text-align:right;">
-94
+91
 </td>
 <td style="text-align:right;">
-5
+1
 </td>
 </tr>
 <tr>
@@ -921,13 +921,13 @@ code du travail
 Réglementaire
 </td>
 <td style="text-align:right;">
-6885
+6886
 </td>
 <td style="text-align:right;">
-48456
+27726
 </td>
 <td style="text-align:right;">
-1418459
+684251
 </td>
 <td style="text-align:right;">
 1297
@@ -945,10 +945,10 @@ Réglementaire
 Hollande
 </td>
 <td style="text-align:right;">
-4418
+4419
 </td>
 <td style="text-align:right;">
--5
+-1
 </td>
 </tr>
 <tr>
@@ -1051,11 +1051,11 @@ Giscard
     ## `summarise()` has grouped output by 'code', 'président'. You can override using
     ## the `.groups` argument.
 
-    ## Warning: Removed 11 rows containing missing values (geom_point).
+    ## Warning: Removed 11 rows containing missing values (`geom_point()`).
 
 ![](draft_files/figure-gfm/touscodes.ratio.2-1.png)<!-- -->
 
-    ## Warning: Removed 72 rows containing missing values (position_stack).
+    ## Warning: Removed 72 rows containing missing values (`position_stack()`).
 
 ![](draft_files/figure-gfm/touscodes.ratio.3-1.png)<!-- -->
 

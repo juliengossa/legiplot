@@ -382,28 +382,6 @@ code de l’aviation civile
 </tr>
 <tr>
 <td style="text-align:left;">
-code de l’éducation
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-28
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-code de l’énergie
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-44
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 code de l’entrée et du séjour des étrangers et du droit d’asile
 </td>
 <td style="text-align:right;">
@@ -444,6 +422,28 @@ code de l’urbanisme
 </td>
 <td style="text-align:right;">
 127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+code de l’éducation
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+code de l’énergie
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+44
 </td>
 </tr>
 <tr>
@@ -657,17 +657,6 @@ code du travail
 </tr>
 <tr>
 <td style="text-align:left;">
-code électoral
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-31
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 code général de la propriété des personnes publiques
 </td>
 <td style="text-align:right;">
@@ -697,6 +686,17 @@ code pénal
 </td>
 <td style="text-align:right;">
 5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+code électoral
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+31
 </td>
 </tr>
 </tbody>

@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(ggcpesrthemes)
 library(cowplot)
+library(lubridate)
 
 
 source("R/legiplot_fun_load.R")
@@ -298,4 +299,134 @@ lpm %>%
 
 
 
+## Waffles
 
+```{r scolarite}
+niveaux <- c("Maternelle PS", "Maternelle GS", "CP", "CE1", "CE2", "CM1", "CM2", "6ème", "5ème", "4ème", "3ème", "Seconde", "Première", "Terminale")
+trimestres = c("1er trimestre", "2ème trimestre", "3ème trimestre","grandes vacances")
+niveaux <- factor(niveaux,levels=niveaux)
+trimestres <- factor(trimestres,levels=trimestres)
+
+scolarite <- function(from="2009-09-01") {
+  d <- as.Date(from)
+  crossing(niveaux,trimestres) %>%
+    mutate(label = paste(niveaux,trimestres,sep=" - ")) %>%
+    mutate(date = d %m+% months(3*(row_number()-1)))
+}  
+scolarite()
+```
+
+```{r waffle, fig.asp=1}
+waffle.data <- function(lecode="code de l'éducation",
+                         from="2017-06-01", to="2023-06-01") {
+  lp_modifs %>%
+    filter(code == lecode, date < to) %>%
+    slice_tail(n=1,by = article) %>%
+    filter(type != "Suppression" | date >= from) %>%
+    mutate(type = case_when(
+      date < from & type == "Suppression" ~ "FAIL",
+      date < from ~ "Conservé",
+      type == "Préexistence" ~ "Conservé",
+      type == "Modification" ~ "Modifié",
+      type == "Ajout" ~ "Ajouté",
+      type == "Suppression" ~ "Supprimé")) %>%
+    mutate(type = factor(type,levels=c("Conservé","Modifié","Ajouté","Supprimé"))) 
+}
+
+waffle <- function(lecode="code de l'éducation",
+                         from="2017-06-01", to="2023-06-01",
+                         width=100, height=0, addtitle="") {
+  df <- waffle.data(lecode,from,to)
+  
+  stats <- df %>% 
+    summarise(nb = n(), .by = type) %>%
+    complete(type, fill=list(nb = 0)) %>%
+    mutate(part = nb / sum(nb)) %>%
+    mutate(label = scales::percent(part,accuracy=1))
+  
+  statslab <- stats$label
+  names(statslab) <- stats$type
+  
+  #return(stats)
+    
+  df %>%
+    mutate(x = (row_number()-1) %% width, y = floor((row_number()-1) / width)) %>%
+    ggplot(aes(x=x,y=y,fill=type)) +
+    geom_tile(width=1,height=1, color="black") +
+    expand_limits(y=height) +
+    scale_y_reverse() +
+    scale_fill_manual(values=c("aquamarine","darkorange","darkorchid1","deepskyblue"),
+                      limits = c("Conservé","Modifié","Ajouté","Supprimé"),
+                      name="Article") +
+    theme_void() +
+    theme(legend.position = "top", 
+          plot.title = element_text(hjust=0.5), plot.subtitle = element_text(hjust=0.5),
+          legend.margin=margin(t=0.5, b=0, unit='cm'),
+          plot.margin=margin(t=0.3, b=0, unit='cm')) +
+    labs(title = paste("Articles du",lecode,"entre",from,"et",to,addtitle),
+            subtitle = paste("Conservés : ",statslab[['Conservé']],
+                             ", Modifiés : ",statslab[['Modifié']],
+                             ", Ajoutés : ",statslab[['Ajouté']],
+                             ", Supprimés : ",statslab[['Supprimé']]),
+            caption = "Julien Gossa, Camille Noûs, CPESR  |  Source : Légifrance via ArcheoLex")
+}
+
+waffle()
+waffle(to="2017-06-01")
+```
+
+
+```{r waffgif, fig.asp=9/16}
+waffle.pngs <- function(lecode="code de l'éducation",
+                        from="2017-06-01", to="2023-06-01", 
+                        width=100, height=0, delay=1, pause=3,
+                        keeppng=FALSE) {
+  dir.create("pngs")
+  d <- as.Date(from)
+  pngs <- c()
+  while(d <= to) {
+    print(d)
+    fn <- paste0("pngs/waffle-",d,".png")
+    if(!keeppng) {
+      p <- waffle(lecode,from=from,to=d,width=width,height=height)
+      ggsave(p, filename=fn, bg="white", width = 6, height = 6)
+    }
+    pngs <- c(pngs,fn)
+    #d <- d %m+% months(12)
+    d <- d %m+% months(1)
+  }
+  pngs <- c(rep(pngs[1],pause),pngs,rep(pngs[length(pngs)],pause))
+  gifski::gifski(pngs,paste0(lecode,".gif"),width = 800, height = 800, delay = delay)
+}
+
+waffle.pngs(from="2017-06-01", to="2023-06-01", width=100, height=57, delay = 0.25, pause=10, keeppng = FALSE)
+```
+
+
+
+```{r waffscol, fig.asp=9/16}
+waffle.scol <- function(width=100, height=0, delay=1, pause=3,
+                        keeppng=FALSE) {
+  lecode <- "code de l'éducation"
+  dir.create("pngs")
+  scol <- scolarite()
+  pngs <- c()
+  
+  from <- scol[1,]$date
+  for(i in 1:nrow(scol)) { 
+    niv <- scol[i,]$label
+    to <- scol[i,]$date
+    fn <- paste0("pngs/scol-",to,".png")
+    print(niv)
+    if(!keeppng) {
+      p <- waffle(lecode,from=from,to=to,width=width,height=height,addtitle=paste0("\n",niv))
+      ggsave(p, filename=fn, bg="white", width = 6, height = 6)
+    }
+    pngs <- c(pngs,fn)
+  }
+  pngs <- c(rep(pngs[1],pause),pngs,rep(pngs[length(pngs)],pause))
+  gifski::gifski(pngs,paste0("scolarite.gif"),width = 800, height = 800, delay = delay)
+}
+
+waffle.scol(width=100, height=57, delay = 0.25, pause=10, keeppng = FALSE)
+```
