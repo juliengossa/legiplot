@@ -300,3 +300,12 @@ Voir les données
     ## Joining with `by = join_by(Date)`
 
 <img src="legifouille_files/figure-gfm/mandats-1.png" width="672" />
+
+    ## 
+    ## Attachement du package : 'lubridate'
+
+    ## Les objets suivants sont masqués depuis 'package:base':
+    ## 
+    ##     date, intersect, setdiff, union
+
+<img src="legifouille_files/figure-gfm/mandats.proj-1.png" width="672" />

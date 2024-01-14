@@ -82,7 +82,7 @@ le %>%
   ggtitle("Nombre de textes modifiants le code de l'éducation")
 ```
 
-```{r mandats, fig.asp=9/16}
+```{r mandats.proj, fig.asp=9/16}
 library(lubridate)
 lesum <- le %>% 
   filter(!str_detect(président,"Chirac")) %>%
