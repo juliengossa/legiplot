@@ -1,0 +1,62 @@
+---
+title: "CPESR"
+author: "CPESR"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(dplyr.summarise.inform = FALSE)
+knitr::opts_chunk$set(fig.asp = 9/16, fig.retina = 2)
+
+library(tidyverse)
+library(ggcpesrthemes)
+theme_set(theme_cpesr())
+theme_cpesr_setup(authors = "Julien Gossa", source = "https://github.com/cpesr/RFC/")
+```
+
+## Données 
+
+```{r load}
+legifouille <- read.csv("code_education_modifs.csv") %>%
+  arrange(Date)
+
+colnames(df)
+```
+
+## Explorations
+
+```{r type, results='asis'}
+legifouille %>%
+  summarise(nb = n_distinct(Texte), .by = Type) %>%
+  spoiler_table()
+```
+
+```{r explo}
+explo <- function(date) {
+  l <- legifouille %>% filter(Date >= date)
+
+  l %>%
+    summarise(nb = n_distinct(Texte), .by = Type) %>%
+    spoiler_table()
+  
+  l %>%
+    filter(Type %in% c("LOI","ORDONNANCE")) %>%
+    select(Date,Texte,URL) %>%
+    unique() %>%
+    spoiler_table(trim=Inf)
+}
+```
+
+## M. Macron
+
+```{r macron, results='asis'}
+explo("2017-06-01")
+```
+
+## Bacheliers
+
+```{r bac, results='asis'}
+explo("2009-09-01")
+```

@@ -368,7 +368,7 @@ waffle <- function(lecode="code de l'éducation",
                              ", Modifiés : ",statslab[['Modifié']],
                              ", Ajoutés : ",statslab[['Ajouté']],
                              ", Supprimés : ",statslab[['Supprimé']]),
-            caption = "Julien Gossa, Camille Noûs, CPESR  |  Source : Légifrance via ArcheoLex")
+            caption = "Julien Gossa, Camille Noûs, CPESR  |  Source : Légifrance via ArcheoLex  ")
 }
 
 waffle()
@@ -428,5 +428,5 @@ waffle.scol <- function(width=100, height=0, delay=1, pause=3,
   gifski::gifski(pngs,paste0("scolarite.gif"),width = 800, height = 800, delay = delay)
 }
 
-waffle.scol(width=100, height=57, delay = 0.25, pause=10, keeppng = FALSE)
+waffle.scol(width=100, height=60, delay = 0.25, pause=10, keeppng = FALSE)
 ```
