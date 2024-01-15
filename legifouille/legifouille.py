@@ -31,6 +31,8 @@ class Code:
     def __init__(self, path):
         self.path = path
         self.struct_articles = self.get_struct_articles(path+"texte/struct/"+os.listdir(path+"texte/struct/")[0])
+        # Remove duplicates
+        self.struct_articles = list(dict.fromkeys(self.struct_articles))
 
     def get_struct_articles(self,structfile):
         soup = get_soup(structfile)
@@ -63,17 +65,42 @@ class Code:
 
         return modifs
 
+    def print_modifs(self):
+        print(",".join(["Date","Type","Texte","Article","URL"]))
+        modifs = self.get_modifs()
+        for m in modifs:
+            modif = modifs[m]
+            text = modif.text.replace("\n","").split(" - ")
+
+            print(",".join([modif['datesignatexte'],modif['naturetexte'],text[0],text[1],"https://www.legifrance.gouv.fr/jorf/id/"+modif['cidtexte']]))
+
+
+    def print_liens(self, allversions = True):
+        article_keys = [ "ID", "NUM", "DATE_DEBUT", "ETAT" ]
+        lien_keys = [ "id", "typelien", "sens", "datesignatexte", "naturetexte", "numtexte", "num" ]
+
+        header = [ "article_"+a.lower() for a in article_keys ]
+        header += [ "lien_"+l for l in lien_keys ]
+        header += [ "lien_texte", "lien_url" ]
+        print(",".join(header))
+
+        for struct_article in self.struct_articles:
+            article = self.get_article(struct_article)
+            article_data = [ article.find(key).text for key in  article_keys ]
+            if article.find("ETAT").text != "VIGUEUR" and not allversions: continue
+            for lien in article.findAll("LIEN"):
+                #print(lien)
+                lien_data = [ lien[key] for key in lien_keys ]
+                if lien_data[-2] == "": lien_data[-2] = '"'+lien.text.split(" - ")[0]+'"'
+                url = "https://www.legifrance.gouv.fr/jorf/id/"+lien['cidtexte']
+                print(",".join(article_data + lien_data + ['"'+lien.text+'"', url]))
+
 
 def main():
     code = Code("./LEGI/TEXT/00/00/06/07/11/LEGITEXT000006071191/")
 
-    print(",".join(["Date","Type","Texte","Article","URL"]))
-    modifs = code.get_modifs()
-    for m in modifs:
-        modif = modifs[m]
-        text = modif.text.replace("\n","").split(" - ")
+    code.print_liens()
 
-        print(",".join([modif['datesignatexte'],modif['naturetexte'],text[0],text[1],"https://www.legifrance.gouv.fr/jorf/id/"+modif['cidtexte']]))
 
 if __name__ == "__main__":
     main()
