@@ -106,8 +106,9 @@ explo <- function(date) {
     filter(lien_datesignatexte >= date, startsWith(lien_typelien, "MODIF")) %>%
     filter(lien_naturetexte != "DECRET") %>%
     arrange(lien_datesignatexte) %>%
+    mutate(nb_modifications = n(), .by = c(lien_naturetexte, lien_numtexte)) %>%
     slice_head(n = 1, by = c(lien_naturetexte, lien_numtexte)) %>%
-    select(lien_naturetexte,lien_numtexte,lien_datesignatexte,lien_url) %>%
+    select(lien_naturetexte,lien_numtexte,lien_datesignatexte,nb_modifications,lien_url) %>%
     spoiler_table("Textes modifiants (hors décrets)", trim = Inf)
 }
 ```
