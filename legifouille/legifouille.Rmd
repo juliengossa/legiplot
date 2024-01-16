@@ -108,7 +108,7 @@ explo <- function(date) {
     arrange(lien_datesignatexte) %>%
     slice_head(n = 1, by = c(lien_naturetexte, lien_numtexte)) %>%
     select(lien_naturetexte,lien_numtexte,lien_datesignatexte,lien_url) %>%
-    spoiler_table("Textes modifiants (hors décrets)", trim = 10)
+    spoiler_table("Textes modifiants (hors décrets)", trim = Inf)
 }
 ```
 
