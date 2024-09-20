@@ -22,6 +22,7 @@ mandats <- read.csv("data/elections.csv") %>%
     président = factor(président, levels=unique(président)) )
 
 lecode = "code de l'éducation"
+lecode = "code du travail"
 startdate = as.Date("2017-06-01")
 
 theme_cpesr_setup(authors = "Julien Gossa", source="https://github.com/juliengossa/legiplot")
@@ -399,7 +400,7 @@ waffle.pngs <- function(lecode="code de l'éducation",
   gifski::gifski(pngs,paste0(lecode,".gif"),width = 800, height = 800, delay = delay)
 }
 
-waffle.pngs(from="2017-06-01", to="2023-06-01", width=100, height=57, delay = 0.3, pause=8, keeppng = FALSE)
+waffle.pngs(from="2017-06-01", to="2023-06-01", width=100, height=57, delay = 0.3, pause=8, keeppng = TRUE)
 ```
 
 
@@ -418,15 +419,20 @@ waffle.scol <- function(width=100, height=0, delay=1, pause=3,
     to <- scol[i,]$date
     fn <- paste0("pngs/scol-",to,".png")
     print(niv)
-    if(!keeppng) {
-      p <- waffle(lecode,from=from,to=to,width=width,height=height,addtitle=paste0("\n",niv))
-      ggsave(p, filename=fn, bg="white", width = 6, height = 6)
-    }
+    p <- waffle(lecode,from=from,to=to,width=width,height=height,addtitle=paste0("\n",niv))
+    ggsave(p, filename=fn, bg="white", width = 6, height = 6)
     pngs <- c(pngs,fn)
   }
   pngs <- c(rep(pngs[1],pause),pngs,rep(pngs[length(pngs)],pause*2))
   gifski::gifski(pngs,paste0("scolarite.gif"),width = 800, height = 800, delay = delay)
 }
 
-waffle.scol(width=100, height=60, delay = 0.3, pause=8, keeppng = FALSE)
+waffle.scol(width=100, height=60, delay = 0.3, pause=8, keeppng = TRUE)
+```
+
+
+### Code du travail
+
+```{r}
+waffle.pngs(lecode="code du travail",from="2017-06-01", to="2023-06-01", width=120, height=120, delay = 0.3, pause=8, keeppng = FALSE)
 ```

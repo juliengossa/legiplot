@@ -16,16 +16,20 @@
 
 import json
 import os
+import sys
 from io import StringIO
 from datetime import datetime
 from bs4 import BeautifulSoup
 
 def get_soup(file):
-    with open(file, "r") as f:
-        soup = BeautifulSoup(f.read(),features="xml")
-    return soup
-
-
+    try:
+        with open(file, "r") as f:
+            soup = BeautifulSoup(f.read(),features="xml")
+        return soup
+    except:
+        print("Missing file: "+file, file=sys.stderr)
+        return BeautifulSoup()
+   
 
 class Code:
     def __init__(self, path):
@@ -35,7 +39,9 @@ class Code:
         self.struct_articles = list(dict.fromkeys(self.struct_articles))
 
     def get_struct_articles(self,structfile):
+        
         soup = get_soup(structfile)
+ 
         struct_articles = soup.findAll("LIEN_ART")
 
         sections = soup.findAll("LIEN_SECTION_TA")
@@ -86,6 +92,8 @@ class Code:
 
         for struct_article in self.struct_articles:
             article = self.get_article(struct_article)
+            print(article)
+            if article == BeautifulSoup(): continue
             article_data = [ article.find(key).text for key in  article_keys ]
             if article.find("ETAT").text != "VIGUEUR" and not allversions: continue
             for lien in article.findAll("LIEN"):
