@@ -92,7 +92,6 @@ class Code:
 
         for struct_article in self.struct_articles:
             article = self.get_article(struct_article)
-            print(article)
             if article == BeautifulSoup(): continue
             article_data = [ article.find(key).text for key in  article_keys ]
             if article.find("ETAT").text != "VIGUEUR" and not allversions: continue
@@ -105,7 +104,7 @@ class Code:
 
 
 def main():
-    code = Code("./LEGI/TEXT/00/00/06/07/11/LEGITEXT000006071191/")
+    code = Code("LEGI/legi/global/code_et_TNC_en_vigueur/code_en_vigueur/LEGI/TEXT/00/00/06/07/11/LEGITEXT000006071191/")
 
     code.print_liens()
 
