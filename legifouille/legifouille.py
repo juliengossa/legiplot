@@ -20,6 +20,8 @@ import sys
 from io import StringIO
 from datetime import datetime
 from bs4 import BeautifulSoup
+import csv
+import argparse
 
 def get_soup(file):
     try:
@@ -29,26 +31,69 @@ def get_soup(file):
     except:
         print("Missing file: "+file, file=sys.stderr)
         return BeautifulSoup()
-   
 
-class Code:
-    def __init__(self, path):
+
+class LEGI:
+    struct_article_keys = [ "num", "etat", "debut", "fin", "id" ]
+    struct_article_header = struct_article_keys
+
+    article_keys = [ "NUM", "DATE_DEBUT", "DATE_FIN", "ETAT" ]
+    article_header = [ "article_"+a.lower() for a in article_keys ]
+    
+    lien_keys = [ "id", "typelien", "sens", "datesignatexte", "naturetexte", "numtexte", "num" ]
+    lien_header = [ "lien_"+l for l in lien_keys ] + [ "lien_texte", "lien_url" ]
+
+    def __init__(self, liens=False):
+        self.liens = liens
+        self.csvwriter = csv.writer(sys.stdout)
+        if not liens:
+            self.csvwriter.writerow(self.struct_article_header)            
+        else:
+            self.csvwriter.writerow(self.article_keys + self.lien_header)
+
+        self.articles = {}
+            
+    def parse_code(self, path):
         self.path = path
-        self.struct_articles = self.get_struct_articles(path+"texte/struct/"+os.listdir(path+"texte/struct/")[0])
-        # Remove duplicates
-        self.struct_articles = list(dict.fromkeys(self.struct_articles))
+        self.root = path+"texte/struct/"+os.listdir(path+"texte/struct/")[0]
 
-    def get_struct_articles(self,structfile):
-        
-        soup = get_soup(structfile)
- 
+        self.articles[path] = []
+
+        self.parse_struct(self.root)
+    
+    def parse_struct(self, node, depth=0):
+        #print("  "*depth + node)
+        soup = get_soup(node)
+
         struct_articles = soup.findAll("LIEN_ART")
+        for struct_article in struct_articles:
+            struct_article_data = [ struct_article[key] for key in self.struct_article_keys ]
+            if struct_article['id'] in self.articles[self.path]: continue
+            self.articles[self.path].append(struct_article['id'])
+
+            if not self.liens:
+                self.csvwriter.writerow(struct_article_data)
+            else: 
+                if struct_article['etat'] == "VIGUEUR":
+                    self.parse_article_liens(struct_article)
 
         sections = soup.findAll("LIEN_SECTION_TA")
         for section in sections:
-            struct_articles += self.get_struct_articles(self.path + "section_ta" + section['url'])
+            self.parse_struct(self.path + "section_ta" + section['url'], depth+1)
 
-        return struct_articles
+    def parse_article_liens(self, struct_article):
+        article = self.get_article(struct_article)
+
+        article_data = [ article.find(key).text for key in self.article_keys ]
+
+        vigueur = (article.find("ETAT").text == "VIGUEUR") 
+        for lien in article.findAll("LIEN"):
+            if lien['typelien'] != "MODIFIE" and not vigueur: continue
+            
+            lien_data = [ lien[key] for key in self.lien_keys ]
+            if lien_data[-2] == "": lien_data[-2] = lien.text.split(" - ")[0]
+            url = "https://www.legifrance.gouv.fr/jorf/id/"+lien['cidtexte']
+            self.csvwriter.writerow(article_data + lien_data + [lien.text, url])
 
     def get_article(self,struct_article):
         num = struct_article['id'].replace("LEGIARTI","")
@@ -58,56 +103,19 @@ class Code:
 
         return get_soup(apath)
 
-    def get_liens_modif(self,article):
-        liens = article.findAll("LIEN")
-        return [ lien for lien in liens if lien['typelien']=="MODIFIE" and lien['sens'] == "cible" ]
-
-    def get_modifs(self):
-        modifs = {}
-        for struct_article in self.struct_articles:
-            article = self.get_article(struct_article)
-            for modif in self.get_liens_modif(article):
-                modifs[modif['cidtexte']] = modif
-
-        return modifs
-
-    def print_modifs(self):
-        print(",".join(["Date","Type","Texte","Article","URL"]))
-        modifs = self.get_modifs()
-        for m in modifs:
-            modif = modifs[m]
-            text = modif.text.replace("\n","").split(" - ")
-
-            print(",".join([modif['datesignatexte'],modif['naturetexte'],text[0],text[1],"https://www.legifrance.gouv.fr/jorf/id/"+modif['cidtexte']]))
-
-
-    def print_liens(self, allversions = True):
-        article_keys = [ "ID", "NUM", "DATE_DEBUT", "ETAT" ]
-        lien_keys = [ "id", "typelien", "sens", "datesignatexte", "naturetexte", "numtexte", "num" ]
-
-        header = [ "article_"+a.lower() for a in article_keys ]
-        header += [ "lien_"+l for l in lien_keys ]
-        header += [ "lien_texte", "lien_url" ]
-        print(",".join(header))
-
-        for struct_article in self.struct_articles:
-            article = self.get_article(struct_article)
-            if article == BeautifulSoup(): continue
-            article_data = [ article.find(key).text for key in  article_keys ]
-            if article.find("ETAT").text != "VIGUEUR" and not allversions: continue
-            for lien in article.findAll("LIEN"):
-                #print(lien)
-                lien_data = [ lien[key] for key in lien_keys ]
-                if lien_data[-2] == "": lien_data[-2] = '"'+lien.text.split(" - ")[0]+'"'
-                url = "https://www.legifrance.gouv.fr/jorf/id/"+lien['cidtexte']
-                print(",".join(article_data + lien_data + ['"'+lien.text+'"', url]))
-
+code_path = {
+    'éducation':"LEGI/legi/global/code_et_TNC_en_vigueur/code_en_vigueur/LEGI/TEXT/00/00/06/07/11/LEGITEXT000006071191/"
+}
 
 def main():
-    code = Code("LEGI/legi/global/code_et_TNC_en_vigueur/code_en_vigueur/LEGI/TEXT/00/00/06/07/11/LEGITEXT000006071191/")
+    parser = argparse.ArgumentParser(description='Parser de la base LEGI')
+    parser.add_argument('-l', '--liens', help='extrait les liens des articles en vigueur plutôt que les versions', action='store_true', default=False)
+    parser.add_argument('codes', type=str, help='Code to parse', nargs='*', default=['éducation'])
+    args = parser.parse_args()
 
-    code.print_liens()
-
+    legi = LEGI(args.liens)
+    for code in args.codes:
+        legi.parse_code(code_path[code])
 
 if __name__ == "__main__":
     main()

@@ -19,7 +19,9 @@ theme_cpesr_setup(authors = "Julien Gossa", source = "Base LEGI https://www.data
 ## Données 
 
 ```{r load}
-legifouille <- read.csv("code_education.csv", quote='"') %>%
+legifouille <- read.csv("code_education_liens.csv", quote='"')
+
+%>%
   mutate(partie = ifelse(str_sub(article_num,1,1)=="L","Législative","Réglementaire")) 
 
 colnames(legifouille)
