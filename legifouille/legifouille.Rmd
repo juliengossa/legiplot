@@ -16,164 +16,69 @@ theme_set(theme_cpesr())
 theme_cpesr_setup(authors = "Julien Gossa", source = "Base LEGI https://www.data.gouv.fr/fr/datasets/legi-codes-lois-et-reglements-consolides/")
 ```
 
-## Données 
+## Versions 
 
 ```{r load}
-legifouille <- read.csv("code_education_liens.csv", quote='"')
+mandats <- read.csv("../data/elections.csv") %>% 
+  mutate(président = factor(président,levels=président))
 
-%>%
-  mutate(partie = ifelse(str_sub(article_num,1,1)=="L","Législative","Réglementaire")) 
+lfversions <- read.csv("code_education_versions.csv", quote='"')
 
-colnames(legifouille)
-```
-
-## Explorations
-
-### Doublons
-
-```{r doublons}
-legifouille %>%
-  summarise(nb = n(), .by = everything()) %>%
-  filter(nb > 1)
-```
-
-### Type lien
-
-```{r type.lien, results='asis'}
-legifouille %>%
-  summarise(nb = n(), .by = lien_typelien) %>%
-  spoiler_table()
-```
-
-### Type état
-
-```{r type.etat, results='asis'}
-legifouille %>%
-  summarise(nb = n(), .by = article_etat) %>%
-  spoiler_table()
-```
-
-### Nombre de versions
-
-```{r nb.versions, results='asis'}
-legifouille %>%
-  summarise(versions = n_distinct(article_id), .by = article_num) %>%
-  summarise(nb = n(), .by = versions) %>%
-  arrange(versions) %>%
-  spoiler_table()
-```
-
-```{r explo}
-
-article_urls <- legifouille %>%
-    arrange(article_date_debut) %>%
-    slice_tail(n=1,by=article_num) %>%
-    mutate(url = paste0("https://www.legifrance.gouv.fr/codes/article_lc/",article_id)) %>%
-    select(article_num,url)
-
-explo <- function(date) {
-  
-  # Nb versions
-  legifouille %>% 
-    filter(article_date_debut >= date) %>%
-    summarise(nb_versions = n_distinct(article_date_debut), .by=partie) %>%
-    spoiler_table("Nb versions")
-
-  # Articles les plus modififés
-  legifouille %>% 
-    filter(article_date_debut >= date) %>%
-    summarise(nb_versions = n_distinct(article_date_debut), .by=c(article_num,partie)) %>%
-    arrange(partie,desc(nb_versions)) %>%
-    slice_head(n=10,by=partie) %>%
-    left_join(article_urls) %>%
-    spoiler_table("Articles les plus modifiés",trim = Inf)
-
-  # Nb textes modification
-  legifouille %>%
-    filter(lien_datesignatexte >= date, startsWith(lien_typelien, "MODIF")) %>%
-    summarise(nb = n_distinct(lien_numtexte), .by = lien_naturetexte) %>%
-    spoiler_table("Nb textes de modification par nature")
-
-  # Top textes modification
-  legifouille %>%
-    filter(lien_datesignatexte >= date, startsWith(lien_typelien, "MODIF")) %>%
-    mutate(nb_modifications = n(), .by = c(lien_naturetexte, lien_numtexte)) %>%
-    slice_head(n = 1, by = c(lien_naturetexte, lien_numtexte)) %>%
-    arrange(desc(nb_modifications)) %>%
-    select(lien_naturetexte,lien_numtexte,lien_datesignatexte,nb_modifications,lien_url) %>%
-    spoiler_table("Top textes modifiants", trim = 10)
-
-  # Loi modification
-  legifouille %>%
-    filter(lien_datesignatexte >= date, startsWith(lien_typelien, "MODIF")) %>%
-    filter(lien_naturetexte != "DECRET") %>%
-    arrange(lien_datesignatexte) %>%
-    mutate(nb_modifications = n(), .by = c(lien_naturetexte, lien_numtexte)) %>%
-    slice_head(n = 1, by = c(lien_naturetexte, lien_numtexte)) %>%
-    select(lien_naturetexte,lien_numtexte,lien_datesignatexte,nb_modifications,lien_url) %>%
-    spoiler_table("Textes modifiants (hors décrets)", trim = Inf)
-}
-```
-
-## M. Macron
-
-```{r macron, results='asis'}
-explo("2017-06-01")
-```
-
-## Bacheliers
-
-```{r bac, results='asis'}
-explo("2009-09-01")
-```
-
-## Toujours
-
-```{r toujours, results='asis'}
-explo("0000-09-01")
-```
-
-
-## Mandats présidentiels 
-
-```{r mandats, fig.asp=9/16}
-elections <- read.csv("../data/elections.csv") 
-
-le <- legifouille %>%
-  filter(startsWith(lien_typelien, "MODIF")) %>%
-  transmute(
-    date = lien_datesignatexte,
-    type = lien_naturetexte,
-    numtexte = lien_numtexte
-  ) %>%
-  mutate(type = recode(type, "LOI_ORGANIQUE" = "LOI", "DECISION" = "DECRET")) %>%
-  unique() %>%
-  full_join(elections) %>%
-  arrange(date) %>%
+lfversions <- bind_rows(lfversions, mandats %>% rename(debut=date)) %>%
+  arrange(debut) %>%
   fill(président, .direction = "down") %>%
-  filter(!is.na(type))
+  filter(!is.na(num)) %>%
+  mutate(partie = ifelse(str_sub(num,1,1)=="L","Législative","Réglementaire")) 
 
-le %>% 
-  filter(!str_detect(président,"Chirac")) %>%
-  summarise(Nombre = n_distinct(numtexte), .by = c(type,président)) %>%
-  ggplot(aes(x=président,y=Nombre,fill=type)) +
+colnames(lfversions)
+```
+
+```{r}
+lfversions %>% 
+  summarise(versions = n(), .by = c(partie,président)) %>%
+  ggplot(aes(x=président,y=versions,fill=partie)) +
   geom_col(position = "dodge") +
-  scale_x_discrete(limits=c("Sarkozy","Hollande","Macron","Macron 2")) +
-  ggtitle("Nombre de textes modifiants le code de l'éducation") +
+  ggtitle("Nombre de versions du code de l'éducation", subtitle = "Législative et réglementaire") +
   cpesr_cap()
 ```
 
+
+## Liens
+
+```{r load.textes}
+lfliens <- read.csv("code_education_liens.csv", quote='"')
+
+lfliensmod <- lfliens %>%
+  filter(lien_typelien == "MODIFIE") %>%
+  summarise(n_modifs = n_distinct(NUM), .by = c(lien_numtexte,lien_texte,lien_naturetexte,lien_datesignatexte)) %>%
+  bind_rows(mandats %>% rename(lien_datesignatexte=date))%>%
+  arrange(lien_datesignatexte) %>%
+  fill(président, .direction = "down") %>%
+  filter(!is.na(lien_texte))
+
+colnames(lfliensmod)
+```
+
+```{r}
+lfliensmod %>% 
+  summarise(nb_textes = n(), .by = c(lien_naturetexte,président)) %>%
+  ggplot(aes(x=président,y=nb_textes,fill=lien_naturetexte)) +
+  geom_col(position = "dodge") +
+  ggtitle("Nombre de textes modifiants le code de l'éducation", subtitle = "Projection sur le temps restant du mandat actuel, au rythme du mandat actuel") +
+  cpesr_cap()
+```
+
+
+
 ```{r mandats.proj, fig.asp=9/16}
 library(lubridate)
-lesum <- le %>% 
-  filter(!str_detect(président,"Chirac")) %>%
-  summarise(Nombre = n_distinct(numtexte), .by = c(type,président)) %>%
-  mutate(Donnée = "Mesurée") %>%
-  mutate(président = factor(président,levels=c("Sarkozy","Hollande","Macron","Macron 2")))
-  
 
-lelast <- le %>% filter(président == "Macron 2")
-i <- interval(min(lelast$date), max(lelast$date))
+lesum <- lfliensmod %>% 
+  summarise(Nombre = n(), .by = c(lien_naturetexte,président)) %>%
+  mutate(Donnée = "Mesurée")
+
+lelast <- lfliensmod %>% filter(président == "Macron 2")
+i <- interval(min(lelast$lien_datesignatexte), max(lelast$lien_datesignatexte))
 projprop = 1 / ((i %/% days(1)) / (365*5))
 
 proj <- lesum %>%
@@ -183,7 +88,7 @@ proj <- lesum %>%
 
 bind_rows(lesum,proj) %>%
   mutate(Donnée = factor(Donnée,levels=c("Projection","Mesurée"))) %>%
-  ggplot(aes(x=type,y=Nombre,fill=type,alpha=Donnée)) +
+  ggplot(aes(x=lien_naturetexte,y=Nombre,fill=lien_naturetexte,alpha=Donnée)) +
   geom_col() +
   facet_grid(.~président) +
   scale_alpha_manual(values=c(0.6,1)) +
