@@ -14,6 +14,20 @@ library(tidyverse)
 library(ggcpesrthemes)
 theme_set(theme_cpesr())
 theme_cpesr_setup(authors = "Julien Gossa", source = "Base LEGI https://www.data.gouv.fr/fr/datasets/legi-codes-lois-et-reglements-consolides/")
+
+ggplot_st <- function(.x, ...) {
+  spoiler_table(.x,paste("Données ",knitr::opts_current$get("label")))
+  ggplot(.x, ...)
+}
+
+ggplot_sd <- function(.x, ...) {
+  path = str_replace(knitr::opts_current$get("fig.path"),"gfm","data")
+  dir.create(path, showWarnings = FALSE)
+  sdfn <- paste0(path,knitr::opts_current$get("label"),".csv")
+  write.csv2(.x, file = sdfn, row.names = FALSE)
+  cat("[Télécharger les données](",sdfn,")")
+  ggplot(.x, ...)
+}
 ```
 
 ## Versions 
@@ -33,10 +47,10 @@ lfversions <- bind_rows(lfversions, mandats %>% rename(debut=date)) %>%
 colnames(lfversions)
 ```
 
-```{r}
+```{r versions, results='asis'}
 lfversions %>% 
   summarise(versions = n(), .by = c(partie,président)) %>%
-  ggplot(aes(x=président,y=versions,fill=partie)) +
+  ggplot_sd(aes(x=président,y=versions,fill=partie)) +
   geom_col(position = "dodge") +
   ggtitle("Nombre de versions du code de l'éducation", subtitle = "Législative et réglementaire") +
   cpesr_cap()
@@ -59,10 +73,10 @@ lfliensmod <- lfliens %>%
 colnames(lfliensmod)
 ```
 
-```{r}
+```{r liens, results='asis'}
 lfliensmod %>% 
   summarise(nb_textes = n(), .by = c(lien_naturetexte,président)) %>%
-  ggplot(aes(x=président,y=nb_textes,fill=lien_naturetexte)) +
+  ggplot_sd(aes(x=président,y=nb_textes,fill=lien_naturetexte)) +
   geom_col(position = "dodge") +
   ggtitle("Nombre de textes modifiants le code de l'éducation", subtitle = "Projection sur le temps restant du mandat actuel, au rythme du mandat actuel") +
   cpesr_cap()
@@ -70,7 +84,7 @@ lfliensmod %>%
 
 
 
-```{r mandats.proj, fig.asp=9/16}
+```{r mandats.proj, fig.asp=9/16, results='asis'}
 library(lubridate)
 
 lesum <- lfliensmod %>% 
@@ -88,7 +102,7 @@ proj <- lesum %>%
 
 bind_rows(lesum,proj) %>%
   mutate(Donnée = factor(Donnée,levels=c("Projection","Mesurée"))) %>%
-  ggplot(aes(x=lien_naturetexte,y=Nombre,fill=lien_naturetexte,alpha=Donnée)) +
+  ggplot_sd(aes(x=lien_naturetexte,y=Nombre,fill=lien_naturetexte,alpha=Donnée)) +
   geom_col() +
   facet_grid(.~président) +
   scale_alpha_manual(values=c(0.6,1)) +
