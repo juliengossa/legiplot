@@ -14,20 +14,6 @@ library(tidyverse)
 library(ggcpesrthemes)
 theme_set(theme_cpesr())
 theme_cpesr_setup(authors = "Julien Gossa", source = "Base LEGI https://www.data.gouv.fr/fr/datasets/legi-codes-lois-et-reglements-consolides/")
-
-ggplot_st <- function(.x, ...) {
-  spoiler_table(.x,paste("Données ",knitr::opts_current$get("label")))
-  ggplot(.x, ...)
-}
-
-ggplot_sd <- function(.x, ...) {
-  path = str_replace(knitr::opts_current$get("fig.path"),"gfm","data")
-  dir.create(path, showWarnings = FALSE)
-  sdfn <- paste0(path,knitr::opts_current$get("label"),".csv")
-  write.csv2(.x, file = sdfn, row.names = FALSE)
-  cat("[Télécharger les données](",sdfn,")")
-  ggplot(.x, ...)
-}
 ```
 
 ## Versions 
@@ -49,7 +35,7 @@ colnames(lfversions)
 
 ```{r versions, results='asis'}
 lfversions %>% 
-  summarise(versions = n(), .by = c(partie,président)) %>%
+  summarise(versions = n_distinct(debut), .by = c(partie,président)) %>%
   ggplot_sd(aes(x=président,y=versions,fill=partie)) +
   geom_col(position = "dodge") +
   ggtitle("Nombre de versions du code de l'éducation", subtitle = "Législative et réglementaire") +
@@ -64,11 +50,11 @@ lfliens <- read.csv("code_education_liens.csv", quote='"')
 
 lfliensmod <- lfliens %>%
   filter(lien_typelien == "MODIFIE") %>%
-  summarise(n_modifs = n_distinct(NUM), .by = c(lien_numtexte,lien_texte,lien_naturetexte,lien_datesignatexte)) %>%
+  summarise(n_modifs = n_distinct(NUM, na.rm = TRUE), .by = c(lien_numtexte,lien_naturetexte,lien_datesignatexte)) %>%
   bind_rows(mandats %>% rename(lien_datesignatexte=date))%>%
   arrange(lien_datesignatexte) %>%
   fill(président, .direction = "down") %>%
-  filter(!is.na(lien_texte))
+  filter(!is.na(n_modifs)) 
 
 colnames(lfliensmod)
 ```
